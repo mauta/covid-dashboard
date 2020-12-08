@@ -1,0 +1,24 @@
+{
+  "name": "gem-puzzle",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Project from RS School",
+  "scripts": {
+    "eslint": "eslint src/**/*.js",
+    "test": "npm run eslint",
+    "build": "webpack",
+    "start": "webpack-dev-server --open"
+  },
+  "devDependencies": {
+    "eslint": "^7.13.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "webpack": "4.42.1",
+    "webpack-cli": "3.3.11",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "engines": {
+    "node": "10"
+  },
+  "dependencies": {}
+}
