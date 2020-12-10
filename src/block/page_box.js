@@ -20,8 +20,9 @@ export default class PageBox extends Control {
     };
   }
 
-  addItem(caption, className, content) {
+  addItem(caption, title, className, content) {
     this.page = new Control(this.itemWrapper.node, 'div', 'pagebox__page');
+    new Control(this.page.node, 'h2','pagebox__title',`Global ${title}`);
     this.item = new className(this.page.node, content);
     this.items.push(this.page);
     this.pagination.addItem(caption);
