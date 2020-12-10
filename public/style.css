@@ -50,7 +50,7 @@ body {
   display: grid;
   width: 100%;
   grid-template-columns: 20% minmax(500px, 1fr) 30%;
-  grid-template-rows: 130px 120px 1fr;
+  grid-template-rows: 130px 125px 1fr;
   grid-template-areas:
     "cases map tables"
     "list map tables"
@@ -163,7 +163,16 @@ td {
 }
 
 .list__item:hover {
-  background-color: rgba(0, 128, 0, 0.3);
+  background-color: rgba(0, 128, 0, 0.2);
+}
+
+.list__item--active{
+  display: flex;
+  justify-content: space-between;
+  padding: var(--padding);
+  border-bottom: 1px solid rgba(0, 128, 0, 0.5);
+  cursor: pointer;
+  background-color: rgba(0, 128, 0, 0.4);
 }
 
 .list__country {
