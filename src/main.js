@@ -13,6 +13,7 @@ const allCases = 12554652878;
 const cases = new Cases(main, allCases);
 
 const mapBox = new PageBox(main.node, 'map');
+
 mapBox.addItem('1', "first");
 mapBox.addItem('2', "second");
 mapBox.addItem('3', "third");
