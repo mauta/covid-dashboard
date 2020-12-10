@@ -1,6 +1,6 @@
 import Control from './control';
 
-class Toggle extends Control {
+export default class Toggle extends Control {
   constructor(parentNode, activeClass, inactiveClass, caption, onClick) {
     super(parentNode, 'div', inactiveClass, caption);
     this.activeClass = activeClass;
