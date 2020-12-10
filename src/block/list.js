@@ -6,6 +6,7 @@ export default class List extends Control {
     // `<h2 class = "list__title"> Cases by country</h2>';
     super(parentNode, 'ul', 'list');
 
+
     data.forEach(element => {
       new ListLine(this.node, element);
     });
