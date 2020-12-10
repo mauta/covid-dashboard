@@ -1,6 +1,7 @@
 import Control from '../utils/control';
 import ItemGroup from '../utils/item_group';
 import BtnFullScreen from './btn_fullscreen';
+import List from './list';
 
 export default class PageBox extends Control {
   constructor(parentNode, modifier) {
@@ -19,10 +20,10 @@ export default class PageBox extends Control {
     };
   }
 
-  addItem(caption, content) {
-    // здесь можно подумать о том что в айтемы пишем и как
-    // может передаем класс, может снаружи заполняем..
-    this.items.push(new Control(this.itemWrapper.node, 'div', 'pagebox__page', content));
+  addItem(caption, className, content) {
+    this.page = new Control(this.itemWrapper.node, 'div', 'pagebox__page');
+    this.item = new className(this.page.node, content);
+    this.items.push(this.page);
     this.pagination.addItem(caption);
   }
   // можно селект прокинуть повыше и эвенты

@@ -9,7 +9,7 @@
 }
 
 .page {
-  height: 100vh;
+  height: 100%;
 }
 
 body {
@@ -21,8 +21,9 @@ body {
   color: green;
   min-height: 100%;
   display: grid;
-  grid-template-rows: min-content 1fr min-content;
-  grid-gap: 5px;
+  grid-template-rows: 0 min-content 1fr min-content;
+  /* grid-template-rows: min-content 1fr min-content; */
+  grid-gap: 6px;
   align-content: center;
   --border-color: green;
   --back-color: black;
