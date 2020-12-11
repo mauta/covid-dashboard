@@ -14,12 +14,12 @@ import {
   newCountDeaths,
   newCountRecovered
 } from './utils/counting_cases';
-
 const urlAPI = 'https://corona.lmao.ninja/v2/countries';
 fetch(urlAPI).then((res) => res.json()).then((json) => {
   // сделала хедер отдельным классом - вдруг что-то добавить захотим в него
   const header = new Header();
   const main = new Control(document.body, 'main', 'main');
+
 
   let allCases = 0;
   let newCases = 0;
@@ -58,7 +58,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   // mapBox.addItem('3', 'third');
 
   const listBox = new PageBox(main.node, 'list');
-
   // константы ниже для хранения объектов с цифрами по каждой стране
   const globalCases = globalCountSort(globalCountCases(json));
   const globalDeaths = globalCountSort(globalCountDeaths(json));
@@ -94,6 +93,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
 
   tableBox.addItem('GC', 'Cases', Table, tableData);
   tableBox.addItem('1/100 000', 'Cases', Table, hundredData);
+ 
   tableBox.pagination.select(0);
 
   const chartBox = new PageBox(main.node, 'chart');
