@@ -2,6 +2,7 @@ import Control from '../utils/control';
 import Toggle from '../utils/toggle';
 import Img from './img';
 
+
 export default class ListLine extends Toggle {
   constructor(parentNode, data) {
     super(parentNode, 'li', 'list__item--active', 'list__item');

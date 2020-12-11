@@ -5,20 +5,52 @@ import Cases from './block/cases';
 import PageBox from './block/page_box';
 import List from './block/list';
 import Table from './block/table';
-
+import {
+  globalCountCases,
+  globalCountDeaths,
+  globalCountRecovered,
+  globalCountSort,
+  newCountCases,
+  newCountDeaths,
+  newCountRecovered
+} from './utils/counting_cases';
 const urlAPI = 'https://corona.lmao.ninja/v2/countries';
 fetch(urlAPI).then((res) => res.json()).then((json) => {
   // сделала хедер отдельным классом - вдруг что-то добавить захотим в него
   const header = new Header();
   const main = new Control(document.body, 'main', 'main');
 
-  const allCases = json.reduce((acc, el) => {
-    acc += el.cases;
-    return acc;
-  }, 0);
+
+  let allCases = 0;
+  let newCases = 0;
+  let alldeaths = 0;
+  let newdeaths = 0;
+  let allrecovered = 0;
+  let newrecovered = 0;
+  let hundredAllCase = 0;
+  let hundredDeathsCase = 0;
+  let hundredRecoveredsCase = 0;
+
+  json.forEach(keys => {
+    allCases += keys.cases;
+    newCases += keys.todayCases;
+    alldeaths += keys.deaths;
+    newdeaths += keys.todayDeaths;
+    allrecovered += keys.recovered;
+    newrecovered += keys.todayRecovered;
+    hundredAllCase += keys.casesPerOneMillion/10;
+    hundredDeathsCase += keys.deathsPerOneMillion/10;
+    hundredRecoveredsCase += keys.recoveredPerOneMillion/10;
+  });
+
+  // const allCases = json.reduce((acc, el) => {
+  //   acc += el.cases;
+  //   return acc;
+  // }, 0);
+
+  
 
   const cases = new Cases(main, allCases.toLocaleString('ru-RU'));
-
   const mapBox = new PageBox(main.node, 'map');
 
   // mapBox.addItem('1', 'first');
@@ -26,62 +58,42 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   // mapBox.addItem('3', 'third');
 
   const listBox = new PageBox(main.node, 'list');
-  // просто придуманные данные, сама реши какой формат для них будет
-  const listData = [{
-      src: '',
-      country: 'german',
-      count: 125456,
-    },
-    {
-      src: '',
-      country: 'german',
-      count: 12325456,
-    },
-    {
-      src: '',
-      country: 'german',
-      count: 1645453,
-    },
-    {
-      src: '',
-      country: 'german',
-      count: 125456,
-    },
-    {
-      src: '',
-      country: 'german',
-      count: 1255636,
-    },
-    {
-      src: '',
-      country: 'german',
-      count: 1252342356,
-    },
-    {
-      src: '',
-      country: 'german',
-      count: 122345456,
-    },
+  // константы ниже для хранения объектов с цифрами по каждой стране
+  const globalCases = globalCountSort(globalCountCases(json));
+  const globalDeaths = globalCountSort(globalCountDeaths(json));
+  const globalRecovered = globalCountSort(globalCountRecovered(json));
+  const newCasesCount = newCountCases(json);
+  const newDeaths = newCountDeaths(json);
+  const newRecovered = newCountRecovered(json);
 
-  ];
-  listBox.addItem('GC', 'Cases', List, listData);
-  listBox.addItem('GD', 'Deaths', List, listData);
-  listBox.addItem('GR', 'Recovered', List, listData);
+  listBox.addItem('GC', 'Cases', List, globalCases);
+  listBox.addItem('GD', 'Deaths', List, globalDeaths);
+  listBox.addItem('GR', 'Recovered', List, globalRecovered);
   listBox.pagination.select(0);
 
   const tableBox = new PageBox(main.node, 'table');
-  // просто придуманные данные, сама реши какой формат для них будет
+
   const tableData = {
     allCases: allCases.toLocaleString('ru-RU'),
-    newCases: 1564687454,
-    alldeaths: 1545313,
-    newdeaths: 1534,
-    allrecovered: 1123547,
-    newrecovered: 2454,
+    newCases: newCases.toLocaleString('ru-RU'),
+    alldeaths: alldeaths.toLocaleString('ru-RU'),
+    newdeaths: newdeaths.toLocaleString('ru-RU'),
+    allrecovered: allrecovered.toLocaleString('ru-RU'),
+    newrecovered: newrecovered.toLocaleString('ru-RU'),
+  };
+
+  const hundredData = {
+    allCases: hundredAllCase.toLocaleString('ru-RU'),
+    newCases: newCases.toLocaleString('ru-RU'),
+    alldeaths: hundredDeathsCase.toLocaleString('ru-RU'),
+    newdeaths: newdeaths.toLocaleString('ru-RU'),
+    allrecovered: hundredRecoveredsCase.toLocaleString('ru-RU'),
+    newrecovered: newrecovered.toLocaleString('ru-RU'),
   };
 
   tableBox.addItem('GC', 'Cases', Table, tableData);
-  tableBox.addItem('1/10 000', 'Cases', Table, tableData);
+  tableBox.addItem('1/100 000', 'Cases', Table, hundredData);
+ 
   tableBox.pagination.select(0);
 
   const chartBox = new PageBox(main.node, 'chart');
