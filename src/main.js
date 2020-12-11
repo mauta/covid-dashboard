@@ -5,6 +5,7 @@ import Cases from './block/cases';
 import PageBox from './block/page_box';
 import List from './block/list';
 import Table from './block/table';
+import Chart from './block/chart';
 import {
   globalCountCases,
   globalCountDeaths,
@@ -48,7 +49,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   //   return acc;
   // }, 0);
 
-  
+
 
   const cases = new Cases(main, allCases.toLocaleString('ru-RU'));
   const mapBox = new PageBox(main.node, 'map');
@@ -93,11 +94,11 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
 
   tableBox.addItem('GC', 'Cases', Table, tableData);
   tableBox.addItem('1/100 000', 'Cases', Table, hundredData);
- 
+
   tableBox.pagination.select(0);
 
   const chartBox = new PageBox(main.node, 'chart');
-  // tableBox.addItem('GC', 'Cases', List, listData);
+  chartBox.addItem('GC', 'Cases', Chart, hundredData);
   // tableBox.addItem('GD', 'Deaths', List, listData);
   // tableBox.addItem('GR', 'Recovered', List, listData);
 

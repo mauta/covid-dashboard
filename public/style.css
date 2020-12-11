@@ -207,6 +207,7 @@ td {
   background-size: 30px;
 }
 
+
 .pagebox__main {
   border: solid var(--border-width) var(--border-color);
   border-radius: var(--border-radius);
@@ -403,4 +404,14 @@ td {
     font-size: smaller;
   }
 
+}
+
+.canvas{
+  border: 1px solid hsla(120, 100%, 25%, 0.3);
+  /* width: 90%;
+  height:75%; */
+  /* background-color: #fff; */
+  margin: 0 auto;
+  display: block;
+  margin-bottom: 20px;
 }
