@@ -21,7 +21,7 @@ body {
   color: green;
   min-height: 100%;
   display: grid;
-  grid-template-rows: 82px 1fr 50px;
+  grid-template-rows: 82px calc(100vh - 158px) 50px;
   grid-gap: 6px;
   align-content: center;
   --border-color: green;
@@ -49,7 +49,7 @@ body {
   display: grid;
   width: 100%;
   grid-template-columns: 20% minmax(500px, 1fr) 30%;
-  grid-template-rows: 130px 125px 1fr;
+  grid-template-rows: 130px 125px calc(100% - 265px);
   grid-template-areas:
     "cases map tables"
     "list map tables"
@@ -410,4 +410,3 @@ td {
   margin: 0 auto;
   display: block;
 }
-
