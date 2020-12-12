@@ -5,6 +5,7 @@ import Cases from './block/cases';
 import PageBox from './block/page_box';
 import List from './block/list';
 import Table from './block/table';
+import Chart from './block/chart';
 import {
   globalCountCases,
   globalCountDeaths,
@@ -12,14 +13,13 @@ import {
   globalCountSort,
   newCountCases,
   newCountDeaths,
-  newCountRecovered
+  newCountRecovered,
 } from './utils/counting_cases';
+
 const urlAPI = 'https://corona.lmao.ninja/v2/countries';
 fetch(urlAPI).then((res) => res.json()).then((json) => {
-  // сделала хедер отдельным классом - вдруг что-то добавить захотим в него
   const header = new Header();
   const main = new Control(document.body, 'main', 'main');
-
 
   let allCases = 0;
   let newCases = 0;
@@ -31,24 +31,17 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   let hundredDeathsCase = 0;
   let hundredRecoveredsCase = 0;
 
-  json.forEach(keys => {
+  json.forEach((keys) => {
     allCases += keys.cases;
     newCases += keys.todayCases;
     alldeaths += keys.deaths;
     newdeaths += keys.todayDeaths;
     allrecovered += keys.recovered;
     newrecovered += keys.todayRecovered;
-    hundredAllCase += keys.casesPerOneMillion/10;
-    hundredDeathsCase += keys.deathsPerOneMillion/10;
-    hundredRecoveredsCase += keys.recoveredPerOneMillion/10;
+    hundredAllCase += keys.casesPerOneMillion / 10;
+    hundredDeathsCase += keys.deathsPerOneMillion / 10;
+    hundredRecoveredsCase += keys.recoveredPerOneMillion / 10;
   });
-
-  // const allCases = json.reduce((acc, el) => {
-  //   acc += el.cases;
-  //   return acc;
-  // }, 0);
-
-  
 
   const cases = new Cases(main, allCases.toLocaleString('ru-RU'));
   const mapBox = new PageBox(main.node, 'map');
@@ -93,11 +86,22 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
 
   tableBox.addItem('GC', 'Cases', Table, tableData);
   tableBox.addItem('1/100 000', 'Cases', Table, hundredData);
- 
+
   tableBox.pagination.select(0);
 
   const chartBox = new PageBox(main.node, 'chart');
-  // tableBox.addItem('GC', 'Cases', List, listData);
+
+  const arr = [
+    [68, '15.03.20'],
+    [32, '15.03.20'],
+    [82, '16.06.20'],
+    [1, '15.08.20'],
+    [122, '15.03.20'],
+    [12, '15.03.20'],
+    [25, '20.12.20'],
+  ];
+
+  chartBox.addItem('GC', 'Cases', Chart, arr);
   // tableBox.addItem('GD', 'Deaths', List, listData);
   // tableBox.addItem('GR', 'Recovered', List, listData);
 

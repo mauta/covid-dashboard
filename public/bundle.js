@@ -156,10 +156,87 @@ __webpack_require__.r(__webpack_exports__);
 
 class Cases extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
   constructor(parent, data) {
-    const inner = '<h2 class = "cases__title"> All cases</h2>';
+    const inner = '<h2 class = "cases__title"> Global cases</h2>';
     super(parent.node, 'section', 'cases', inner);
     this.allCases = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'p', 'cases__all', data);
     this.btnSearch = new _btn_search__WEBPACK_IMPORTED_MODULE_1__["default"](this.node);
+  }
+}
+
+
+/***/ }),
+
+/***/ "./src/block/chart.js":
+/*!****************************!*\
+  !*** ./src/block/chart.js ***!
+  \****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Chart; });
+/* harmony import */ var _utils_control__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/control */ "./src/utils/control.js");
+
+
+class Chart extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
+  constructor(parentNode, data) {
+    super(parentNode, 'canvas', 'canvas');
+    const TOP_PDNG = 100;
+    const SIZE_PDNG = 40;
+    const AXE_PDNG = 20;
+    const arr = [
+      [68, '15.03.20'],
+      [32, '15.03.20'],
+      [82, '16.06.20'],
+      [1, '15.08.20'],
+      [122, '15.03.20'],
+      [12, '15.03.20'],
+      [25, '20.12.20'],
+    ];
+
+    this.dataArr = arr.map((el) => el[0]);
+
+    this.ctx = this.node.getContext('2d');
+
+    const y = parentNode.offsetHeight - TOP_PDNG;
+    const x = parentNode.offsetWidth - SIZE_PDNG;
+
+    this.node.width = x;
+    this.node.height = y;
+    this.ctx.strokeStyle = '#008000';
+    this.ctx.lineWidth = 1;
+    this.ctx.moveTo(AXE_PDNG, AXE_PDNG);
+    this.ctx.lineTo(AXE_PDNG, y - AXE_PDNG);
+    this.ctx.moveTo(AXE_PDNG, y - AXE_PDNG);
+    this.ctx.lineTo(x - AXE_PDNG, y - AXE_PDNG);
+    this.ctx.stroke();
+
+    this.YLenght = y - 2 * AXE_PDNG;
+    this.XLenght = x - 2 * AXE_PDNG;
+    this.maxY = Math.max.apply(null, this.dataArr);
+    this.XKoef = this.XLenght / this.dataArr.length;
+    this.YKoef = this.YLenght / this.maxY;
+    this.ctx.fillStyle = '#008000';
+    this.ctx.fillText(`${this.maxY}`, 3, AXE_PDNG, AXE_PDNG - 6);
+    this.ctx.fillText(`${Math.round(this.maxY * 0.25)}`, 3, AXE_PDNG + this.YLenght * 0.75, AXE_PDNG - 6);
+    this.ctx.fillText(`${Math.round(this.maxY * 0.5)}`, 3, AXE_PDNG + this.YLenght * 0.5, AXE_PDNG - 6);
+    this.ctx.fillText(`${Math.round(this.maxY * 0.75)}`, 3, AXE_PDNG + this.YLenght * 0.25, AXE_PDNG - 6);
+
+    this.ctx.fillText(`${arr[arr.length-1][1]}`, this.XLenght - 5, AXE_PDNG * 1.7 + this.YLenght);
+    this.ctx.fillText(`${arr[Math.round(arr.length / 2)][1]}`, AXE_PDNG + this.XLenght * 0.5, AXE_PDNG * 1.7 + this.YLenght);
+
+    this.ctx.fillText(`${arr[0][1]}`, AXE_PDNG + this.XLenght * 0, AXE_PDNG * 1.7 + this.YLenght);
+    this.ctx.fill();
+
+    const draw = (param) => {
+      for (let i = 0; i < param.length; i += 1) {
+        const curentY = y - AXE_PDNG - param[i] * this.YKoef;
+        this.ctx.fillStyle = '#008000';
+        this.ctx.fillRect(i * this.XKoef + AXE_PDNG, curentY, this.XKoef, param[i] * this.YKoef);
+      }
+    };
+    draw(this.dataArr);
   }
 }
 
@@ -215,6 +292,86 @@ class Header extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
 /***/ }),
 
+/***/ "./src/block/img.js":
+/*!**************************!*\
+  !*** ./src/block/img.js ***!
+  \**************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Img; });
+/* harmony import */ var _utils_control__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/control */ "./src/utils/control.js");
+
+
+class Img extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
+  constructor(parentNode, className, src, alt) {
+    super(parentNode, 'img', className);
+    this.node.src = src;
+    this.node.alt = alt;
+  }
+}
+
+
+/***/ }),
+
+/***/ "./src/block/list.js":
+/*!***************************!*\
+  !*** ./src/block/list.js ***!
+  \***************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return List; });
+/* harmony import */ var _utils_control__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/control */ "./src/utils/control.js");
+/* harmony import */ var _list_line__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./list_line */ "./src/block/list_line.js");
+
+
+
+class List extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
+  constructor(parentNode, data) {
+    super(parentNode, 'ul', 'list');
+    data.forEach(element => {
+      new _list_line__WEBPACK_IMPORTED_MODULE_1__["default"](this.node, element);
+    });
+  }
+}
+
+
+/***/ }),
+
+/***/ "./src/block/list_line.js":
+/*!********************************!*\
+  !*** ./src/block/list_line.js ***!
+  \********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ListLine; });
+/* harmony import */ var _utils_control__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/control */ "./src/utils/control.js");
+/* harmony import */ var _utils_toggle__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/toggle */ "./src/utils/toggle.js");
+/* harmony import */ var _img__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./img */ "./src/block/img.js");
+
+
+
+
+class ListLine extends _utils_toggle__WEBPACK_IMPORTED_MODULE_1__["default"] {
+  constructor(parentNode, data) {
+    super(parentNode, 'li', 'list__item--active', 'list__item');
+    this.flag = new _img__WEBPACK_IMPORTED_MODULE_2__["default"](this.node, 'list__flag', data.src, data.country);
+    this.country = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'div', 'list__country', data.country);
+    this.count = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'div', 'list__count', data.count.toLocaleString('ru-RU'));
+  }
+}
+
+
+/***/ }),
+
 /***/ "./src/block/page_box.js":
 /*!*******************************!*\
   !*** ./src/block/page_box.js ***!
@@ -228,6 +385,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_control__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/control */ "./src/utils/control.js");
 /* harmony import */ var _utils_item_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/item_group */ "./src/utils/item_group.js");
 /* harmony import */ var _btn_fullscreen__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./btn_fullscreen */ "./src/block/btn_fullscreen.js");
+/* harmony import */ var _list__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./list */ "./src/block/list.js");
+
 
 
 
@@ -249,13 +408,42 @@ class PageBox extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
     };
   }
 
-  addItem(caption, content) {
-    // здесь можно подумать о том что в айтемы пишем и как
-    // может передаем класс, может снаружи заполняем..
-    this.items.push(new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.itemWrapper.node, 'div', 'pagebox__page', content));
+  addItem(caption, title, className, content) {
+    this.page = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.itemWrapper.node, 'div', 'pagebox__page');
+    new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.page.node, 'h2','pagebox__title',`Global ${title}`);
+    this.item = new className(this.page.node, content);
+    this.items.push(this.page);
     this.pagination.addItem(caption);
   }
   // можно селект прокинуть повыше и эвенты
+}
+
+
+/***/ }),
+
+/***/ "./src/block/table.js":
+/*!****************************!*\
+  !*** ./src/block/table.js ***!
+  \****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Table; });
+/* harmony import */ var _utils_control__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/control */ "./src/utils/control.js");
+
+
+
+class Table extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
+  constructor(parentNode, data) {
+    super(parentNode, 'table');
+// тут тоже сама придумай какого типа и вида данные будут приходить и как их будешь вставлять
+    this.title = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'tr', '', '<td></td><td>all</td><td>new</td>');
+    this.cases = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'tr', '', `<td>cases</td><td>${data.allCases}</td><td>${data.newCases}</td>`);
+    this.deaths = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'tr', '', `<td>deaths</td><td>${data.alldeaths}</td><td>${data.newdeaths}</td>`);
+    this.recovered = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'tr', '', `<td>recovered</td><td>${data.allrecovered}</td><td>${data.newrecovered}</td>`);
+  }
 }
 
 
@@ -275,6 +463,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _block_header__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./block/header */ "./src/block/header.js");
 /* harmony import */ var _block_cases__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./block/cases */ "./src/block/cases.js");
 /* harmony import */ var _block_page_box__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./block/page_box */ "./src/block/page_box.js");
+/* harmony import */ var _block_list__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./block/list */ "./src/block/list.js");
+/* harmony import */ var _block_table__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./block/table */ "./src/block/table.js");
+/* harmony import */ var _block_chart__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./block/chart */ "./src/block/chart.js");
+/* harmony import */ var _utils_counting_cases__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./utils/counting_cases */ "./src/utils/counting_cases.js");
+
+
+
 
 
 
@@ -287,33 +482,86 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const header = new _block_header__WEBPACK_IMPORTED_MODULE_2__["default"]();
   const main = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](document.body, 'main', 'main');
 
-  const allCases = json.reduce((acc, el) => {
-    acc += el.cases;
-    return acc;
-  }, 0);
+
+  let allCases = 0;
+  let newCases = 0;
+  let alldeaths = 0;
+  let newdeaths = 0;
+  let allrecovered = 0;
+  let newrecovered = 0;
+  let hundredAllCase = 0;
+  let hundredDeathsCase = 0;
+  let hundredRecoveredsCase = 0;
+
+  json.forEach(keys => {
+    allCases += keys.cases;
+    newCases += keys.todayCases;
+    alldeaths += keys.deaths;
+    newdeaths += keys.todayDeaths;
+    allrecovered += keys.recovered;
+    newrecovered += keys.todayRecovered;
+    hundredAllCase += keys.casesPerOneMillion/10;
+    hundredDeathsCase += keys.deathsPerOneMillion/10;
+    hundredRecoveredsCase += keys.recoveredPerOneMillion/10;
+  });
+
+  // const allCases = json.reduce((acc, el) => {
+  //   acc += el.cases;
+  //   return acc;
+  // }, 0);
+
+
 
   const cases = new _block_cases__WEBPACK_IMPORTED_MODULE_3__["default"](main, allCases.toLocaleString('ru-RU'));
-
   const mapBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_4__["default"](main.node, 'map');
 
-  mapBox.addItem('1', 'first');
-  mapBox.addItem('2', 'second');
-  mapBox.addItem('3', 'third');
+  // mapBox.addItem('1', 'first');
+  // mapBox.addItem('2', 'second');
+  // mapBox.addItem('3', 'third');
 
   const listBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_4__["default"](main.node, 'list');
-  listBox.addItem('1', 'first');
-  listBox.addItem('2', 'second');
-  listBox.addItem('3', 'third');
+  // константы ниже для хранения объектов с цифрами по каждой стране
+  const globalCases = Object(_utils_counting_cases__WEBPACK_IMPORTED_MODULE_8__["globalCountSort"])(Object(_utils_counting_cases__WEBPACK_IMPORTED_MODULE_8__["globalCountCases"])(json));
+  const globalDeaths = Object(_utils_counting_cases__WEBPACK_IMPORTED_MODULE_8__["globalCountSort"])(Object(_utils_counting_cases__WEBPACK_IMPORTED_MODULE_8__["globalCountDeaths"])(json));
+  const globalRecovered = Object(_utils_counting_cases__WEBPACK_IMPORTED_MODULE_8__["globalCountSort"])(Object(_utils_counting_cases__WEBPACK_IMPORTED_MODULE_8__["globalCountRecovered"])(json));
+  const newCasesCount = Object(_utils_counting_cases__WEBPACK_IMPORTED_MODULE_8__["newCountCases"])(json);
+  const newDeaths = Object(_utils_counting_cases__WEBPACK_IMPORTED_MODULE_8__["newCountDeaths"])(json);
+  const newRecovered = Object(_utils_counting_cases__WEBPACK_IMPORTED_MODULE_8__["newCountRecovered"])(json);
+
+  listBox.addItem('GC', 'Cases', _block_list__WEBPACK_IMPORTED_MODULE_5__["default"], globalCases);
+  listBox.addItem('GD', 'Deaths', _block_list__WEBPACK_IMPORTED_MODULE_5__["default"], globalDeaths);
+  listBox.addItem('GR', 'Recovered', _block_list__WEBPACK_IMPORTED_MODULE_5__["default"], globalRecovered);
+  listBox.pagination.select(0);
 
   const tableBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_4__["default"](main.node, 'table');
-  tableBox.addItem('1', 'first');
-  tableBox.addItem('2', 'second');
-  tableBox.addItem('3', 'third');
+
+  const tableData = {
+    allCases: allCases.toLocaleString('ru-RU'),
+    newCases: newCases.toLocaleString('ru-RU'),
+    alldeaths: alldeaths.toLocaleString('ru-RU'),
+    newdeaths: newdeaths.toLocaleString('ru-RU'),
+    allrecovered: allrecovered.toLocaleString('ru-RU'),
+    newrecovered: newrecovered.toLocaleString('ru-RU'),
+  };
+
+  const hundredData = {
+    allCases: hundredAllCase.toLocaleString('ru-RU'),
+    newCases: newCases.toLocaleString('ru-RU'),
+    alldeaths: hundredDeathsCase.toLocaleString('ru-RU'),
+    newdeaths: newdeaths.toLocaleString('ru-RU'),
+    allrecovered: hundredRecoveredsCase.toLocaleString('ru-RU'),
+    newrecovered: newrecovered.toLocaleString('ru-RU'),
+  };
+
+  tableBox.addItem('GC', 'Cases', _block_table__WEBPACK_IMPORTED_MODULE_6__["default"], tableData);
+  tableBox.addItem('1/100 000', 'Cases', _block_table__WEBPACK_IMPORTED_MODULE_6__["default"], hundredData);
+
+  tableBox.pagination.select(0);
 
   const chartBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_4__["default"](main.node, 'chart');
-  chartBox.addItem('1', 'first');
-  chartBox.addItem('2', 'second');
-  chartBox.addItem('3', 'third');
+  chartBox.addItem('GC', 'Cases', _block_chart__WEBPACK_IMPORTED_MODULE_7__["default"], hundredData);
+  // tableBox.addItem('GD', 'Deaths', List, listData);
+  // tableBox.addItem('GR', 'Recovered', List, listData);
 
   // сделала футер отдельным классом - вдруг что-то добавить захотим в него
   const footer = new _block_footer__WEBPACK_IMPORTED_MODULE_1__["default"]();
@@ -354,6 +602,89 @@ class Control extends _observer__WEBPACK_IMPORTED_MODULE_0__["default"]{
 
 /***/ }),
 
+/***/ "./src/utils/counting_cases.js":
+/*!*************************************!*\
+  !*** ./src/utils/counting_cases.js ***!
+  \*************************************/
+/*! exports provided: globalCountCases, globalCountDeaths, globalCountRecovered, newCountCases, newCountDeaths, newCountRecovered, globalCountSort */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "globalCountCases", function() { return globalCountCases; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "globalCountDeaths", function() { return globalCountDeaths; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "globalCountRecovered", function() { return globalCountRecovered; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "newCountCases", function() { return newCountCases; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "newCountDeaths", function() { return newCountDeaths; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "newCountRecovered", function() { return newCountRecovered; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "globalCountSort", function() { return globalCountSort; });
+function count(massCases, country, value, flag = '') {
+  massCases.push({
+    src: flag,
+    country,
+    count: value,
+  });
+  return massCases;
+}
+
+function globalCountCases(json, massCases = []) {
+  json.forEach((keys) => {
+    count(massCases, keys.country, keys.cases, keys.countryInfo.flag);
+  });
+  return massCases;
+}
+
+function globalCountDeaths(json, massCases = []) {
+  json.forEach((keys) => {
+    count(massCases, keys.country, keys.deaths, keys.countryInfo.flag);
+  });
+  return massCases;
+}
+
+function globalCountRecovered(json, massCases = []) {
+  json.forEach((keys) => {
+    count(massCases, keys.country, keys.recovered, keys.countryInfo.flag);
+  });
+  return massCases;
+}
+
+function newCountCases(json, massCases = []) {
+  json.forEach((keys) => {
+    count(massCases, keys.country, keys.todayCases);
+  });
+  return massCases;
+}
+
+function newCountDeaths(json, massCases = []) {
+  json.forEach((keys) => {
+    count(massCases, keys.country, keys.todayDeaths);
+  });
+  return massCases;
+}
+
+function newCountRecovered(json, massCases = []) {
+  json.forEach((keys) => {
+    count(massCases, keys.country, keys.todayRecovered);
+  });
+  return massCases;
+}
+
+function globalCountSort(massCases) {
+  massCases.sort((a, b) => {
+    if (a.count > b.count) {
+      return -1;
+    }
+    if (a.count < b.count) {
+      return 1;
+    }
+    return 0;
+  });
+  return massCases;
+}
+
+
+/***/ }),
+
 /***/ "./src/utils/item_group.js":
 /*!*********************************!*\
   !*** ./src/utils/item_group.js ***!
@@ -379,7 +710,7 @@ class ItemGroup extends _control__WEBPACK_IMPORTED_MODULE_1__["default"] {
   }
 
   addItem(caption) {
-    const item = new _toggle__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, this.activeItemClass, this.inactiveItemClass, caption, () => {
+    const item = new _toggle__WEBPACK_IMPORTED_MODULE_0__["default"](this.node,'div', this.activeItemClass, this.inactiveItemClass, caption, () => {
       this.select(this.items.findIndex((it) => item === it));
     });
     this.items.push(item);
@@ -442,8 +773,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class Toggle extends _control__WEBPACK_IMPORTED_MODULE_0__["default"] {
-  constructor(parentNode, activeClass, inactiveClass, caption, onClick) {
-    super(parentNode, 'div', inactiveClass, caption);
+  constructor(parentNode, tag, activeClass, inactiveClass, caption, onClick) {
+    super(parentNode, tag, inactiveClass, caption);
     this.activeClass = activeClass;
     this.inactiveClass = inactiveClass;
     this.onClick = onClick;
