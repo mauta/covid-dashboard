@@ -5,7 +5,6 @@ export default class BtnFullScreen extends Control {
     const inner = '<span class="visually-hidden">Open on full screen</span>';
     super(parent, 'button', 'btn btn--full-screen', inner);
     this.node.setAttribute('type', 'button');
-
     this.node.onclick = onClick;
   }
 }

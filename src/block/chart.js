@@ -1,27 +1,27 @@
 import Control from '../utils/control';
 
 export default class Chart extends Control {
-  constructor(parentNode, data) {
+  constructor(parentNode, dataForChart) {
     super(parentNode, 'canvas', 'canvas');
+    this.parentNode = parentNode;
+    this.data = dataForChart;
+    this.render(this.data);
+
+    this.addListener('onResize', () => {
+      this.reRender();
+    });
+  }
+
+  render(data) {
     const TOP_PDNG = 100;
     const SIZE_PDNG = 40;
     const AXE_PDNG = 20;
-    const arr = [
-      [68, '15.03.20'],
-      [32, '15.03.20'],
-      [82, '16.06.20'],
-      [1, '15.08.20'],
-      [122, '15.03.20'],
-      [12, '15.03.20'],
-      [25, '20.12.20'],
-    ];
-
-    this.dataArr = arr.map((el) => el[0]);
+    this.dataArr = data.map((el) => el[0]);
 
     this.ctx = this.node.getContext('2d');
 
-    const y = parentNode.offsetHeight - TOP_PDNG;
-    const x = parentNode.offsetWidth - SIZE_PDNG;
+    const y = this.parentNode.offsetHeight - TOP_PDNG;
+    const x = this.parentNode.offsetWidth - SIZE_PDNG;
 
     this.node.width = x;
     this.node.height = y;
@@ -44,10 +44,10 @@ export default class Chart extends Control {
     this.ctx.fillText(`${Math.round(this.maxY * 0.5)}`, 3, AXE_PDNG + this.YLenght * 0.5, AXE_PDNG - 6);
     this.ctx.fillText(`${Math.round(this.maxY * 0.75)}`, 3, AXE_PDNG + this.YLenght * 0.25, AXE_PDNG - 6);
 
-    this.ctx.fillText(`${arr[arr.length-1][1]}`, this.XLenght - 5, AXE_PDNG * 1.7 + this.YLenght);
-    this.ctx.fillText(`${arr[Math.round(arr.length / 2)][1]}`, AXE_PDNG + this.XLenght * 0.5, AXE_PDNG * 1.7 + this.YLenght);
+    this.ctx.fillText(`${data[data.length - 1][1]}`, this.XLenght - 5, AXE_PDNG * 1.7 + this.YLenght);
+    this.ctx.fillText(`${data[Math.round(data.length / 2)][1]}`, AXE_PDNG + this.XLenght * 0.5, AXE_PDNG * 1.7 + this.YLenght);
 
-    this.ctx.fillText(`${arr[0][1]}`, AXE_PDNG + this.XLenght * 0, AXE_PDNG * 1.7 + this.YLenght);
+    this.ctx.fillText(`${data[0][1]}`, AXE_PDNG + this.XLenght * 0, AXE_PDNG * 1.7 + this.YLenght);
     this.ctx.fill();
 
     const draw = (param) => {
@@ -58,5 +58,10 @@ export default class Chart extends Control {
       }
     };
     draw(this.dataArr);
+  }
+
+  reRender() {
+    this.clear();
+    this.render(this.data);
   }
 }
