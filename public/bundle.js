@@ -104,7 +104,6 @@ class BtnFullScreen extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default
     const inner = '<span class="visually-hidden">Open on full screen</span>';
     super(parent, 'button', 'btn btn--full-screen', inner);
     this.node.setAttribute('type', 'button');
-
     this.node.onclick = onClick;
   }
 }
@@ -150,7 +149,7 @@ class BtnSearch extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Cases; });
 /* harmony import */ var _utils_control__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/control */ "./src/utils/control.js");
-/* harmony import */ var _btn_search__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./btn_search */ "./src/block/btn_search.js");
+/* harmony import */ var _search__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./search */ "./src/block/search.js");
 
 
 
@@ -159,7 +158,7 @@ class Cases extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
     const inner = '<h2 class = "cases__title"> Global cases</h2>';
     super(parent.node, 'section', 'cases', inner);
     this.allCases = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'p', 'cases__all', data);
-    this.btnSearch = new _btn_search__WEBPACK_IMPORTED_MODULE_1__["default"](this.node);
+    this.search = new _search__WEBPACK_IMPORTED_MODULE_1__["default"](this.node);
   }
 }
 
@@ -180,27 +179,27 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class Chart extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
-  constructor(parentNode, data) {
+  constructor(parentNode, dataForChart) {
     super(parentNode, 'canvas', 'canvas');
+    this.parentNode = parentNode;
+    this.data = dataForChart;
+    this.render(this.data);
+
+    this.addListener('onResize', () => {
+      this.reRender();
+    });
+  }
+
+  render(data) {
     const TOP_PDNG = 100;
     const SIZE_PDNG = 40;
     const AXE_PDNG = 20;
-    const arr = [
-      [68, '15.03.20'],
-      [32, '15.03.20'],
-      [82, '16.06.20'],
-      [1, '15.08.20'],
-      [122, '15.03.20'],
-      [12, '15.03.20'],
-      [25, '20.12.20'],
-    ];
-
-    this.dataArr = arr.map((el) => el[0]);
+    this.dataArr = data.map((el) => el[0]);
 
     this.ctx = this.node.getContext('2d');
 
-    const y = parentNode.offsetHeight - TOP_PDNG;
-    const x = parentNode.offsetWidth - SIZE_PDNG;
+    const y = this.parentNode.offsetHeight - TOP_PDNG;
+    const x = this.parentNode.offsetWidth - SIZE_PDNG;
 
     this.node.width = x;
     this.node.height = y;
@@ -223,10 +222,10 @@ class Chart extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this.ctx.fillText(`${Math.round(this.maxY * 0.5)}`, 3, AXE_PDNG + this.YLenght * 0.5, AXE_PDNG - 6);
     this.ctx.fillText(`${Math.round(this.maxY * 0.75)}`, 3, AXE_PDNG + this.YLenght * 0.25, AXE_PDNG - 6);
 
-    this.ctx.fillText(`${arr[arr.length-1][1]}`, this.XLenght - 5, AXE_PDNG * 1.7 + this.YLenght);
-    this.ctx.fillText(`${arr[Math.round(arr.length / 2)][1]}`, AXE_PDNG + this.XLenght * 0.5, AXE_PDNG * 1.7 + this.YLenght);
+    this.ctx.fillText(`${data[data.length - 1][1]}`, this.XLenght - 5, AXE_PDNG * 1.7 + this.YLenght);
+    this.ctx.fillText(`${data[Math.round(data.length / 2)][1]}`, AXE_PDNG + this.XLenght * 0.5, AXE_PDNG * 1.7 + this.YLenght);
 
-    this.ctx.fillText(`${arr[0][1]}`, AXE_PDNG + this.XLenght * 0, AXE_PDNG * 1.7 + this.YLenght);
+    this.ctx.fillText(`${data[0][1]}`, AXE_PDNG + this.XLenght * 0, AXE_PDNG * 1.7 + this.YLenght);
     this.ctx.fill();
 
     const draw = (param) => {
@@ -237,6 +236,11 @@ class Chart extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
       }
     };
     draw(this.dataArr);
+  }
+
+  reRender() {
+    this.clear();
+    this.render(this.data);
   }
 }
 
@@ -385,7 +389,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_control__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/control */ "./src/utils/control.js");
 /* harmony import */ var _utils_item_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/item_group */ "./src/utils/item_group.js");
 /* harmony import */ var _btn_fullscreen__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./btn_fullscreen */ "./src/block/btn_fullscreen.js");
-/* harmony import */ var _list__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./list */ "./src/block/list.js");
+/* harmony import */ var _chart__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./chart */ "./src/block/chart.js");
+/* eslint-disable no-new */
+
 
 
 
@@ -398,8 +404,10 @@ class PageBox extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
     this.btnFullScreen = new _btn_fullscreen__WEBPACK_IMPORTED_MODULE_2__["default"](this.node, () => {
       this.node.classList.toggle('pagebox__wrapper--full-screen');
+      if (modifier === 'chart') {
+        this.item.dispath('onResize');
+      }
     });
-
 
     this.items = [];
     this.pagination = new _utils_item_group__WEBPACK_IMPORTED_MODULE_1__["default"](this.node, 'pagebox__marks', 'pagebox__mark pagebox__mark--active', 'pagebox__mark');
@@ -410,12 +418,76 @@ class PageBox extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
   addItem(caption, title, className, content) {
     this.page = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.itemWrapper.node, 'div', 'pagebox__page');
-    new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.page.node, 'h2','pagebox__title',`Global ${title}`);
+    new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.page.node, 'h2', 'pagebox__title', `Global ${title}`);
     this.item = new className(this.page.node, content);
     this.items.push(this.page);
     this.pagination.addItem(caption);
+
+    let resizeTimeout;
+
+    const resizeThrottler = () => {
+      if (!resizeTimeout) {
+        resizeTimeout = setTimeout(() => {
+          resizeTimeout = null;
+          this.item.reRender();
+        }, 200);
+      }
+    };
+
+    if (this.item instanceof _chart__WEBPACK_IMPORTED_MODULE_3__["default"]) {
+      window.addEventListener('resize', resizeThrottler, false);
+    }
   }
-  // можно селект прокинуть повыше и эвенты
+}
+
+
+/***/ }),
+
+/***/ "./src/block/search.js":
+/*!*****************************!*\
+  !*** ./src/block/search.js ***!
+  \*****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Search; });
+/* harmony import */ var _utils_control__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/control */ "./src/utils/control.js");
+/* harmony import */ var _btn_search__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./btn_search */ "./src/block/btn_search.js");
+
+
+
+class Search extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
+  constructor(parent) {
+    super(parent, 'div', 'search-wrap');
+    this.btnSearch = new _btn_search__WEBPACK_IMPORTED_MODULE_1__["default"](this.node);
+    this.input = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'input', 'search__input');
+    this.input.node.type = 'text';
+    this.input.node.pattern = '^[a-zA-Z\s]+$';
+
+    this.ul = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'ul', 'search__list search__list--hidden');
+    // new Control(this.ul.node, 'li', 'search__item', 'первый');
+    // new Control(this.ul.node, 'li', 'search__item', 'первый');
+    // new Control(this.ul.node, 'li', 'search__item', 'первый');
+    // new Control(this.ul.node, 'li', 'search__item', 'первый');
+    // new Control(this.ul.node, 'li', 'search__item', 'первый');
+
+    const countries = ['Afghanistan', 'Albania', 'Algeria', 'American Samoa', 'Andorra', 'Angola', 'Anguilla', 'Antigua and Barbuda', 'Argentina', 'Armenia', 'Aruba', 'Australia', 'Austria', 'Azerbaijan', 'Bangladesh', 'Barbados', 'Bahamas', 'Bahrain', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bermuda', 'Bhutan', 'Bolivia', 'Bosnia and Herzegovina', 'Botswana', 'Brazil', 'British Indian Ocean Territory', 'British Virgin Islands', 'Brunei Darussalam', 'Bulgaria', 'Burkina Faso', 'Burma', 'Burundi', 'Cambodia', 'Cameroon', 'Canada', 'Cape Verde', 'Cayman Islands', 'Central African Republic', 'Chad', 'Chile', 'China', 'Christmas Island', 'Cocos (Keeling) Islands', 'Colombia', 'Comoros', 'Congo-Brazzaville', 'Congo-Kinshasa', 'Cook Islands', 'Costa Rica', 'Croatia', 'Cura?ao', 'Cyprus', 'Czech Republic', 'Denmark', 'Djibouti', 'Dominica', 'Dominican Republic', 'East Timor', 'Ecuador', 'El Salvador', 'Egypt', 'Equatorial Guinea', 'Eritrea', 'Estonia', 'Ethiopia', 'Falkland Islands', 'Faroe Islands', 'Federated States of Micronesia', 'Fiji', 'Finland', 'France', 'French Guiana', 'French Polynesia', 'French Southern Lands', 'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana', 'Gibraltar', 'Greece', 'Greenland', 'Grenada', 'Guadeloupe', 'Guam', 'Guatemala', 'Guernsey', 'Guinea', 'Guinea-Bissau', 'Guyana', 'Haiti', 'Heard and McDonald Islands', 'Honduras', 'Hong Kong', 'Hungary', 'Iceland', 'India', 'Indonesia', 'Iraq', 'Ireland', 'Isle of Man', 'Israel', 'Italy', 'Jamaica', 'Japan', 'Jersey', 'Jordan', 'Kazakhstan', 'Kenya', 'Kiribati', 'Kuwait', 'Kyrgyzstan', 'Laos', 'Latvia', 'Lebanon', 'Lesotho', 'Liberia', 'Libya', 'Liechtenstein', 'Lithuania', 'Luxembourg', 'Macau', 'Macedonia', 'Madagascar', 'Malawi', 'Malaysia', 'Maldives', 'Mali', 'Malta', 'Marshall Islands', 'Martinique', 'Mauritania', 'Mauritius', 'Mayotte', 'Mexico', 'Moldova', 'Monaco', 'Mongolia', 'Montenegro', 'Montserrat', 'Morocco', 'Mozambique', 'Namibia', 'Nauru', 'Nepal', 'Netherlands', 'New Caledonia', 'New Zealand', 'Nicaragua', 'Niger', 'Nigeria', 'Niue', 'Norfolk Island', 'Northern Mariana Islands', 'Norway', 'Oman', 'Pakistan', 'Palau', 'Panama', 'Papua New Guinea', 'Paraguay', 'Peru', 'Philippines', 'Pitcairn Islands', 'Poland', 'Portugal', 'Puerto Rico', 'Qatar', 'R?union', 'Romania', 'Russia', 'Rwanda', 'Saint Barth?lemy', 'Saint Helena', 'Saint Kitts and Nevis', 'Saint Lucia', 'Saint Martin', 'Saint Pierre and Miquelon', 'Saint Vincent', 'Samoa', 'San Marino', 'S?o Tom? and Pr?ncipe', 'Saudi Arabia', 'Senegal', 'Serbia', 'Seychelles', 'Sierra Leone', 'Singapore', 'Sint Maarten', 'Slovakia', 'Slovenia', 'Solomon Islands', 'Somalia', 'South Africa', 'South Georgia', 'South Korea', 'Spain', 'Sri Lanka', 'Sudan', 'Suriname', 'Svalbard and Jan Mayen', 'Sweden', 'Swaziland', 'Switzerland', 'Syria', 'Taiwan', 'Tajikistan', 'Tanzania', 'Thailand', 'Togo', 'Tokelau', 'Tonga', 'Trinidad and Tobago', 'Tunisia', 'Turkey', 'Turkmenistan', 'Turks and Caicos Islands', 'Tuvalu', 'Uganda', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States', 'Uruguay', 'Uzbekistan', 'Vanuatu', 'Vatican City', 'Vietnam', 'Venezuela', 'Wallis and Futuna', 'Western Sahara', 'Yemen', 'Zambia', 'Zimbabwe'].map((item) => item.toLowerCase());
+    this.word = '';
+    this.input.node.addEventListener('keypress', (el) => {
+      this.ul.node.classList.remove('search__list--hidden');
+      this.ul.clear();
+      this.word = this.input.node.value;
+      this.arrCountry = countries.filter((item) => item.startsWith(this.word));
+      this.arrCountry.forEach((item) => {
+        new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.ul.node, 'li', 'search__item', `${item}`);
+      });
+      if (this.arrCountry.length === 0) {
+        this.ul.node.classList.add('search__list--hidden');
+      }
+    });
+  }
 }
 
 
@@ -476,12 +548,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 const urlAPI = 'https://corona.lmao.ninja/v2/countries';
 fetch(urlAPI).then((res) => res.json()).then((json) => {
-  // сделала хедер отдельным классом - вдруг что-то добавить захотим в него
   const header = new _block_header__WEBPACK_IMPORTED_MODULE_2__["default"]();
   const main = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](document.body, 'main', 'main');
-
 
   let allCases = 0;
   let newCases = 0;
@@ -493,24 +564,17 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   let hundredDeathsCase = 0;
   let hundredRecoveredsCase = 0;
 
-  json.forEach(keys => {
+  json.forEach((keys) => {
     allCases += keys.cases;
     newCases += keys.todayCases;
     alldeaths += keys.deaths;
     newdeaths += keys.todayDeaths;
     allrecovered += keys.recovered;
     newrecovered += keys.todayRecovered;
-    hundredAllCase += keys.casesPerOneMillion/10;
-    hundredDeathsCase += keys.deathsPerOneMillion/10;
-    hundredRecoveredsCase += keys.recoveredPerOneMillion/10;
+    hundredAllCase += keys.casesPerOneMillion / 10;
+    hundredDeathsCase += keys.deathsPerOneMillion / 10;
+    hundredRecoveredsCase += keys.recoveredPerOneMillion / 10;
   });
-
-  // const allCases = json.reduce((acc, el) => {
-  //   acc += el.cases;
-  //   return acc;
-  // }, 0);
-
-
 
   const cases = new _block_cases__WEBPACK_IMPORTED_MODULE_3__["default"](main, allCases.toLocaleString('ru-RU'));
   const mapBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_4__["default"](main.node, 'map');
@@ -559,7 +623,18 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   tableBox.pagination.select(0);
 
   const chartBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_4__["default"](main.node, 'chart');
-  chartBox.addItem('GC', 'Cases', _block_chart__WEBPACK_IMPORTED_MODULE_7__["default"], hundredData);
+
+  const arr = [
+    [68, '15.03.20'],
+    [32, '15.03.20'],
+    [82, '16.06.20'],
+    [1, '15.08.20'],
+    [122, '15.03.20'],
+    [12, '15.03.20'],
+    [25, '20.12.20'],
+  ];
+
+  chartBox.addItem('GC', 'Cases', _block_chart__WEBPACK_IMPORTED_MODULE_7__["default"], arr);
   // tableBox.addItem('GD', 'Deaths', List, listData);
   // tableBox.addItem('GR', 'Recovered', List, listData);
 
@@ -736,26 +811,43 @@ class ItemGroup extends _control__WEBPACK_IMPORTED_MODULE_1__["default"] {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Observer; });
-class Observer{
-  constructor(){
+class Observer {
+  constructor() {
     this.listeners = [];
   }
-  addListener(name, callback){
-    let id = {};
-    this.listeners.push({id, name, callback});
+
+  addListener(name, callback) {
+    const id = {};
+    this.listeners.push({
+      id,
+      name,
+      callback,
+    });
     return id;
   }
-  addOnceListener(name, callback){
-    let id = {};
-    this.listeners.push({id, name, callback:()=>{
-      callback();
-      this.removeListener(id);
-    }});
+
+  addOnceListener(name, callback) {
+    const id = {};
+    this.listeners.push({
+      id,
+      name,
+      callback: () => {
+        callback();
+        this.removeListener(id);
+      },
+    });
     return id;
   }
-  removeListener(id){ this.listeners = this.listeners.filter(it=>it.id!=id); }
-  dispath(name){ this.listeners.filter(it=>it.name==name).forEach(it=>it.callback()); }
+
+  removeListener(id) {
+    this.listeners = this.listeners.filter((it) => it.id !== id);
+  }
+
+  dispath(name) {
+    this.listeners.filter((it) => it.name === name).forEach((it) => it.callback());
+  }
 }
+
 
 /***/ }),
 

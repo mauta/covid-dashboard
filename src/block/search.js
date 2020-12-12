@@ -21,13 +21,14 @@ export default class Search extends Control {
     this.input.node.addEventListener('keypress', (el) => {
       this.ul.node.classList.remove('search__list--hidden');
       this.ul.clear();
-      console.log(el.key);
       this.word = this.input.node.value;
-      console.log(this.word);
       this.arrCountry = countries.filter((item) => item.startsWith(this.word));
       this.arrCountry.forEach((item) => {
         new Control(this.ul.node, 'li', 'search__item', `${item}`);
       });
+      if (this.arrCountry.length === 0) {
+        this.ul.node.classList.add('search__list--hidden');
+      }
     });
   }
 }
