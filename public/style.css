@@ -55,7 +55,7 @@ body {
   position: relative;
   display: grid;
   width: 100%;
-  grid-template-columns: 20% minmax(500px, 1fr) 30%;
+  grid-template-columns: 20% 1fr 30%;
   grid-template-rows: 130px 125px calc(100% - 265px);
   grid-template-areas:
     "cases map tables"
@@ -220,6 +220,8 @@ td {
   height: calc(100% - 35px);
   position: relative;
   border-bottom-left-radius: 0px;
+  
+  max-height: calc(100vh - 130px);
 }
 
 .pagebox__page {
@@ -231,6 +233,9 @@ td {
   border-radius: var(--border-radius);
   border-bottom-left-radius: 0px;
   overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
 }
 
 
@@ -414,7 +419,7 @@ td {
 
 .canvas {
   border: 1px solid hsla(120, 100%, 25%, 0.3);
-  margin: 0 auto;
+  /*margin: 0 auto;*/
   display: block;
 }
 

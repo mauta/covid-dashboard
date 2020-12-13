@@ -3,7 +3,7 @@ import Control from '../utils/control';
 import ItemGroup from '../utils/item_group';
 import BtnFullScreen from './btn_fullscreen';
 
-import Chart from './chart';
+import ChartWrapped from './popup';
 
 export default class PageBox extends Control {
   constructor(parentNode, modifier) {
@@ -13,7 +13,7 @@ export default class PageBox extends Control {
     this.btnFullScreen = new BtnFullScreen(this.node, () => {
       this.node.classList.toggle('pagebox__wrapper--full-screen');
       if (modifier === 'chart') {
-        this.item.dispath('onResize');
+        this.item.chart.dispath('onResize');
       }
     });
 
@@ -37,12 +37,12 @@ export default class PageBox extends Control {
       if (!resizeTimeout) {
         resizeTimeout = setTimeout(() => {
           resizeTimeout = null;
-          this.item.reRender();
+          this.item.chart.reRender();
         }, 200);
       }
     };
 
-    if (this.item instanceof Chart) {
+    if (this.item instanceof ChartWrapped) {
       window.addEventListener('resize', resizeThrottler, false);
     }
   }

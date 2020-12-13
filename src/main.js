@@ -6,7 +6,7 @@ import Cases from './block/cases';
 import PageBox from './block/page_box';
 import List from './block/list';
 import Table from './block/table';
-import Chart from './block/chart';
+import ChartWrapped from './block/popup';
 import {
   globalCountCases,
   globalCountDeaths,
@@ -102,7 +102,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     [25, '20.12.20'],
   ];
 
-  chartBox.addItem('GC', 'Cases', Chart, arr);
+  chartBox.addItem('GC', 'Cases', ChartWrapped, arr);
   // tableBox.addItem('GD', 'Deaths', List, listData);
   // tableBox.addItem('GR', 'Recovered', List, listData);
 
