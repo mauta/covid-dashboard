@@ -1,3 +1,4 @@
+/* eslint-disable no-new */
 import Control from './utils/control';
 import Footer from './block/footer';
 import Header from './block/header';
