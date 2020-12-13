@@ -448,6 +448,10 @@ td {
   z-index: 2;
 }
 
+.search__item--active{
+
+}
+
 .search__input:hover{
   transform: scale(1.05);
   -webkit-transform: scale(1.02);
@@ -457,6 +461,11 @@ td {
 }
 
 .search__input:invalid{
+  border-color: rgba(255, 0, 0, 0.5);
+  color:rgba(255, 0, 0, 0.5);
+}
+
+.search__input--invalid{
   border-color: rgba(255, 0, 0, 0.5);
   color:rgba(255, 0, 0, 0.5);
 }
@@ -491,6 +500,12 @@ td {
 .search__item{
   padding: 4px 0;
 }
+
+.search__item--active{
+  padding: 4px 0;
+  background-color: rgba(0, 128, 0, 0.3);
+}
+
 .search__item:hover{
   background-color: rgba(0, 128, 0, 0.3);
 }
