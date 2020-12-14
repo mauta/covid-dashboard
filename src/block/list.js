@@ -7,5 +7,7 @@ export default class List extends Control {
     data.forEach(element => {
       new ListLine(this.node, element);
     });
+
+    // переделать на item group
   }
 }

@@ -13,15 +13,20 @@ export default class PageBox extends Control {
     this.btnFullScreen = new BtnFullScreen(this.node, () => {
       this.node.classList.toggle('pagebox__wrapper--full-screen');
       if (modifier === 'chart') {
-        this.item.dispath('onResize');
+        this.item.reRender()
       }
     });
 
     this.items = [];
     this.pagination = new ItemGroup(this.node, 'pagebox__marks', 'pagebox__mark pagebox__mark--active', 'pagebox__mark');
-    this.pagination.onSelect = (index) => {
-      this.items.forEach((it, i) => it.node.style.display = (i != index) ? 'none' : ''); // может цсс-класс-модификатор
+    this.pagination.onSelect = (index) => {    
+      this.select(index);
     };
+  }
+
+  select(index,noEvent){
+    !noEvent &&  this.dispath('tabSelected',index);
+    this.items.forEach((it, i) => it.node.style.display = (i != index) ? 'none' : ''); 
   }
 
   addItem(caption, title, className, content) {

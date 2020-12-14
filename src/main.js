@@ -50,12 +50,17 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const mapBox = new PageBox(main.node, 'map');
 
   mapBox.addItem('GC', 'Cases', MapWraper);
+
+  mapBox.addItem('GD', 'Cases', MapWraper);
+  mapBox.addItem('GR', 'Cases', MapWraper);
+
+
   // mapBox.addItem('2', 'second');
   // mapBox.addItem('3', 'third');
   // new MapWraper(mapBox.node)
 
   const listBox = new PageBox(main.node, 'list');
-  
+
   // константы ниже для хранения объектов с цифрами по каждой стране
   const globalCases = globalCountSort(globalCountCases(json));
   const globalDeaths = globalCountSort(globalCountDeaths(json));
@@ -106,9 +111,26 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     [25, '20.12.20'],
   ];
 
+
   chartBox.addItem('GC', 'Cases', Chart, arr);
-  // tableBox.addItem('GD', 'Deaths', List, listData);
-  // tableBox.addItem('GR', 'Recovered', List, listData);
+  chartBox.addItem('GD', 'Deaths', Chart, arr.concat(arr));
+  chartBox.addItem('GR', 'Recover', Chart, arr);
+
+  const arrPageForSinhron = [chartBox, listBox, mapBox];
+
+  // сюда передаем данные для отображения при выборе другой вкладки
+  arrPageForSinhron.forEach((item) => {
+    item.addListener('tabSelected', (index) => {
+      arrPageForSinhron.forEach((el) => {
+        if (el !== item) {
+          el.select(index, true);
+          el.pagination.select(index, true);
+        }        
+      })
+    })
+  })
+
+
 
   const footer = new Footer();
 });
