@@ -11,7 +11,7 @@ export default class MapWraper extends Control {
       container: 'map',
       center: [-74.5, 40],
       zoom: 2,
-      style:'mapbox://styles/mauta/ckin44yuk3h3d18l3t77d0mn2',
+      style: 'mapbox://styles/mauta/ckin44yuk3h3d18l3t77d0mn2',
       hash: true,
       transformRequest: (url, resourceType) => {
         if (resourceType === 'Source' && url.startsWith('http://myHost')) {
@@ -24,6 +24,24 @@ export default class MapWraper extends Control {
           };
         }
       },
-    });
+    }).addControl(new mapboxgl.AttributionControl({
+      compact: true
+    }));
+
+    // добавляем сразу маркер с попапом
+    var marker = new mapboxgl.Marker({
+            color: "#008000",
+            draggable: false,
+            // меняем размер маркера
+            scale:1.2,
+
+          }
+      )
+      .setLngLat([30.5, 50.5])
+      .setPopup(new mapboxgl.Popup({
+        closeButton: false,
+      }).setHTML("<h1>Hello World!</h1>")) // add popup
+      .addTo(this.map);
+
+    }
   }
-}

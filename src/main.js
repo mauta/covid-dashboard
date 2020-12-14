@@ -19,8 +19,8 @@ import {
 import MapWraper from './block/mapblock';
 
 const urlAPI = 'https://corona.lmao.ninja/v2/countries';
-// fetch(urlAPI).then((res) => res.json()).then((json) => {
-  const json = []
+fetch(urlAPI).then((res) => res.json()).then((json) => {
+  // const json = []
   new Header();
   const main = new Control(document.body, 'main', 'main');
 
@@ -109,6 +109,5 @@ const urlAPI = 'https://corona.lmao.ninja/v2/countries';
   // tableBox.addItem('GD', 'Deaths', List, listData);
   // tableBox.addItem('GR', 'Recovered', List, listData);
 
-  // сделала футер отдельным классом - вдруг что-то добавить захотим в него
   const footer = new Footer();
-// });
+});

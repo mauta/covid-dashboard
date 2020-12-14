@@ -449,10 +449,12 @@ class MapWraper extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
     super(parentNode, 'div', 'map-wrapper');
     this.node.id = 'map';
 
+    mapbox_gl__WEBPACK_IMPORTED_MODULE_1___default.a.accessToken = 'pk.eyJ1IjoibWF1dGEiLCJhIjoiY2tpbjM4dHIyMDU3MDJ6bWx1YnhoNXYxNSJ9.kq3HP8TVE6Sc8u1-HU2QFg';
     this.map = new mapbox_gl__WEBPACK_IMPORTED_MODULE_1___default.a.Map({
       container: 'map',
+      center: [-74.5, 40],
       zoom: 2,
-      style: style_object,
+      style: 'mapbox://styles/mauta/ckin44yuk3h3d18l3t77d0mn2',
       hash: true,
       transformRequest: (url, resourceType) => {
         if (resourceType === 'Source' && url.startsWith('http://myHost')) {
@@ -465,9 +467,27 @@ class MapWraper extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
           };
         }
       },
-    });
+    }).addControl(new mapbox_gl__WEBPACK_IMPORTED_MODULE_1___default.a.AttributionControl({
+      compact: true
+    }));
+
+    // добавляем сразу маркер с попапом
+    var marker = new mapbox_gl__WEBPACK_IMPORTED_MODULE_1___default.a.Marker({
+            color: "#008000",
+            draggable: false,
+            // меняем размер маркера
+            scale:1.2,
+
+          }
+      )
+      .setLngLat([30.5, 50.5])
+      .setPopup(new mapbox_gl__WEBPACK_IMPORTED_MODULE_1___default.a.Popup({
+        closeButton: false,
+      }).setHTML("<h1>Hello World!</h1>")) // add popup
+      .addTo(this.map);
+
+    }
   }
-}
 
 
 /***/ }),
@@ -664,6 +684,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const urlAPI = 'https://corona.lmao.ninja/v2/countries';
 fetch(urlAPI).then((res) => res.json()).then((json) => {
+  // const json = []
   new _block_header__WEBPACK_IMPORTED_MODULE_2__["default"]();
   const main = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](document.body, 'main', 'main');
 
@@ -695,6 +716,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   mapBox.addItem('GC', 'Cases', _block_mapblock__WEBPACK_IMPORTED_MODULE_9__["default"]);
   // mapBox.addItem('2', 'second');
   // mapBox.addItem('3', 'third');
+  // new MapWraper(mapBox.node)
 
   const listBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_4__["default"](main.node, 'list');
   // константы ниже для хранения объектов с цифрами по каждой стране
@@ -751,7 +773,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   // tableBox.addItem('GD', 'Deaths', List, listData);
   // tableBox.addItem('GR', 'Recovered', List, listData);
 
-  // сделала футер отдельным классом - вдруг что-то добавить захотим в него
   const footer = new _block_footer__WEBPACK_IMPORTED_MODULE_1__["default"]();
 });
 
