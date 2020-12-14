@@ -16,10 +16,12 @@ import {
   newCountDeaths,
   newCountRecovered,
 } from './utils/counting_cases';
+import MapWraper from './block/mapblock';
 
 const urlAPI = 'https://corona.lmao.ninja/v2/countries';
-fetch(urlAPI).then((res) => res.json()).then((json) => {
-  const header = new Header();
+// fetch(urlAPI).then((res) => res.json()).then((json) => {
+  const json = []
+  new Header();
   const main = new Control(document.body, 'main', 'main');
 
   let allCases = 0;
@@ -47,9 +49,10 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const cases = new Cases(main, allCases.toLocaleString('ru-RU'));
   const mapBox = new PageBox(main.node, 'map');
 
-  // mapBox.addItem('1', 'first');
+  mapBox.addItem('GC', 'Cases', MapWraper);
   // mapBox.addItem('2', 'second');
   // mapBox.addItem('3', 'third');
+  // new MapWraper(mapBox.node)
 
   const listBox = new PageBox(main.node, 'list');
   // константы ниже для хранения объектов с цифрами по каждой стране
@@ -108,4 +111,4 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
 
   // сделала футер отдельным классом - вдруг что-то добавить захотим в него
   const footer = new Footer();
-});
+// });
