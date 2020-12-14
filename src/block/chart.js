@@ -5,11 +5,7 @@ export default class Chart extends Control {
     super(parentNode, 'canvas', 'canvas');
     this.parentNode = parentNode;
     this.data = dataForChart;
-    this.render(this.data);
-
-    this.addListener('onResize', () => {
-      this.reRender();
-    });
+    this.render(this.data);  
   }
 
   render(data) {

@@ -26,8 +26,7 @@ export default class Search extends Control {
       });
 
       if (this.arrCountry.length === 0 && this.word.length !== 0) {
-        this.input.node.classList.add('search__input--invalid');
-      } else {
+          } else {
         this.input.node.classList.remove('search__input--invalid');
       }
       if (this.arrCountry.length === 1) {

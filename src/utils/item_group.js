@@ -17,9 +17,9 @@ export default class ItemGroup extends Control {
     this.items.push(item);
   }
 
-  select(index) {
+  select(index,noEvent) {
     this.items.forEach((it) => it.changeState(false));
     this.items[index].changeState(true);
-    this.onSelect && this.onSelect(index);
+    !noEvent && this.onSelect && this.onSelect(index);
   }
 }
