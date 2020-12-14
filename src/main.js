@@ -55,6 +55,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   // new MapWraper(mapBox.node)
 
   const listBox = new PageBox(main.node, 'list');
+  
   // константы ниже для хранения объектов с цифрами по каждой стране
   const globalCases = globalCountSort(globalCountCases(json));
   const globalDeaths = globalCountSort(globalCountDeaths(json));
