@@ -514,3 +514,8 @@ td {
 .search__list--hidden{
   display: none;
 }
+
+.map-wrapper{
+  width: 100%;
+  height: 100%;
+}
