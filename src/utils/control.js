@@ -1,6 +1,6 @@
 import Observer from './observer';
 
-export default class Control extends Observer{
+export default class Control extends Observer {
   constructor(parentNode, tag = 'div', className = '', content = '') {
     super();
     this.node = document.createElement(tag);
@@ -10,8 +10,6 @@ export default class Control extends Observer{
   }
 
   clear() {
-    while (this.node.firstChild) {
-      this.node.lastChild.remove();
-    }
+    this.node.innerHTML = '';
   }
 }

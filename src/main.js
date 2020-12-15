@@ -52,7 +52,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const chartBox = new PageBox(main.node, 'chart');
   fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
     const chartsRequests = new ChartsAPI(jsonChart);
-    console.log(chartsRequests.chartGS());
+    // console.log(chartsRequests.chartGS());
   });
 
   const arr = [
@@ -66,8 +66,8 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   ];
 
   chartBox.addItem('GC', 'Cases', ChartWrapped, arr);
-  chartBox.addItem('GD', 'Deaths', ChartWrapped, arr.concat(arr));
-  chartBox.addItem('GR', 'Recover', ChartWrapped, arr);
+  // chartBox.addItem('GD', 'Deaths', ChartWrapped, arr.concat(arr));
+  // chartBox.addItem('GR', 'Recover', ChartWrapped, arr);
   chartBox.pagination.select(0);
 
   const arrPageForSinhron = [chartBox, listBox, mapBox];
