@@ -7,6 +7,7 @@ export default class Chart extends Control {
     this.addListener('onResize', () => {
       this.reRender();
     });
+    this.render(dataForChart);
   }
 
   render(data) {

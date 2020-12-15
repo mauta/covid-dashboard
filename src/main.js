@@ -5,17 +5,15 @@ import Header from './block/header';
 import PageBox from './block/page_box';
 import List from './block/list';
 import Table from './block/table';
-import ChartWrapped from './block/popup';
+import ChartWrapped from './block/chart_Wrapped';
 import CasesAPI from './utils/cases_api';
 import MapWraper from './block/mapblock';
 import DataAPI from './block/data_api';
 import ChartsAPI from './block/charts_api';
-import MapWraper from './block/mapblock';
 
 const urlAPI = 'https://corona.lmao.ninja/v2/countries';
 const url = 'https://covid19-api.org/api/timeline';
 fetch(urlAPI).then((res) => res.json()).then((json) => {
-
   new Header();
   const main = new Control(document.body, 'main', 'main');
   const dataCaseAPI = new DataAPI(json, main);
@@ -25,6 +23,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   mapBox.addItem('GC', 'Cases', MapWraper);
   mapBox.addItem('GD', 'Cases', MapWraper);
   mapBox.addItem('GR', 'Cases', MapWraper);
+  mapBox.pagination.select(0);
 
   const listBox = new PageBox(main.node, 'list');
 
@@ -34,9 +33,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const globalDeaths = caseAPI.globalCountSort(caseAPI.globalCountDeaths());
   const globalRecovered = caseAPI.globalCountSort(caseAPI.globalCountRecovered());
 
-
-
-//   const cases = new Cases(main, allCases.toLocaleString('ru-RU'));
+  //   const cases = new Cases(main, allCases.toLocaleString('ru-RU'));
 
   listBox.addItem('GC', 'Cases', List, globalCases);
   listBox.addItem('GD', 'Deaths', List, globalDeaths);
@@ -47,18 +44,16 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const tableData = dataCaseAPI.tableDataCase();
   const hundredData = dataCaseAPI.hundredDataCase();
 
-
   tableBox.addItem('GC', 'Cases', Table, tableData);
   tableBox.addItem('1/100 000', 'Cases', Table, hundredData);
 
   tableBox.pagination.select(0);
 
   const chartBox = new PageBox(main.node, 'chart');
-fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
+  fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
     const chartsRequests = new ChartsAPI(jsonChart);
     console.log(chartsRequests.chartGS());
   });
-
 
   const arr = [
     [68, '15.03.20'],
@@ -73,7 +68,7 @@ fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
   chartBox.addItem('GC', 'Cases', ChartWrapped, arr);
   chartBox.addItem('GD', 'Deaths', ChartWrapped, arr.concat(arr));
   chartBox.addItem('GR', 'Recover', ChartWrapped, arr);
-
+  chartBox.pagination.select(0);
 
   const arrPageForSinhron = [chartBox, listBox, mapBox];
 
@@ -85,9 +80,8 @@ fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
           el.select(index, true);
           el.pagination.select(index, true);
         }
-      })
-    })
-  })
-  const footer = new Footer();
+      });
+    });
+  });
+  new Footer();
 });
-
