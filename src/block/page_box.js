@@ -2,8 +2,9 @@
 import Control from '../utils/control';
 import ItemGroup from '../utils/item_group';
 import BtnFullScreen from './btn_fullscreen';
-
+import ChartWrapped from './popup';
 import Chart from './chart';
+
 
 export default class PageBox extends Control {
   constructor(parentNode, modifier) {
@@ -13,20 +14,21 @@ export default class PageBox extends Control {
     this.btnFullScreen = new BtnFullScreen(this.node, () => {
       this.node.classList.toggle('pagebox__wrapper--full-screen');
       if (modifier === 'chart') {
-        this.item.reRender()
+        this.item.chart.dispath('onResize');
+//         this.item.reRender()
       }
     });
 
     this.items = [];
     this.pagination = new ItemGroup(this.node, 'pagebox__marks', 'pagebox__mark pagebox__mark--active', 'pagebox__mark');
-    this.pagination.onSelect = (index) => {    
+    this.pagination.onSelect = (index) => {
       this.select(index);
     };
   }
 
   select(index,noEvent){
     !noEvent &&  this.dispath('tabSelected',index);
-    this.items.forEach((it, i) => it.node.style.display = (i != index) ? 'none' : ''); 
+    this.items.forEach((it, i) => it.node.style.display = (i != index) ? 'none' : '');
   }
 
   addItem(caption, title, className, content) {
@@ -42,12 +44,15 @@ export default class PageBox extends Control {
       if (!resizeTimeout) {
         resizeTimeout = setTimeout(() => {
           resizeTimeout = null;
-          this.item.reRender();
+          this.item.chart.reRender();
+//           this.item.reRender();
         }, 200);
       }
     };
 
-    if (this.item instanceof Chart) {
+
+    if (this.item instanceof ChartWrapped) {
+//     if (this.item instanceof Chart) {
       window.addEventListener('resize', resizeThrottler, false);
     }
   }
