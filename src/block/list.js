@@ -9,5 +9,6 @@ export default class List extends Control {
     });
 
     // переделать на item group
+    
   }
 }
