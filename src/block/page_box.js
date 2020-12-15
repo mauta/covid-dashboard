@@ -9,18 +9,19 @@ export default class PageBox extends Control {
     super(parentNode, 'section', `pagebox__wrapper pagebox__wrapper--${modifier}`);
     this.itemWrapper = new Control(this.node, 'div', 'pagebox__main');
 
-    this.btnFullScreen = new BtnFullScreen(this.node, () => {
-      this.node.classList.toggle('pagebox__wrapper--full-screen');
-      if (modifier === 'chart') {
-        this.item.chart.reRender();
-      }
-    });
-
     this.items = [];
     this.pagination = new ItemGroup(this.node, 'div', 'pagebox__marks', 'pagebox__mark pagebox__mark--active', 'pagebox__mark');
     this.pagination.onSelect = (index) => {
       this.select(index);
     };
+
+    this.btnFullScreen = new BtnFullScreen(this.node, () => {
+      this.node.classList.toggle('pagebox__wrapper--full-screen');
+      console.log(this.items)
+      if (modifier === 'chart') {
+        this.item.chart.reRender();
+      }
+    });
   }
 
   select(index, noEvent) {
