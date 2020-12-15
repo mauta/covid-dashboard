@@ -20,5 +20,7 @@
   "engines": {
     "node": "10"
   },
-  "dependencies": {}
+  "dependencies": {
+    "mapbox-gl": "^2.0.0"
+  }
 }
