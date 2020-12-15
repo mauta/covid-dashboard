@@ -7,7 +7,6 @@ export default class ChartWrapped extends Control {
     super(parentNode, 'div', 'canvas__wrapper');
     this.chart = new Chart(this.node, data);
     this.popup = new Popup(this.node, 'popup__wrapper', 'popup__wrapper--hidden');
-    console.log(data);
     this.onMouseMove = () => {};
     this.node.addEventListener('mousemove', (ev) => {
       const rect = this.node.getBoundingClientRect();
