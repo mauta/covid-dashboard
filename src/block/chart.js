@@ -12,14 +12,12 @@ export default class Chart extends Control {
   }
 
   render(data) {
-    const TOP_PDNG = 100;
+    const TOP_PDNG = 10;
     const SIZE_PDNG = 40;
     const AXE_PDNG = 20;
     this.dataArr = data.map((el) => el[0]);
 
     this.ctx = this.node.getContext('2d');
-    // console.log(this.parentNode);
-    // console.log(this.parentNode.clientWidth);
     const y = this.parentNode.offsetHeight - TOP_PDNG;
     const x = this.parentNode.offsetWidth - SIZE_PDNG;
 

@@ -13,7 +13,7 @@ export default class PageBox extends Control {
       this.node.classList.toggle('pagebox__wrapper--full-screen');
       if (modifier === 'chart') {
         this.item.chart.reRender();
-       }
+      }
     });
 
     this.items = [];
@@ -33,7 +33,7 @@ export default class PageBox extends Control {
     new Control(this.page.node, 'h2', 'pagebox__title', `Global ${title}`);
     this.item = new className(this.page.node, content);
     this.items.push(this.page);
-    this.pagination.addItem(caption);
+    this.pagination.addItem('div', caption);
 
     let resizeTimeout;
 
