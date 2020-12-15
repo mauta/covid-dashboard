@@ -10,6 +10,7 @@ import CasesAPI from './utils/cases_api';
 import MapWraper from './block/mapblock';
 import DataAPI from './block/data_api';
 import ChartsAPI from './block/charts_api';
+import MapWraper from './block/mapblock';
 
 const urlAPI = 'https://corona.lmao.ninja/v2/countries';
 const url = 'https://covid19-api.org/api/timeline';
@@ -33,9 +34,9 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const globalDeaths = caseAPI.globalCountSort(caseAPI.globalCountDeaths());
   const globalRecovered = caseAPI.globalCountSort(caseAPI.globalCountRecovered());
 
-  // const newCasesCount = newCountCases(json);
-  // const newDeaths = newCountDeaths(json);
-  // const newRecovered = newCountRecovered(json);
+
+
+//   const cases = new Cases(main, allCases.toLocaleString('ru-RU'));
 
   listBox.addItem('GC', 'Cases', List, globalCases);
   listBox.addItem('GD', 'Deaths', List, globalDeaths);
@@ -46,16 +47,18 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const tableData = dataCaseAPI.tableDataCase();
   const hundredData = dataCaseAPI.hundredDataCase();
 
+
   tableBox.addItem('GC', 'Cases', Table, tableData);
   tableBox.addItem('1/100 000', 'Cases', Table, hundredData);
 
   tableBox.pagination.select(0);
 
   const chartBox = new PageBox(main.node, 'chart');
-  fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
+fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
     const chartsRequests = new ChartsAPI(jsonChart);
     console.log(chartsRequests.chartGS());
   });
+
 
   const arr = [
     [68, '15.03.20'],
@@ -71,6 +74,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   chartBox.addItem('GD', 'Deaths', ChartWrapped, arr.concat(arr));
   chartBox.addItem('GR', 'Recover', ChartWrapped, arr);
 
+
   const arrPageForSinhron = [chartBox, listBox, mapBox];
 
   // сюда передаем данные для отображения при выборе другой вкладки
@@ -84,6 +88,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
       })
     })
   })
-
   const footer = new Footer();
-})
+});
+
