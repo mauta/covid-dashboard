@@ -1,13 +1,14 @@
 import Control from './control';
 
 export default class Toggle extends Control {
-  constructor(parentNode, tag, activeClass, inactiveClass, caption, onClick) {
+  constructor(parentNode, tag, activeClass, inactiveClass, caption, data, onClick) {
     super(parentNode, tag, inactiveClass, caption);
     this.activeClass = activeClass;
     this.inactiveClass = inactiveClass;
     this.onClick = onClick;
     this.isToggled;
     this.changeState(false);
+    this.data = data;
 
     this.node.onclick = () => {
       this.changeState();

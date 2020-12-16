@@ -12,8 +12,8 @@ export default class ItemGroup extends Control {
     this.tag = tag;
   }
 
-  addItem(tagItem, caption) {
-    const item = new Toggle(this.node, tagItem, this.activeItemClass, this.inactiveItemClass, caption, () => {
+  addItem(tagItem, caption, data) {
+    const item = new Toggle(this.node, tagItem, this.activeItemClass, this.inactiveItemClass, caption, data, () => {
       this.select(this.items.findIndex((it) => item === it));
     });
     this.items.push(item);
@@ -22,6 +22,11 @@ export default class ItemGroup extends Control {
   select(index, noEvent) {
     this.items.forEach((it) => it.changeState(false));
     this.items[index].changeState(true);
-    !noEvent && this.onSelect && this.onSelect(index);
+    const currentCountry = this.items[index].data
+
+    this.dispath('onSelectedCountry', currentCountry);
+
+
+   !noEvent && this.onSelect && this.onSelect(index);
   }
 }

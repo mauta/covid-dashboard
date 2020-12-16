@@ -32,7 +32,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const globalCases = caseAPI.globalCountSort(caseAPI.globalCountCases());
   const globalDeaths = caseAPI.globalCountSort(caseAPI.globalCountDeaths());
   const globalRecovered = caseAPI.globalCountSort(caseAPI.globalCountRecovered());
-  console.log(globalCases);
 
   //   const cases = new Cases(main, allCases.toLocaleString('ru-RU'));
 
@@ -72,6 +71,16 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
 
   const arrPageForSinhron = [chartBox, listBox, mapBox];
   const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];
+
+  listBox.innerItems.forEach((el)=>{
+    el.addListener('onSelectedCountry', (country) => {
+        chartBox.titles.forEach((el)=>{
+        el.node.innerHTML = country
+      })
+    });
+  })
+
+
   arrPageForHidden.forEach((item) => {
     item.addListener('onFullScreen', (modifier) => {
       const arrPageHide = arrPageForHidden.filter((el) => el.modifier !== modifier);
