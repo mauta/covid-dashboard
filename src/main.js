@@ -32,7 +32,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const globalCases = caseAPI.globalCountSort(caseAPI.globalCountCases());
   const globalDeaths = caseAPI.globalCountSort(caseAPI.globalCountDeaths());
   const globalRecovered = caseAPI.globalCountSort(caseAPI.globalCountRecovered());
-  console.log(globalCases);
 
   //   const cases = new Cases(main, allCases.toLocaleString('ru-RU'));
 

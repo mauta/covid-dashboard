@@ -10,6 +10,7 @@ export default class PageBox extends Control {
     this.itemWrapper = new Control(this.node, 'div', 'pagebox__main');
     this.items = [];
     this.modifier = modifier;
+    this.innerItems = [];
 
     this.btnFullScreen = new BtnFullScreen(this.node, () => {
       this.node.classList.toggle('pagebox__wrapper--full-screen');
@@ -36,14 +37,16 @@ export default class PageBox extends Control {
     this.item = new className(this.page.node, content);
     this.items.push(this.page);
     this.pagination.addItem('div', caption);
-
+    this.innerItems.push(this.item);
     let resizeTimeout;
 
     const resizeThrottler = () => {
       if (!resizeTimeout) {
         resizeTimeout = setTimeout(() => {
           resizeTimeout = null;
-          this.item.chart.reRender();
+          this.innerItems.forEach((el) => {
+            el.chart.reRender();
+          });
         }, 200);
       }
     };
