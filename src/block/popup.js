@@ -13,8 +13,9 @@ export default class Popup extends Control {
     this.node.style.top = `${y}px`;
   }
 
-  show() {
+  show(content) {
     this.node.className = this.className;
+    this.node.textContent = content;
   }
 
   hide() {

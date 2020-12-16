@@ -11,12 +11,15 @@ export default class ChartWrapped extends Control {
     this.height = this.node.offsetHeight;
     this.node.addEventListener('mousemove', (ev) => {
       const rect = this.node.getBoundingClientRect();
-      this.popup.setPosition(ev.clientX - rect.left, ev.clientY - rect.top);
-      this.popup.show();
-      this.onMouseMove(ev);
+      const chartRect = this.chart.node.getBoundingClientRect();
+      if ((ev.clientX - chartRect.left - 20) > 0 && (chartRect.right - ev.clientX - 20) > 0) {
+        this.popup.setPosition(ev.clientX - rect.left, ev.clientY - rect.top);
+        this.popup.show(chartRect.right - ev.clientX - 20);
+        this.onMouseMove(ev);
+      }
     });
 
-    this.node.addEventListener('mouseleave', () => {
+    this.chart.node.addEventListener('mouseleave', () => {
       this.popup.hide();
     });
   }
