@@ -32,6 +32,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const globalCases = caseAPI.globalCountSort(caseAPI.globalCountCases());
   const globalDeaths = caseAPI.globalCountSort(caseAPI.globalCountDeaths());
   const globalRecovered = caseAPI.globalCountSort(caseAPI.globalCountRecovered());
+  console.log(globalCases);
 
   //   const cases = new Cases(main, allCases.toLocaleString('ru-RU'));
 
@@ -46,7 +47,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
 
   tableBox.addItem('GC', 'Cases', Table, tableData);
   tableBox.addItem('1/100 000', 'Cases', Table, hundredData);
-
   tableBox.pagination.select(0);
 
   const chartBox = new PageBox(main.node, 'chart');
@@ -66,13 +66,29 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   ];
 
   chartBox.addItem('GC', 'Cases', ChartWrapped, arr);
-  // chartBox.addItem('GD', 'Deaths', ChartWrapped, arr.concat(arr));
-  // chartBox.addItem('GR', 'Recover', ChartWrapped, arr);
+  chartBox.addItem('GD', 'Deaths', ChartWrapped, arr.concat(arr));
+  chartBox.addItem('GR', 'Recover', ChartWrapped, arr);
   chartBox.pagination.select(0);
 
   const arrPageForSinhron = [chartBox, listBox, mapBox];
+  const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];
+  arrPageForHidden.forEach((item) => {
+    item.addListener('onFullScreen', (modifier) => {
+      const arrPageHide = arrPageForHidden.filter((el) => el.modifier !== modifier);
+      arrPageHide.forEach((el) => {
+        if (el.node.classList.contains('pagebox__wrapper--hide')) {
+          el.node.classList.remove('pagebox__wrapper--hide');
+          document.body.style.gridTemplateRows = '';
+          main.node.style.gridTemplateRows = '';
+        } else {
+          el.node.classList.toggle('pagebox__wrapper--hide');
+          document.body.style.gridTemplateRows = '82px calc(100vh - 158px) 50px';
+          main.node.style.gridTemplateRows = '1fr';
+        }
+      });
+    });
+  });
 
-  // сюда передаем данные для отображения при выборе другой вкладки
   arrPageForSinhron.forEach((item) => {
     item.addListener('tabSelected', (index) => {
       arrPageForSinhron.forEach((el) => {
@@ -83,5 +99,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
       });
     });
   });
+
   new Footer();
 });

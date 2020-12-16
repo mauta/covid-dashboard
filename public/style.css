@@ -110,8 +110,11 @@ td {
   text-align: center;
 }
 
+.pagebox__wrapper--hide{
+  display: none;
+}
+
 .pagebox__wrapper--map {
-  /* min-width: 500px; */
   grid-area: map;
 }
 
@@ -198,11 +201,11 @@ td {
   }
 }
 
-@media (min-width: 600px) {
+@media (max-width: 1000px) {
   .pagebox__wrapper--full-screen {
     position: absolute;
     z-index: 5;
-    height: 100%;
+    height: calc(100vh - 350px);
     grid-row: 1 / span 4;
     grid-column: 1 / span 4;
   }
