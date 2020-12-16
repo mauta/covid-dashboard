@@ -14,10 +14,24 @@ export default class PageBox extends Control {
 
     this.btnFullScreen = new BtnFullScreen(this.node, () => {
       this.node.classList.toggle('pagebox__wrapper--full-screen');
-      if (modifier === 'chart') {
-        this.item.chart.reRender();
-      }
       this.dispath('onFullScreen', this.modifier);
+      if (modifier === 'chart') {
+
+        console.log(this.innerItems[1]);
+
+        for (let i = 0; i < 3; i += 1) {
+          console.log(this.innerItems[i]);
+          this.innerItems[i].chart.reRender();
+        }
+
+        // this.innerItems.forEach((el) => {
+        //   console.log(el.chart);
+
+        //   el.chart.reRender();
+
+        //   console.log(el.chart);
+        // });
+      }
     });
 
     this.pagination = new ItemGroup(this.node, 'div', 'pagebox__marks', 'pagebox__mark pagebox__mark--active', 'pagebox__mark');
