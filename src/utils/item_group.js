@@ -19,13 +19,6 @@ export default class ItemGroup extends Control {
     this.items.push(item);
   }
 
-  // addItem(caption) {
-  //   const item = new Toggle(this.node, 'div', this.activeItemClass, this.inactiveItemClass, caption, () => {
-  //     this.select(this.items.findIndex((it) => item === it));
-  //   });
-  //   this.items.push(item);
-  // }
-
   select(index, noEvent) {
     this.items.forEach((it) => it.changeState(false));
     this.items[index].changeState(true);
