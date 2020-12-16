@@ -72,13 +72,17 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const arrPageForSinhron = [chartBox, listBox, mapBox];
   const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];
 
+  const countryTitleCases = [chartBox, tableBox, mapBox];
+
   listBox.innerItems.forEach((el)=>{
     el.addListener('onSelectedCountry', (country) => {
-        chartBox.titles.forEach((el)=>{
-        el.node.innerHTML = country;
+      countryTitleCases.forEach((key) => {
+        key.titles.forEach((el)=>{
+          el.node.innerHTML = country;
+        });
       });
     });
-  })
+  });
 
   arrPageForHidden.forEach((item) => {
     item.addListener('onFullScreen', (modifier) => {
