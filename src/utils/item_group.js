@@ -22,15 +22,11 @@ export default class ItemGroup extends Control {
   select(index, noEvent) {
     this.items.forEach((it) => it.changeState(false));
     this.items[index].changeState(true);
-
-    console.log(this.items[index].data);
-
     const currentCountry = this.items[index].data
 
     this.dispath('onSelectedCountry', currentCountry);
-    // this.items[index].dispath('onSelectedCountry', this.items[index].data);
 
 
-    !noEvent && this.onSelect && this.onSelect(index);
+   !noEvent && this.onSelect && this.onSelect(index);
   }
 }

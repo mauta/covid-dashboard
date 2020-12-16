@@ -72,15 +72,13 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const arrPageForSinhron = [chartBox, listBox, mapBox];
   const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];
 
-  // arrPageForHidden.forEach((item) => {
-  //   console.log(item);
-  //   item.addListener('onSelectedCountry', (country) => {
-  //     // вот тут надо вызвать событие для перезагрузки данных для новой страны
-  //     console.log('blabla');
-  //     console.log(item.modifier);
-  //     console.log(country);
-  //   });
-  // });
+  listBox.innerItems.forEach((el)=>{
+    el.addListener('onSelectedCountry', (country) => {
+        chartBox.titles.forEach((el)=>{
+        el.node.innerHTML = country
+      })
+    });
+  })
 
 
   arrPageForHidden.forEach((item) => {

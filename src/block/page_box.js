@@ -11,6 +11,7 @@ export default class PageBox extends Control {
     this.items = [];
     this.modifier = modifier;
     this.innerItems = [];
+    this.titles= [];
 
     this.btnFullScreen = new BtnFullScreen(this.node, () => {
       this.node.classList.toggle('pagebox__wrapper--full-screen');
@@ -38,18 +39,13 @@ export default class PageBox extends Control {
 
   addItem(caption, title, className, content) {
     this.page = new Control(this.itemWrapper.node, 'div', 'pagebox__page');
-    new Control(this.page.node, 'h2', 'pagebox__title', `Global ${title}`);
-    this.item = new className(this.page.node, content);
+    let titleggg = new Control(this.page.node, 'h2', 'pagebox__title', `Global ${title}`);
+    this.titles.push(titleggg);
+    let item = new className(this.page.node, content);
     this.items.push(this.page);
     this.pagination.addItem('div', caption);
-    this.innerItems.push(this.item);
+    this.innerItems.push(item);
     let resizeTimeout;
-
-    this.item.addListener('onSelectedCountry', (country) => {
-      // вот тут надо вызвать событие для перезагрузки данных для новой страны
-      console.log(this.page);
-      console.log(country);
-    })
 
     const resizeThrottler = () => {
       if (!resizeTimeout) {
