@@ -12,12 +12,17 @@ export default class DataAPI {
     this.hundredAllCase = 0;
     this.hundredDeathsCase = 0;
     this.hundredRecoveredsCase = 0;
+    this.hundredNewAllCase = 0;
+    this.hundredNewDeathsCase = 0;
+    this.hundredNewRecoveredsCase = 0;
+    this.population = 0;
     this.main = main;
     this.countCase(this.json);
   }
 
   countCase(json) {
     json.forEach((keys) => {
+      this.population += keys.population;
       this.allCases += keys.cases;
       this.newCases += keys.todayCases;
       this.alldeaths += keys.deaths;
@@ -28,6 +33,10 @@ export default class DataAPI {
       this.hundredDeathsCase += keys.deathsPerOneMillion / 10;
       this.hundredRecoveredsCase += keys.recoveredPerOneMillion / 10;
     });
+    this.hundredNewAllCase = (this.newCases / this.population) * 100000;
+    this.hundredNewDeathsCase = (this.newdeaths / this.population) * 100000;
+    this.hundredNewRecoveredsCase = (this.newrecovered / this.population) * 100000;
+
     const cases = new Cases(this.main, this.allCases.toLocaleString('ru-RU'));
   }
 
@@ -46,11 +55,11 @@ export default class DataAPI {
   hundredDataCase() {
     const hundredData = {
       allCases: this.hundredAllCase.toLocaleString('ru-RU'),
-      newCases: this.newCases.toLocaleString('ru-RU'),
+      newCases: this.hundredNewAllCase.toLocaleString('ru-RU'),
       alldeaths: this.hundredDeathsCase.toLocaleString('ru-RU'),
-      newdeaths: this.newdeaths.toLocaleString('ru-RU'),
+      newdeaths: this.hundredNewDeathsCase.toLocaleString('ru-RU'),
       allrecovered: this.hundredRecoveredsCase.toLocaleString('ru-RU'),
-      newrecovered: this.newrecovered.toLocaleString('ru-RU'),
+      newrecovered: this.hundredNewRecoveredsCase.toLocaleString('ru-RU'),
     };
     return hundredData;
   }

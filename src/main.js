@@ -75,11 +75,10 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   listBox.innerItems.forEach((el)=>{
     el.addListener('onSelectedCountry', (country) => {
         chartBox.titles.forEach((el)=>{
-        el.node.innerHTML = country
-      })
+        el.node.innerHTML = country;
+      });
     });
   })
-
 
   arrPageForHidden.forEach((item) => {
     item.addListener('onFullScreen', (modifier) => {
