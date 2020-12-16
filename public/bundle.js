@@ -234,22 +234,20 @@ class Chart extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
   constructor(parentNode, dataForChart) {
     super(parentNode, 'canvas', 'canvas');
     this.parentNode = parentNode;
-    this.data = dataForChart;
-    this.render(this.data);
-
     this.addListener('onResize', () => {
       this.reRender();
     });
+    this.data = dataForChart;
+    this.render(this.data);
   }
 
   render(data) {
-    const TOP_PDNG = 100;
+    const TOP_PDNG = 10;
     const SIZE_PDNG = 40;
     const AXE_PDNG = 20;
     this.dataArr = data.map((el) => el[0]);
 
     this.ctx = this.node.getContext('2d');
-
     const y = this.parentNode.offsetHeight - TOP_PDNG;
     const x = this.parentNode.offsetWidth - SIZE_PDNG;
 
@@ -293,6 +291,149 @@ class Chart extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
   reRender() {
     this.clear();
     this.render(this.data);
+  }
+}
+
+
+/***/ }),
+
+/***/ "./src/block/chart_Wrapped.js":
+/*!************************************!*\
+  !*** ./src/block/chart_Wrapped.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ChartWrapped; });
+/* harmony import */ var _chart__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./chart */ "./src/block/chart.js");
+/* harmony import */ var _popup__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./popup */ "./src/block/popup.js");
+/* harmony import */ var _utils_control__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/control */ "./src/utils/control.js");
+
+
+
+
+class ChartWrapped extends _utils_control__WEBPACK_IMPORTED_MODULE_2__["default"] {
+  constructor(parentNode, data) {
+    super(parentNode, 'div', 'canvas__wrapper');
+    this.chart = new _chart__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, data);
+    this.popup = new _popup__WEBPACK_IMPORTED_MODULE_1__["default"](this.node, 'popup__wrapper', 'popup__wrapper--hidden');
+    this.onMouseMove = () => {};
+    this.height = this.node.offsetHeight;
+    this.node.addEventListener('mousemove', (ev) => {
+      const rect = this.node.getBoundingClientRect();
+      const chartRect = this.chart.node.getBoundingClientRect();
+      if ((ev.clientX - chartRect.left - 20) > 0 && (chartRect.right - ev.clientX - 20) > 0) {
+        this.popup.setPosition(ev.clientX - rect.left, ev.clientY - rect.top);
+        this.popup.show(chartRect.right - ev.clientX - 20);
+        this.onMouseMove(ev);
+      }
+    });
+
+    this.chart.node.addEventListener('mouseleave', () => {
+      this.popup.hide();
+    });
+  }
+}
+
+
+/***/ }),
+
+/***/ "./src/block/charts_api.js":
+/*!*********************************!*\
+  !*** ./src/block/charts_api.js ***!
+  \*********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ChartsAPI; });
+class ChartsAPI {
+  constructor(json) {
+    this.json = json;
+    // this.chartGS(this.json);
+  }
+
+  chartGS() {
+    const arrGS = [];
+    this.json.forEach((keys) => {
+      arrGS.push([keys.total_cases, keys.last_update]);
+    });
+    return arrGS;
+  }
+}
+
+
+/***/ }),
+
+/***/ "./src/block/data_api.js":
+/*!*******************************!*\
+  !*** ./src/block/data_api.js ***!
+  \*******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return DataAPI; });
+/* harmony import */ var _cases__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cases */ "./src/block/cases.js");
+
+
+class DataAPI {
+  constructor(json, main) {
+    this.json = json;
+    this.allCases = 0;
+    this.newCases = 0;
+    this.alldeaths = 0;
+    this.newdeaths = 0;
+    this.allrecovered = 0;
+    this.newrecovered = 0;
+    this.hundredAllCase = 0;
+    this.hundredDeathsCase = 0;
+    this.hundredRecoveredsCase = 0;
+    this.main = main;
+    this.countCase(this.json);
+  }
+
+  countCase(json) {
+    json.forEach((keys) => {
+      this.allCases += keys.cases;
+      this.newCases += keys.todayCases;
+      this.alldeaths += keys.deaths;
+      this.newdeaths += keys.todayDeaths;
+      this.allrecovered += keys.recovered;
+      this.newrecovered += keys.todayRecovered;
+      this.hundredAllCase += keys.casesPerOneMillion / 10;
+      this.hundredDeathsCase += keys.deathsPerOneMillion / 10;
+      this.hundredRecoveredsCase += keys.recoveredPerOneMillion / 10;
+    });
+    const cases = new _cases__WEBPACK_IMPORTED_MODULE_0__["default"](this.main, this.allCases.toLocaleString('ru-RU'));
+  }
+
+  tableDataCase() {
+    const tableData = {
+      allCases: this.allCases.toLocaleString('ru-RU'),
+      newCases: this.newCases.toLocaleString('ru-RU'),
+      alldeaths: this.alldeaths.toLocaleString('ru-RU'),
+      newdeaths: this.newdeaths.toLocaleString('ru-RU'),
+      allrecovered: this.allrecovered.toLocaleString('ru-RU'),
+      newrecovered: this.newrecovered.toLocaleString('ru-RU'),
+    };
+    return tableData;
+  }
+
+  hundredDataCase() {
+    const hundredData = {
+      allCases: this.hundredAllCase.toLocaleString('ru-RU'),
+      newCases: this.newCases.toLocaleString('ru-RU'),
+      alldeaths: this.hundredDeathsCase.toLocaleString('ru-RU'),
+      newdeaths: this.newdeaths.toLocaleString('ru-RU'),
+      allrecovered: this.hundredRecoveredsCase.toLocaleString('ru-RU'),
+      newrecovered: this.newrecovered.toLocaleString('ru-RU'),
+    };
+    return hundredData;
   }
 }
 
@@ -348,30 +489,6 @@ class Header extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
 /***/ }),
 
-/***/ "./src/block/img.js":
-/*!**************************!*\
-  !*** ./src/block/img.js ***!
-  \**************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Img; });
-/* harmony import */ var _utils_control__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/control */ "./src/utils/control.js");
-
-
-class Img extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
-  constructor(parentNode, className, src, alt) {
-    super(parentNode, 'img', className);
-    this.node.src = src;
-    this.node.alt = alt;
-  }
-}
-
-
-/***/ }),
-
 /***/ "./src/block/list.js":
 /*!***************************!*\
   !*** ./src/block/list.js ***!
@@ -382,47 +499,25 @@ class Img extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return List; });
-/* harmony import */ var _utils_control__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/control */ "./src/utils/control.js");
-/* harmony import */ var _list_line__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./list_line */ "./src/block/list_line.js");
+/* harmony import */ var _utils_item_group__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/item_group */ "./src/utils/item_group.js");
 
 
-
-class List extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
+class List extends _utils_item_group__WEBPACK_IMPORTED_MODULE_0__["default"] {
   constructor(parentNode, data) {
-    super(parentNode, 'ul', 'list');
-    data.forEach(element => {
-      new _list_line__WEBPACK_IMPORTED_MODULE_1__["default"](this.node, element);
+    super(parentNode, 'ul', 'list', 'list__item--active', 'list__item');
+    this.data = data;
+
+    this.data.forEach((item) => {
+      const inner = `
+       <img class="list__flag" src="${item.src}" width="20" height="16" alt="${item.country}">
+      <div class="list__country">${item.country}</div>
+      <div class="list__count">${item.count.toLocaleString('ru-RU')}</div>`;
+      this.addItem('li', inner);
     });
   }
-}
 
 
-/***/ }),
-
-/***/ "./src/block/list_line.js":
-/*!********************************!*\
-  !*** ./src/block/list_line.js ***!
-  \********************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ListLine; });
-/* harmony import */ var _utils_control__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/control */ "./src/utils/control.js");
-/* harmony import */ var _utils_toggle__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/toggle */ "./src/utils/toggle.js");
-/* harmony import */ var _img__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./img */ "./src/block/img.js");
-
-
-
-
-class ListLine extends _utils_toggle__WEBPACK_IMPORTED_MODULE_1__["default"] {
-  constructor(parentNode, data) {
-    super(parentNode, 'li', 'list__item--active', 'list__item');
-    this.flag = new _img__WEBPACK_IMPORTED_MODULE_2__["default"](this.node, 'list__flag', data.src, data.country);
-    this.country = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'div', 'list__country', data.country);
-    this.count = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'div', 'list__count', data.count.toLocaleString('ru-RU'));
-  }
+// надо добавить события по ентеру, и по клику + опять же у меня пока айтемы в никуда.
 }
 
 
@@ -505,9 +600,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_control__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/control */ "./src/utils/control.js");
 /* harmony import */ var _utils_item_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/item_group */ "./src/utils/item_group.js");
 /* harmony import */ var _btn_fullscreen__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./btn_fullscreen */ "./src/block/btn_fullscreen.js");
-/* harmony import */ var _chart__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./chart */ "./src/block/chart.js");
+/* harmony import */ var _chart_Wrapped__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./chart_Wrapped */ "./src/block/chart_Wrapped.js");
 /* eslint-disable no-new */
-
 
 
 
@@ -517,19 +611,41 @@ class PageBox extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
   constructor(parentNode, modifier) {
     super(parentNode, 'section', `pagebox__wrapper pagebox__wrapper--${modifier}`);
     this.itemWrapper = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'div', 'pagebox__main');
+    this.items = [];
+    this.modifier = modifier;
+    this.innerItems = [];
 
     this.btnFullScreen = new _btn_fullscreen__WEBPACK_IMPORTED_MODULE_2__["default"](this.node, () => {
       this.node.classList.toggle('pagebox__wrapper--full-screen');
+      this.dispath('onFullScreen', this.modifier);
       if (modifier === 'chart') {
-        this.item.dispath('onResize');
+
+        console.log(this.innerItems[1]);
+
+        for (let i = 0; i < 3; i += 1) {
+          console.log(this.innerItems[i]);
+          this.innerItems[i].chart.reRender();
+        }
+
+        // this.innerItems.forEach((el) => {
+        //   console.log(el.chart);
+
+        //   el.chart.reRender();
+
+        //   console.log(el.chart);
+        // });
       }
     });
 
-    this.items = [];
-    this.pagination = new _utils_item_group__WEBPACK_IMPORTED_MODULE_1__["default"](this.node, 'pagebox__marks', 'pagebox__mark pagebox__mark--active', 'pagebox__mark');
+    this.pagination = new _utils_item_group__WEBPACK_IMPORTED_MODULE_1__["default"](this.node, 'div', 'pagebox__marks', 'pagebox__mark pagebox__mark--active', 'pagebox__mark');
     this.pagination.onSelect = (index) => {
-      this.items.forEach((it, i) => it.node.style.display = (i != index) ? 'none' : ''); // может цсс-класс-модификатор
+      this.select(index);
     };
+  }
+
+  select(index, noEvent) {
+    !noEvent && this.dispath('tabSelected', index);
+    this.items.forEach((it, i) => it.node.style.display = (i != index) ? 'none' : '');
   }
 
   addItem(caption, title, className, content) {
@@ -537,22 +653,63 @@ class PageBox extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
     new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.page.node, 'h2', 'pagebox__title', `Global ${title}`);
     this.item = new className(this.page.node, content);
     this.items.push(this.page);
-    this.pagination.addItem(caption);
-
+    this.pagination.addItem('div', caption);
+    this.innerItems.push(this.item);
     let resizeTimeout;
 
     const resizeThrottler = () => {
       if (!resizeTimeout) {
         resizeTimeout = setTimeout(() => {
           resizeTimeout = null;
-          this.item.reRender();
+          this.innerItems.forEach((el) => {
+            el.chart.reRender();
+          });
         }, 200);
       }
     };
 
-    if (this.item instanceof _chart__WEBPACK_IMPORTED_MODULE_3__["default"]) {
+    if (this.item instanceof _chart_Wrapped__WEBPACK_IMPORTED_MODULE_3__["default"]) {
       window.addEventListener('resize', resizeThrottler, false);
     }
+  }
+}
+
+
+/***/ }),
+
+/***/ "./src/block/popup.js":
+/*!****************************!*\
+  !*** ./src/block/popup.js ***!
+  \****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Popup; });
+/* harmony import */ var _utils_control__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/control */ "./src/utils/control.js");
+
+
+class Popup extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
+  constructor(parentNode, className, hiddenClassName) {
+    super(parentNode, 'div', className);
+    this.className = className;
+    this.hiddenClassName = hiddenClassName;
+    this.hide();
+  }
+
+  setPosition(x, y) {
+    this.node.style.left = `${x}px`;
+    this.node.style.top = `${y}px`;
+  }
+
+  show(content) {
+    this.node.className = this.className;
+    this.node.textContent = content;
+  }
+
+  hide() {
+    this.node.className = this.hiddenClassName;
   }
 }
 
@@ -600,8 +757,7 @@ class Search extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
       });
 
       if (this.arrCountry.length === 0 && this.word.length !== 0) {
-        this.input.node.classList.add('search__input--invalid');
-      } else {
+          } else {
         this.input.node.classList.remove('search__input--invalid');
       }
       if (this.arrCountry.length === 1) {
@@ -663,13 +819,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_control__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils/control */ "./src/utils/control.js");
 /* harmony import */ var _block_footer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./block/footer */ "./src/block/footer.js");
 /* harmony import */ var _block_header__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./block/header */ "./src/block/header.js");
-/* harmony import */ var _block_cases__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./block/cases */ "./src/block/cases.js");
-/* harmony import */ var _block_page_box__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./block/page_box */ "./src/block/page_box.js");
-/* harmony import */ var _block_list__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./block/list */ "./src/block/list.js");
-/* harmony import */ var _block_table__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./block/table */ "./src/block/table.js");
-/* harmony import */ var _block_chart__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./block/chart */ "./src/block/chart.js");
-/* harmony import */ var _utils_counting_cases__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./utils/counting_cases */ "./src/utils/counting_cases.js");
-/* harmony import */ var _block_mapblock__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./block/mapblock */ "./src/block/mapblock.js");
+/* harmony import */ var _block_page_box__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./block/page_box */ "./src/block/page_box.js");
+/* harmony import */ var _block_list__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./block/list */ "./src/block/list.js");
+/* harmony import */ var _block_table__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./block/table */ "./src/block/table.js");
+/* harmony import */ var _block_chart_Wrapped__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./block/chart_Wrapped */ "./src/block/chart_Wrapped.js");
+/* harmony import */ var _utils_cases_api__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./utils/cases_api */ "./src/utils/cases_api.js");
+/* harmony import */ var _block_mapblock__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./block/mapblock */ "./src/block/mapblock.js");
+/* harmony import */ var _block_data_api__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./block/data_api */ "./src/block/data_api.js");
+/* harmony import */ var _block_charts_api__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./block/charts_api */ "./src/block/charts_api.js");
 /* eslint-disable no-new */
 
 
@@ -682,82 +839,49 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 const urlAPI = 'https://corona.lmao.ninja/v2/countries';
+const url = 'https://covid19-api.org/api/timeline';
 fetch(urlAPI).then((res) => res.json()).then((json) => {
-  // const json = []
   new _block_header__WEBPACK_IMPORTED_MODULE_2__["default"]();
   const main = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](document.body, 'main', 'main');
+  const dataCaseAPI = new _block_data_api__WEBPACK_IMPORTED_MODULE_9__["default"](json, main);
 
-  let allCases = 0;
-  let newCases = 0;
-  let alldeaths = 0;
-  let newdeaths = 0;
-  let allrecovered = 0;
-  let newrecovered = 0;
-  let hundredAllCase = 0;
-  let hundredDeathsCase = 0;
-  let hundredRecoveredsCase = 0;
+  const mapBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'map');
 
-  json.forEach((keys) => {
-    allCases += keys.cases;
-    newCases += keys.todayCases;
-    alldeaths += keys.deaths;
-    newdeaths += keys.todayDeaths;
-    allrecovered += keys.recovered;
-    newrecovered += keys.todayRecovered;
-    hundredAllCase += keys.casesPerOneMillion / 10;
-    hundredDeathsCase += keys.deathsPerOneMillion / 10;
-    hundredRecoveredsCase += keys.recoveredPerOneMillion / 10;
-  });
+  mapBox.addItem('GC', 'Cases', _block_mapblock__WEBPACK_IMPORTED_MODULE_8__["default"]);
+  mapBox.addItem('GD', 'Cases', _block_mapblock__WEBPACK_IMPORTED_MODULE_8__["default"]);
+  mapBox.addItem('GR', 'Cases', _block_mapblock__WEBPACK_IMPORTED_MODULE_8__["default"]);
+  mapBox.pagination.select(0);
 
-  const cases = new _block_cases__WEBPACK_IMPORTED_MODULE_3__["default"](main, allCases.toLocaleString('ru-RU'));
-  const mapBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_4__["default"](main.node, 'map');
+  const listBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'list');
 
-  mapBox.addItem('GC', 'Cases', _block_mapblock__WEBPACK_IMPORTED_MODULE_9__["default"]);
-  // mapBox.addItem('2', 'second');
-  // mapBox.addItem('3', 'third');
-  // new MapWraper(mapBox.node)
-
-  const listBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_4__["default"](main.node, 'list');
   // константы ниже для хранения объектов с цифрами по каждой стране
-  const globalCases = Object(_utils_counting_cases__WEBPACK_IMPORTED_MODULE_8__["globalCountSort"])(Object(_utils_counting_cases__WEBPACK_IMPORTED_MODULE_8__["globalCountCases"])(json));
-  const globalDeaths = Object(_utils_counting_cases__WEBPACK_IMPORTED_MODULE_8__["globalCountSort"])(Object(_utils_counting_cases__WEBPACK_IMPORTED_MODULE_8__["globalCountDeaths"])(json));
-  const globalRecovered = Object(_utils_counting_cases__WEBPACK_IMPORTED_MODULE_8__["globalCountSort"])(Object(_utils_counting_cases__WEBPACK_IMPORTED_MODULE_8__["globalCountRecovered"])(json));
-  const newCasesCount = Object(_utils_counting_cases__WEBPACK_IMPORTED_MODULE_8__["newCountCases"])(json);
-  const newDeaths = Object(_utils_counting_cases__WEBPACK_IMPORTED_MODULE_8__["newCountDeaths"])(json);
-  const newRecovered = Object(_utils_counting_cases__WEBPACK_IMPORTED_MODULE_8__["newCountRecovered"])(json);
+  const caseAPI = new _utils_cases_api__WEBPACK_IMPORTED_MODULE_7__["default"](json);
+  const globalCases = caseAPI.globalCountSort(caseAPI.globalCountCases());
+  const globalDeaths = caseAPI.globalCountSort(caseAPI.globalCountDeaths());
+  const globalRecovered = caseAPI.globalCountSort(caseAPI.globalCountRecovered());
 
-  listBox.addItem('GC', 'Cases', _block_list__WEBPACK_IMPORTED_MODULE_5__["default"], globalCases);
-  listBox.addItem('GD', 'Deaths', _block_list__WEBPACK_IMPORTED_MODULE_5__["default"], globalDeaths);
-  listBox.addItem('GR', 'Recovered', _block_list__WEBPACK_IMPORTED_MODULE_5__["default"], globalRecovered);
+  //   const cases = new Cases(main, allCases.toLocaleString('ru-RU'));
+
+  listBox.addItem('GC', 'Cases', _block_list__WEBPACK_IMPORTED_MODULE_4__["default"], globalCases);
+  listBox.addItem('GD', 'Deaths', _block_list__WEBPACK_IMPORTED_MODULE_4__["default"], globalDeaths);
+  listBox.addItem('GR', 'Recovered', _block_list__WEBPACK_IMPORTED_MODULE_4__["default"], globalRecovered);
   listBox.pagination.select(0);
 
-  const tableBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_4__["default"](main.node, 'table');
+  const tableBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'table');
+  const tableData = dataCaseAPI.tableDataCase();
+  const hundredData = dataCaseAPI.hundredDataCase();
 
-  const tableData = {
-    allCases: allCases.toLocaleString('ru-RU'),
-    newCases: newCases.toLocaleString('ru-RU'),
-    alldeaths: alldeaths.toLocaleString('ru-RU'),
-    newdeaths: newdeaths.toLocaleString('ru-RU'),
-    allrecovered: allrecovered.toLocaleString('ru-RU'),
-    newrecovered: newrecovered.toLocaleString('ru-RU'),
-  };
-
-  const hundredData = {
-    allCases: hundredAllCase.toLocaleString('ru-RU'),
-    newCases: newCases.toLocaleString('ru-RU'),
-    alldeaths: hundredDeathsCase.toLocaleString('ru-RU'),
-    newdeaths: newdeaths.toLocaleString('ru-RU'),
-    allrecovered: hundredRecoveredsCase.toLocaleString('ru-RU'),
-    newrecovered: newrecovered.toLocaleString('ru-RU'),
-  };
-
-  tableBox.addItem('GC', 'Cases', _block_table__WEBPACK_IMPORTED_MODULE_6__["default"], tableData);
-  tableBox.addItem('1/100 000', 'Cases', _block_table__WEBPACK_IMPORTED_MODULE_6__["default"], hundredData);
-
+  tableBox.addItem('GC', 'Cases', _block_table__WEBPACK_IMPORTED_MODULE_5__["default"], tableData);
+  tableBox.addItem('1/100 000', 'Cases', _block_table__WEBPACK_IMPORTED_MODULE_5__["default"], hundredData);
   tableBox.pagination.select(0);
 
-  const chartBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_4__["default"](main.node, 'chart');
+  const chartBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'chart');
+  fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
+    const chartsRequests = new _block_charts_api__WEBPACK_IMPORTED_MODULE_10__["default"](jsonChart);
+    // console.log(chartsRequests.chartGS());
+  });
 
   const arr = [
     [68, '15.03.20'],
@@ -769,12 +893,128 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     [25, '20.12.20'],
   ];
 
-  chartBox.addItem('GC', 'Cases', _block_chart__WEBPACK_IMPORTED_MODULE_7__["default"], arr);
-  // tableBox.addItem('GD', 'Deaths', List, listData);
-  // tableBox.addItem('GR', 'Recovered', List, listData);
+  chartBox.addItem('GC', 'Cases', _block_chart_Wrapped__WEBPACK_IMPORTED_MODULE_6__["default"], arr);
+  chartBox.addItem('GD', 'Deaths', _block_chart_Wrapped__WEBPACK_IMPORTED_MODULE_6__["default"], arr.concat(arr));
+  chartBox.addItem('GR', 'Recover', _block_chart_Wrapped__WEBPACK_IMPORTED_MODULE_6__["default"], arr);
+  chartBox.pagination.select(0);
 
-  const footer = new _block_footer__WEBPACK_IMPORTED_MODULE_1__["default"]();
+  const arrPageForSinhron = [chartBox, listBox, mapBox];
+  const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];
+  arrPageForHidden.forEach((item) => {
+    item.addListener('onFullScreen', (modifier) => {
+      const arrPageHide = arrPageForHidden.filter((el) => el.modifier !== modifier);
+      arrPageHide.forEach((el) => {
+        if (el.node.classList.contains('pagebox__wrapper--hide')) {
+          el.node.classList.remove('pagebox__wrapper--hide');
+          document.body.style.gridTemplateRows = '';
+          main.node.style.gridTemplateRows = '';
+        } else {
+          el.node.classList.toggle('pagebox__wrapper--hide');
+          document.body.style.gridTemplateRows = '82px calc(100vh - 158px) 50px';
+          main.node.style.gridTemplateRows = '1fr';
+        }
+      });
+    });
+  });
+
+  arrPageForSinhron.forEach((item) => {
+    item.addListener('tabSelected', (index) => {
+      arrPageForSinhron.forEach((el) => {
+        if (el !== item) {
+          el.select(index, true);
+          el.pagination.select(index, true);
+        }
+      });
+    });
+  });
+
+  new _block_footer__WEBPACK_IMPORTED_MODULE_1__["default"]();
 });
+
+
+/***/ }),
+
+/***/ "./src/utils/cases_api.js":
+/*!********************************!*\
+  !*** ./src/utils/cases_api.js ***!
+  \********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return CasesAPI; });
+/*eslint class-methods-use-this: ["error", { "exceptMethods": ["count", "globalCountSort"]}] */
+
+class CasesAPI {
+  constructor(json) {
+    this.json = json;
+  }
+
+  count(massCases, country, value, flag = '') {
+    massCases.push({
+      src: flag,
+      country,
+      count: value,
+    });
+    return massCases;
+  }
+
+  globalCountCases(massCases = []) {
+    this.json.forEach((keys) => {
+      this.count(massCases, keys.country, keys.cases, keys.countryInfo.flag);
+    });
+    return massCases;
+  }
+
+  globalCountDeaths(massCases = []) {
+    this.json.forEach((keys) => {
+      this.count(massCases, keys.country, keys.deaths, keys.countryInfo.flag);
+    });
+    return massCases;
+  }
+
+  globalCountRecovered(massCases = []) {
+    this.json.forEach((keys) => {
+      this.count(massCases, keys.country, keys.recovered, keys.countryInfo.flag);
+    });
+    return massCases;
+  }
+
+  newCountCases(massCases = []) {
+    this.json.forEach((keys) => {
+      this.count(massCases, keys.country, keys.todayCases);
+    });
+    return massCases;
+  }
+
+  newCountDeaths(massCases = []) {
+    this.json.forEach((keys) => {
+      this.count(massCases, keys.country, keys.todayDeaths);
+    });
+    return massCases;
+  }
+
+  newCountRecovered(massCases = []) {
+    this.json.forEach((keys) => {
+      this.count(massCases, keys.country, keys.todayRecovered);
+    });
+    return massCases;
+  }
+
+  globalCountSort(massCases) {
+    massCases.sort((a, b) => {
+      if (a.count > b.count) {
+        return -1;
+      }
+      if (a.count < b.count) {
+        return 1;
+      }
+      return 0;
+    });
+    return massCases;
+  }
+}
 
 
 /***/ }),
@@ -792,7 +1032,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _observer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./observer */ "./src/utils/observer.js");
 
 
-class Control extends _observer__WEBPACK_IMPORTED_MODULE_0__["default"]{
+class Control extends _observer__WEBPACK_IMPORTED_MODULE_0__["default"] {
   constructor(parentNode, tag = 'div', className = '', content = '') {
     super();
     this.node = document.createElement(tag);
@@ -802,93 +1042,8 @@ class Control extends _observer__WEBPACK_IMPORTED_MODULE_0__["default"]{
   }
 
   clear() {
-    while (this.node.firstChild) {
-      this.node.lastChild.remove();
-    }
+    this.node.innerHTML = '';
   }
-}
-
-
-/***/ }),
-
-/***/ "./src/utils/counting_cases.js":
-/*!*************************************!*\
-  !*** ./src/utils/counting_cases.js ***!
-  \*************************************/
-/*! exports provided: globalCountCases, globalCountDeaths, globalCountRecovered, newCountCases, newCountDeaths, newCountRecovered, globalCountSort */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "globalCountCases", function() { return globalCountCases; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "globalCountDeaths", function() { return globalCountDeaths; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "globalCountRecovered", function() { return globalCountRecovered; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "newCountCases", function() { return newCountCases; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "newCountDeaths", function() { return newCountDeaths; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "newCountRecovered", function() { return newCountRecovered; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "globalCountSort", function() { return globalCountSort; });
-function count(massCases, country, value, flag = '') {
-  massCases.push({
-    src: flag,
-    country,
-    count: value,
-  });
-  return massCases;
-}
-
-function globalCountCases(json, massCases = []) {
-  json.forEach((keys) => {
-    count(massCases, keys.country, keys.cases, keys.countryInfo.flag);
-  });
-  return massCases;
-}
-
-function globalCountDeaths(json, massCases = []) {
-  json.forEach((keys) => {
-    count(massCases, keys.country, keys.deaths, keys.countryInfo.flag);
-  });
-  return massCases;
-}
-
-function globalCountRecovered(json, massCases = []) {
-  json.forEach((keys) => {
-    count(massCases, keys.country, keys.recovered, keys.countryInfo.flag);
-  });
-  return massCases;
-}
-
-function newCountCases(json, massCases = []) {
-  json.forEach((keys) => {
-    count(massCases, keys.country, keys.todayCases);
-  });
-  return massCases;
-}
-
-function newCountDeaths(json, massCases = []) {
-  json.forEach((keys) => {
-    count(massCases, keys.country, keys.todayDeaths);
-  });
-  return massCases;
-}
-
-function newCountRecovered(json, massCases = []) {
-  json.forEach((keys) => {
-    count(massCases, keys.country, keys.todayRecovered);
-  });
-  return massCases;
-}
-
-function globalCountSort(massCases) {
-  massCases.sort((a, b) => {
-    if (a.count > b.count) {
-      return -1;
-    }
-    if (a.count < b.count) {
-      return 1;
-    }
-    return 0;
-  });
-  return massCases;
 }
 
 
@@ -910,25 +1065,27 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class ItemGroup extends _control__WEBPACK_IMPORTED_MODULE_1__["default"] {
-  constructor(parentNode, wrapperClass, activeItemClass, inactiveItemClass) {
-    super(parentNode, 'div', wrapperClass);
+  constructor(parentNode, tag, wrapperClass, activeItemClass, inactiveItemClass) {
+    // super(parentNode, 'div', wrapperClass);
+    super(parentNode, tag, wrapperClass);
     this.activeItemClass = activeItemClass;
     this.inactiveItemClass = inactiveItemClass;
     this.items = [];
     this.onSelect;
+    this.tag = tag;
   }
 
-  addItem(caption) {
-    const item = new _toggle__WEBPACK_IMPORTED_MODULE_0__["default"](this.node,'div', this.activeItemClass, this.inactiveItemClass, caption, () => {
+  addItem(tagItem, caption) {
+    const item = new _toggle__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, tagItem, this.activeItemClass, this.inactiveItemClass, caption, () => {
       this.select(this.items.findIndex((it) => item === it));
     });
     this.items.push(item);
   }
 
-  select(index) {
+  select(index, noEvent) {
     this.items.forEach((it) => it.changeState(false));
     this.items[index].changeState(true);
-    this.onSelect && this.onSelect(index);
+    !noEvent && this.onSelect && this.onSelect(index);
   }
 }
 
@@ -977,8 +1134,8 @@ class Observer {
     this.listeners = this.listeners.filter((it) => it.id !== id);
   }
 
-  dispath(name) {
-    this.listeners.filter((it) => it.name === name).forEach((it) => it.callback());
+  dispath(name,...params) {
+    this.listeners.filter((it) => it.name === name).forEach((it) => it.callback(...params));
   }
 }
 

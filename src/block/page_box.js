@@ -16,20 +16,11 @@ export default class PageBox extends Control {
       this.node.classList.toggle('pagebox__wrapper--full-screen');
       this.dispath('onFullScreen', this.modifier);
       if (modifier === 'chart') {
-
-        console.log(this.innerItems[1]);
-
         for (let i = 0; i < 3; i += 1) {
-          console.log(this.innerItems[i]);
           this.innerItems[i].chart.reRender();
         }
-
         // this.innerItems.forEach((el) => {
-        //   console.log(el.chart);
-
         //   el.chart.reRender();
-
-        //   console.log(el.chart);
         // });
       }
     });
@@ -53,6 +44,12 @@ export default class PageBox extends Control {
     this.pagination.addItem('div', caption);
     this.innerItems.push(this.item);
     let resizeTimeout;
+
+    this.item.addListener('onSelectedCountry', (country) => {
+      // вот тут надо вызвать событие для перезагрузки данных для новой страны
+      console.log(this.page);
+      console.log(country);
+    })
 
     const resizeThrottler = () => {
       if (!resizeTimeout) {

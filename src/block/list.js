@@ -10,7 +10,7 @@ export default class List extends ItemGroup {
        <img class="list__flag" src="${item.src}" width="20" height="16" alt="${item.country}">
       <div class="list__country">${item.country}</div>
       <div class="list__count">${item.count.toLocaleString('ru-RU')}</div>`;
-      this.addItem('li', inner);
+      this.addItem('li', inner, item.country);
     });
   }
 
