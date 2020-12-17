@@ -557,6 +557,7 @@ class List extends _utils_item_group__WEBPACK_IMPORTED_MODULE_0__["default"] {
     super(parentNode, 'ul', 'list', 'list__item--active', 'list__item');
     this.data = data;
 
+
     this.data.forEach((item) => {
       const inner = `
        <img class="list__flag" src="${item.src}" width="20" height="16" alt="${item.country}">
@@ -565,9 +566,6 @@ class List extends _utils_item_group__WEBPACK_IMPORTED_MODULE_0__["default"] {
       this.addItem('li', inner, item.country);
     });
   }
-
-
-// надо добавить события по ентеру, и по клику + опять же у меня пока айтемы в никуда.
 }
 
 
@@ -666,6 +664,7 @@ class PageBox extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this.innerItems = [];
     this.titles = [];
     this.index = 0;
+    this.paginationList = paginationList;
     this.btnFullScreen = new _btn__WEBPACK_IMPORTED_MODULE_2__["default"](this.node, 'btn btn--full-screen', 'Open on full screen', () => {
       this.node.classList.toggle('pagebox__wrapper--full-screen');
       this.dispath('onFullScreen', this.modifier);
@@ -677,26 +676,40 @@ class PageBox extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
       }
     });
 
-    this.pagination = new _utils_item_group__WEBPACK_IMPORTED_MODULE_1__["default"](this.node, 'div', 'pagebox__marks', 'pagebox__mark pagebox__mark--active', 'pagebox__mark');
-    this.btnPrevious = new _btn__WEBPACK_IMPORTED_MODULE_2__["default"](this.pagination.node, 'btn btn-index btn-index--previous', 'previous', () => {});
-    this.pagination.addItem('div', paginationList[this.index]);
-    this.btnPrevious = new _btn__WEBPACK_IMPORTED_MODULE_2__["default"](this.pagination.node, 'btn btn-index btn-index--next', 'next', () => {});
+    this.pagWrap = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'div', 'pagebox__marks');
+    this.btnPrevious = new _btn__WEBPACK_IMPORTED_MODULE_2__["default"](this.pagWrap.node, 'btn btn-index btn-index--previous', 'previous', () => {
+      this.index = (this.index - 1 + this.paginationList.length) % this.paginationList.length;
+      this.pagination.node.innerHTML = this.paginationList[this.index];
+      this.pagination.dispath('tabSelected', this.index);
+    });
+    this.pagination = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.pagWrap.node, 'div', 'pagebox__mark', this.paginationList[this.index]);
+    this.btnPrevious = new _btn__WEBPACK_IMPORTED_MODULE_2__["default"](this.pagWrap.node, 'btn btn-index btn-index--next', 'next', () => {
+      this.index = (this.index + 1) % this.paginationList.length;
+      this.pagination.node.innerHTML = this.paginationList[this.index];
+      this.pagination.dispath('tabSelected', this.index);
+    });
 
-    this.pagination.onSelect = (index) => {
-      this.select(index);
-    };
+
+    // this.pagination = new ItemGroup(this.node, 'div', 'pagebox__marks', 'pagebox__mark pagebox__mark--active', 'pagebox__mark');
+    // this.btnPrevious = new Btn(this.pagination.node, 'btn btn-index btn-index--previous', 'previous', () => {});
+    // this.pagination.addItem('div', paginationList[this.index]);
+    // this.btnPrevious = new Btn(this.pagination.node, 'btn btn-index btn-index--next', 'next', () => {});
+
+    // this.pagination.onSelect = (index) => {
+    //   this.select(index);
+    // };
   }
 
   select(index, noEvent) {
-    !noEvent && this.dispath('tabSelected', index);
+    // noEvent && this.dispath('tabSelected', index);
     this.dispath('dataChange', index);
     // this.items.forEach((it, i) => it.node.style.display = (i != index) ? 'none' : '');
   }
 
   addItem(title, className, content) {
-    // console.log(content);
     this.page = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.itemWrapper.node, 'div', 'pagebox__page');
-    this.title = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.page.node, 'h2', 'pagebox__title', `${title}`);
+    this.titleName = title;
+    this.title = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.page.node, 'h2', 'pagebox__title', title);
     this.titles.push(this.title);
     this.className = className;
     const item = new className(this.page.node, content);
@@ -919,23 +932,20 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   // список показателей для пагинации
   const pagList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered'];
   const dataList = [globalCases, globalDeaths, globalRecovered, globalCases, globalDeaths, globalRecovered];
-  const dataTable = [arr, arr.concat(arr), arr.concat(arr).concat(arr)];
-
+  const dataTable = [arr, arr.concat(arr), arr.concat(arr).concat(arr), arr, arr.concat(arr), arr.concat(arr).concat(arr)];
 
   const mapBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'map', pagList);
-  // mapBox.addItem('World', MapWraper, dataList[1]);
+  mapBox.addItem('World', _block_mapblock__WEBPACK_IMPORTED_MODULE_8__["default"], dataList[1]);
   const listBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'list', pagList);
-  listBox.addItem('World', _block_list__WEBPACK_IMPORTED_MODULE_4__["default"], globalCases, dataList[0]);
+  listBox.addItem('World', _block_list__WEBPACK_IMPORTED_MODULE_4__["default"], dataList[0]);
 
   const chartBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'chart', pagList);
-  chartBox.addItem('World', _block_chart_Wrapped__WEBPACK_IMPORTED_MODULE_6__["default"], dataTable[2]);
+  chartBox.addItem('World', _block_chart_Wrapped__WEBPACK_IMPORTED_MODULE_6__["default"], dataTable[0]);
 
   // fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
   //   const chartsRequests = new ChartsAPI(jsonChart);
   //   console.log(chartsRequests.chartGS());
   // });
-
-
 
   const tableBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'table', pagList);
 
@@ -945,15 +955,12 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
 
   const tableData = dataCaseAPI.tableDataCase();
   const hundredData = dataCaseAPI.hundredDataCase();
-  // tableBox.addItem('World', Table, tableData);
-  tableBox.pagination.select(0);
+  tableBox.addItem('World', _block_table__WEBPACK_IMPORTED_MODULE_5__["default"], tableData);
 
   listBox.innerItems.forEach((el) => {
     el.addListener('onSelectedCountry', (country) => {
       countryTitleCases.forEach((key) => {
-        key.titles.forEach((jtem) => {
-          jtem.node.innerHTML = country;
-        });
+        key.title.innerText = country;
       });
       const dataCaseAPICountry = new _block_data_api__WEBPACK_IMPORTED_MODULE_9__["default"](json, main, country);
       const tableDataCountry = dataCaseAPICountry.tableDataCase();
@@ -979,25 +986,36 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     });
   });
 
-
-  chartBox.addListener('dataChange', (index) => {
-    const newCapthion = chartBox.pagination.captions[index];
-    const newTitle = chartBox.titles[index];
-    const allArr = [arr, arr.concat(arr), arr.concat(arr).concat(arr)];
-    chartBox.updateItem(newCapthion, newTitle, _block_chart_Wrapped__WEBPACK_IMPORTED_MODULE_6__["default"], allArr[index]);
-  });
-
+  // chartBox.addListener('dataChange', (index) => {
+  //   const newCapthion = chartBox.pagination.captions[index];
+  //   const newTitle = chartBox.titles[index];
+  //   const allArr = [arr, arr.concat(arr), arr.concat(arr).concat(arr)];
+  //   chartBox.updateItem(newCapthion, newTitle, ChartWrapped, allArr[index]);
+  // });
 
   arrPageForSinhron.forEach((item) => {
-    item.addListener('tabSelected', (index) => {
+    item.pagination.addListener('tabSelected', (index) => {
       arrPageForSinhron.forEach((el) => {
-        if (el !== item) {
-          el.select(index, true);
-          el.pagination.select(index, true);
+        el.pagination.node.innerText = pagList[index];
+        el.index = index;
+        el.updateItem(el.titleName, el.className, dataList[index]);
+        if (el.modifier === 'chart') {
+          el.updateItem(el.titleName, el.className, dataTable[index]);
         }
       });
     });
   });
+
+  // arrPageForSinhron.forEach((item) => {
+  //   item.addListener('tabSelected', (index) => {
+  //     arrPageForSinhron.forEach((el) => {
+  //       if (el !== item) {
+  //         el.select(index, true);
+  //         el.pagination.select(index, true);
+  //       }
+  //     });
+  //   });
+  // });
 
   new _block_footer__WEBPACK_IMPORTED_MODULE_1__["default"]();
 });
@@ -1150,15 +1168,15 @@ class ItemGroup extends _control__WEBPACK_IMPORTED_MODULE_1__["default"] {
     const item = new _toggle__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, tagItem, this.activeItemClass, this.inactiveItemClass, caption, data, () => {
       this.select(this.items.findIndex((it) => item === it));
     });
-   this.items.push(item);
+    this.items.push(item);
   }
 
   select(index, noEvent) {
     this.items.forEach((it) => it.changeState(false));
     this.items[index].changeState(true);
-    const currentCountry = this.items[index].data
+    const currentCountry = this.items[index].data;
     this.dispath('onSelectedCountry', currentCountry);
-   !noEvent && this.onSelect && this.onSelect(index);
+    !noEvent && this.onSelect && this.onSelect(index);
   }
 }
 
