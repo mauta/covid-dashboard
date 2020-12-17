@@ -61,9 +61,7 @@ export default class PageBox extends Control {
     this.title = new Control(this.page.node, 'h2', 'pagebox__title', title);
     this.titles.push(this.title);
     this.className = className;
-    const item = new className(this.page.node, content);
-    this.items.push(this.page);
-    this.innerItems.push(item);
+    this.item = new className(this.page.node, content);
     let resizeTimeout;
 
     const resizeThrottler = () => {
@@ -86,8 +84,6 @@ export default class PageBox extends Control {
     this.page = new Control(this.itemWrapper.node, 'div', 'pagebox__page');
     const titles = new Control(this.page.node, 'h2', 'pagebox__title', title);
     this.titles.push(titles);
-    const item = new className(this.page.node, content);
-    this.items.push(this.page);
-    this.innerItems.push(item);
+    this.item = new className(this.page.node, content);
   }
 }

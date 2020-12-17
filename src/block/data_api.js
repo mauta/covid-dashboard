@@ -1,5 +1,3 @@
-import Cases from './cases';
-
 export default class DataAPI {
   constructor(json, main, country = '') {
     this.json = json;
@@ -40,8 +38,8 @@ export default class DataAPI {
     this.hundredNewAllCase = (this.newCases / this.population) * 100000;
     this.hundredNewDeathsCase = (this.newdeaths / this.population) * 100000;
     this.hundredNewRecoveredsCase = (this.newrecovered / this.population) * 100000;
-
-    const cases = new Cases(this.main, this.allCases.toLocaleString('ru-RU'));
+    this.countCases = this.allCases.toLocaleString('ru-RU');
+    return this.countCases;
   }
 
   countCaseCountry(json, country) {
@@ -61,7 +59,7 @@ export default class DataAPI {
       this.hundredNewAllCase = (this.newCases / this.population) * 100000;
       this.hundredNewDeathsCase = (this.newdeaths / this.population) * 100000;
       this.hundredNewRecoveredsCase = (this.newrecovered / this.population) * 100000;
-    });     
+    });
   }
 
   tableDataCase() {
