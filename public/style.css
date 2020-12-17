@@ -143,6 +143,7 @@ td {
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 128, 0, 0.3) black;
+  scroll-behavior: smooth;
 }
 
 .list::-webkit-scrollbar {

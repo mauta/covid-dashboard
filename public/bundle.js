@@ -395,9 +395,6 @@ class ChartsAPI {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return DataAPI; });
-/* harmony import */ var _cases__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cases */ "./src/block/cases.js");
-
-
 class DataAPI {
   constructor(json, main, country = '') {
     this.json = json;
@@ -438,8 +435,8 @@ class DataAPI {
     this.hundredNewAllCase = (this.newCases / this.population) * 100000;
     this.hundredNewDeathsCase = (this.newdeaths / this.population) * 100000;
     this.hundredNewRecoveredsCase = (this.newrecovered / this.population) * 100000;
-
-    const cases = new _cases__WEBPACK_IMPORTED_MODULE_0__["default"](this.main, this.allCases.toLocaleString('ru-RU'));
+    this.countCases = this.allCases.toLocaleString('ru-RU');
+    return this.countCases;
   }
 
   countCaseCountry(json, country) {
@@ -459,7 +456,7 @@ class DataAPI {
       this.hundredNewAllCase = (this.newCases / this.population) * 100000;
       this.hundredNewDeathsCase = (this.newdeaths / this.population) * 100000;
       this.hundredNewRecoveredsCase = (this.newrecovered / this.population) * 100000;
-    });     
+    });
   }
 
   tableDataCase() {
@@ -556,7 +553,7 @@ class List extends _utils_item_group__WEBPACK_IMPORTED_MODULE_0__["default"] {
   constructor(parentNode, data) {
     super(parentNode, 'ul', 'list', 'list__item--active', 'list__item');
     this.data = data;
-
+    this.countries = [];
 
     this.data.forEach((item) => {
       const inner = `
@@ -564,6 +561,7 @@ class List extends _utils_item_group__WEBPACK_IMPORTED_MODULE_0__["default"] {
       <div class="list__country">${item.country}</div>
       <div class="list__count">${item.count.toLocaleString('ru-RU')}</div>`;
       this.addItem('li', inner, item.country);
+      this.countries.push(item.country);
     });
   }
 }
@@ -712,9 +710,7 @@ class PageBox extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this.title = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.page.node, 'h2', 'pagebox__title', title);
     this.titles.push(this.title);
     this.className = className;
-    const item = new className(this.page.node, content);
-    this.items.push(this.page);
-    this.innerItems.push(item);
+    this.item = new className(this.page.node, content);
     let resizeTimeout;
 
     const resizeThrottler = () => {
@@ -737,9 +733,7 @@ class PageBox extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this.page = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.itemWrapper.node, 'div', 'pagebox__page');
     const titles = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.page.node, 'h2', 'pagebox__title', title);
     this.titles.push(titles);
-    const item = new className(this.page.node, content);
-    this.items.push(this.page);
-    this.innerItems.push(item);
+    this.item = new className(this.page.node, content);
   }
 }
 
@@ -810,23 +804,24 @@ class Search extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this.input = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'input', 'search__input');
     this.input.node.type = 'text';
     this.input.node.pattern = '^[a-zA-Z\s]+$';
-
     this.ul = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'ul', 'search__list search__list--hidden');
     const countries = ['Afghanistan', 'Albania', 'Algeria', 'American Samoa', 'Andorra', 'Angola', 'Anguilla', 'Antigua and Barbuda', 'Argentina', 'Armenia', 'Aruba', 'Australia', 'Austria', 'Azerbaijan', 'Bangladesh', 'Barbados', 'Bahamas', 'Bahrain', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bermuda', 'Bhutan', 'Bolivia', 'Bosnia and Herzegovina', 'Botswana', 'Brazil', 'British Indian Ocean Territory', 'British Virgin Islands', 'Brunei Darussalam', 'Bulgaria', 'Burkina Faso', 'Burma', 'Burundi', 'Cambodia', 'Cameroon', 'Canada', 'Cape Verde', 'Cayman Islands', 'Central African Republic', 'Chad', 'Chile', 'China', 'Christmas Island', 'Cocos (Keeling) Islands', 'Colombia', 'Comoros', 'Congo-Brazzaville', 'Congo-Kinshasa', 'Cook Islands', 'Costa Rica', 'Croatia', 'Cura?ao', 'Cyprus', 'Czech Republic', 'Denmark', 'Djibouti', 'Dominica', 'Dominican Republic', 'East Timor', 'Ecuador', 'El Salvador', 'Egypt', 'Equatorial Guinea', 'Eritrea', 'Estonia', 'Ethiopia', 'Falkland Islands', 'Faroe Islands', 'Federated States of Micronesia', 'Fiji', 'Finland', 'France', 'French Guiana', 'French Polynesia', 'French Southern Lands', 'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana', 'Gibraltar', 'Greece', 'Greenland', 'Grenada', 'Guadeloupe', 'Guam', 'Guatemala', 'Guernsey', 'Guinea', 'Guinea-Bissau', 'Guyana', 'Haiti', 'Heard and McDonald Islands', 'Honduras', 'Hong Kong', 'Hungary', 'Iceland', 'India', 'Indonesia', 'Iraq', 'Ireland', 'Isle of Man', 'Israel', 'Italy', 'Jamaica', 'Japan', 'Jersey', 'Jordan', 'Kazakhstan', 'Kenya', 'Kiribati', 'Kuwait', 'Kyrgyzstan', 'Laos', 'Latvia', 'Lebanon', 'Lesotho', 'Liberia', 'Libya', 'Liechtenstein', 'Lithuania', 'Luxembourg', 'Macau', 'Macedonia', 'Madagascar', 'Malawi', 'Malaysia', 'Maldives', 'Mali', 'Malta', 'Marshall Islands', 'Martinique', 'Mauritania', 'Mauritius', 'Mayotte', 'Mexico', 'Moldova', 'Monaco', 'Mongolia', 'Montenegro', 'Montserrat', 'Morocco', 'Mozambique', 'Namibia', 'Nauru', 'Nepal', 'Netherlands', 'New Caledonia', 'New Zealand', 'Nicaragua', 'Niger', 'Nigeria', 'Niue', 'Norfolk Island', 'Northern Mariana Islands', 'Norway', 'Oman', 'Pakistan', 'Palau', 'Panama', 'Papua New Guinea', 'Paraguay', 'Peru', 'Philippines', 'Pitcairn Islands', 'Poland', 'Portugal', 'Puerto Rico', 'Qatar', 'R?union', 'Romania', 'Russia', 'Rwanda', 'Saint Barth?lemy', 'Saint Helena', 'Saint Kitts and Nevis', 'Saint Lucia', 'Saint Martin', 'Saint Pierre and Miquelon', 'Saint Vincent', 'Samoa', 'San Marino', 'S?o Tom? and Pr?ncipe', 'Saudi Arabia', 'Senegal', 'Serbia', 'Seychelles', 'Sierra Leone', 'Singapore', 'Sint Maarten', 'Slovakia', 'Slovenia', 'Solomon Islands', 'Somalia', 'South Africa', 'South Georgia', 'South Korea', 'Spain', 'Sri Lanka', 'Sudan', 'Suriname', 'Svalbard and Jan Mayen', 'Sweden', 'Swaziland', 'Switzerland', 'Syria', 'Taiwan', 'Tajikistan', 'Tanzania', 'Thailand', 'Togo', 'Tokelau', 'Tonga', 'Trinidad and Tobago', 'Tunisia', 'Turkey', 'Turkmenistan', 'Turks and Caicos Islands', 'Tuvalu', 'Uganda', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States', 'Uruguay', 'Uzbekistan', 'Vanuatu', 'Vatican City', 'Vietnam', 'Venezuela', 'Wallis and Futuna', 'Western Sahara', 'Yemen', 'Zambia', 'Zimbabwe'].map((item) => item.toLowerCase());
+    this.items = countries.map((item) => {
+      const jtem = new _utils_toggle__WEBPACK_IMPORTED_MODULE_1__["default"](this.ul.node, 'li', 'search__item--active', 'search__item', `${item}`);
+      return jtem;
+    });
     this.word = '';
 
     this.input.node.addEventListener('keyup', (e) => {
       this.ul.node.classList.remove('search__list--hidden');
-      this.ul.clear();
       this.word = this.input.node.value;
       this.arrCountry = countries.filter((item) => item.startsWith(this.word));
-      this.arrCountry.forEach((item) => {
-        new _utils_toggle__WEBPACK_IMPORTED_MODULE_1__["default"](this.ul.node, 'li', 'search__item--active', 'search__item', `${item}`);
-        // можно дописать что мы ждем от клика в этот раз
+      countries.forEach((item, ind) => {
+        this.items[ind].node.style.display = item.startsWith(this.word) ? '' : 'none';
       });
-
       if (this.arrCountry.length === 0 && this.word.length !== 0) {
-          } else {
+        this.input.node.classList.add('search__input--invalid');
+      } else {
         this.input.node.classList.remove('search__input--invalid');
       }
       if (this.arrCountry.length === 1) {
@@ -837,9 +832,9 @@ class Search extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
         this.ul.node.classList.add('search__list--hidden');
       }
 
-      if (e.key === 'Enter') {
-        // вот здесь подумать какое событие мы передаем и где мы его объявляем
-        this.dispath('');
+      if (e.key === 'Enter' && this.arrCountry.length === 1) {
+        const country = this.arrCountry[0][0].toUpperCase() + this.arrCountry[0].slice(1);
+        this.dispath('onSearchCountry', country);
       }
     });
   }
@@ -894,8 +889,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_cases_api__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./utils/cases_api */ "./src/utils/cases_api.js");
 /* harmony import */ var _block_mapblock__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./block/mapblock */ "./src/block/mapblock.js");
 /* harmony import */ var _block_data_api__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./block/data_api */ "./src/block/data_api.js");
-/* harmony import */ var _block_charts_api__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./block/charts_api */ "./src/block/charts_api.js");
+/* harmony import */ var _block_cases__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./block/cases */ "./src/block/cases.js");
+/* harmony import */ var _block_charts_api__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./block/charts_api */ "./src/block/charts_api.js");
 /* eslint-disable no-new */
+
 
 
 
@@ -914,6 +911,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   new _block_header__WEBPACK_IMPORTED_MODULE_2__["default"]();
   const main = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](document.body, 'main', 'main');
   const dataCaseAPI = new _block_data_api__WEBPACK_IMPORTED_MODULE_9__["default"](json, main);
+  const cases = new _block_cases__WEBPACK_IMPORTED_MODULE_10__["default"](main, dataCaseAPI.countCases);
   // константы ниже для хранения объектов с цифрами по каждой стране
   const caseAPI = new _utils_cases_api__WEBPACK_IMPORTED_MODULE_7__["default"](json);
   const globalCases = caseAPI.globalCountSort(caseAPI.globalCountCases());
@@ -957,16 +955,18 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const hundredData = dataCaseAPI.hundredDataCase();
   tableBox.addItem('World', _block_table__WEBPACK_IMPORTED_MODULE_5__["default"], tableData);
 
-  listBox.innerItems.forEach((el) => {
-    el.addListener('onSelectedCountry', (country) => {
-      countryTitleCases.forEach((key) => {
-        key.title.innerText = country;
-      });
-      const dataCaseAPICountry = new _block_data_api__WEBPACK_IMPORTED_MODULE_9__["default"](json, main, country);
-      const tableDataCountry = dataCaseAPICountry.tableDataCase();
-      // здесь пока кривая функция для обновления данных в таблице
-      tableBox.updateItem(country, _block_table__WEBPACK_IMPORTED_MODULE_5__["default"], tableDataCountry);
-    });
+  cases.search.addListener('onSearchCountry', (country) => {
+    const indexCountry = listBox.item.countries.indexOf(country);
+    listBox.item.select(indexCountry, true);
+    listBox.item.items[indexCountry].node.scrollIntoView();
+  });
+
+  listBox.item.addListener('onSelectedCountry', (country) => {
+    const dataCaseAPICountry = new _block_data_api__WEBPACK_IMPORTED_MODULE_9__["default"](json, main, country);
+    const tableDataCountry = dataCaseAPICountry.tableDataCase();
+    // здесь пока кривая функция для обновления данных в таблице
+    tableBox.updateItem(country, _block_table__WEBPACK_IMPORTED_MODULE_5__["default"], tableDataCountry);
+    // добавить обновление данных в других блоках
   });
 
   arrPageForHidden.forEach((item) => {

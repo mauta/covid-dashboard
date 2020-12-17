@@ -9,6 +9,7 @@ import ChartWrapped from './block/chart_Wrapped';
 import CasesAPI from './utils/cases_api';
 import MapWraper from './block/mapblock';
 import DataAPI from './block/data_api';
+import Cases from './block/cases';
 import ChartsAPI from './block/charts_api';
 
 const urlAPI = 'https://corona.lmao.ninja/v2/countries';
@@ -17,6 +18,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   new Header();
   const main = new Control(document.body, 'main', 'main');
   const dataCaseAPI = new DataAPI(json, main);
+  const cases = new Cases(main, dataCaseAPI.countCases);
   // константы ниже для хранения объектов с цифрами по каждой стране
   const caseAPI = new CasesAPI(json);
   const globalCases = caseAPI.globalCountSort(caseAPI.globalCountCases());
@@ -60,16 +62,18 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const hundredData = dataCaseAPI.hundredDataCase();
   tableBox.addItem('World', Table, tableData);
 
-  listBox.innerItems.forEach((el) => {
-    el.addListener('onSelectedCountry', (country) => {
-      countryTitleCases.forEach((key) => {
-        key.title.innerText = country;
-      });
-      const dataCaseAPICountry = new DataAPI(json, main, country);
-      const tableDataCountry = dataCaseAPICountry.tableDataCase();
-      // здесь пока кривая функция для обновления данных в таблице
-      tableBox.updateItem(country, Table, tableDataCountry);
-    });
+  cases.search.addListener('onSearchCountry', (country) => {
+    const indexCountry = listBox.item.countries.indexOf(country);
+    listBox.item.select(indexCountry, true);
+    listBox.item.items[indexCountry].node.scrollIntoView();
+  });
+
+  listBox.item.addListener('onSelectedCountry', (country) => {
+    const dataCaseAPICountry = new DataAPI(json, main, country);
+    const tableDataCountry = dataCaseAPICountry.tableDataCase();
+    // здесь пока кривая функция для обновления данных в таблице
+    tableBox.updateItem(country, Table, tableDataCountry);
+    // добавить обновление данных в других блоках
   });
 
   arrPageForHidden.forEach((item) => {
