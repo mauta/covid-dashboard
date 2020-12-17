@@ -35,23 +35,20 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   // список показателей для пагинации
   const pagList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered'];
   const dataList = [globalCases, globalDeaths, globalRecovered, globalCases, globalDeaths, globalRecovered];
-  const dataTable = [arr, arr.concat(arr), arr.concat(arr).concat(arr)];
-
+  const dataTable = [arr, arr.concat(arr), arr.concat(arr).concat(arr), arr, arr.concat(arr), arr.concat(arr).concat(arr)];
 
   const mapBox = new PageBox(main.node, 'map', pagList);
-  // mapBox.addItem('World', MapWraper, dataList[1]);
+  mapBox.addItem('World', MapWraper, dataList[1]);
   const listBox = new PageBox(main.node, 'list', pagList);
-  listBox.addItem('World', List, globalCases, dataList[0]);
+  listBox.addItem('World', List, dataList[0]);
 
   const chartBox = new PageBox(main.node, 'chart', pagList);
-  chartBox.addItem('World', ChartWrapped, dataTable[2]);
+  chartBox.addItem('World', ChartWrapped, dataTable[0]);
 
   // fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
   //   const chartsRequests = new ChartsAPI(jsonChart);
   //   console.log(chartsRequests.chartGS());
   // });
-
-
 
   const tableBox = new PageBox(main.node, 'table', pagList);
 
@@ -61,15 +58,12 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
 
   const tableData = dataCaseAPI.tableDataCase();
   const hundredData = dataCaseAPI.hundredDataCase();
-  // tableBox.addItem('World', Table, tableData);
-  tableBox.pagination.select(0);
+  tableBox.addItem('World', Table, tableData);
 
   listBox.innerItems.forEach((el) => {
     el.addListener('onSelectedCountry', (country) => {
       countryTitleCases.forEach((key) => {
-        key.titles.forEach((jtem) => {
-          jtem.node.innerHTML = country;
-        });
+        key.title.innerText = country;
       });
       const dataCaseAPICountry = new DataAPI(json, main, country);
       const tableDataCountry = dataCaseAPICountry.tableDataCase();
@@ -95,25 +89,36 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     });
   });
 
-
-  chartBox.addListener('dataChange', (index) => {
-    const newCapthion = chartBox.pagination.captions[index];
-    const newTitle = chartBox.titles[index];
-    const allArr = [arr, arr.concat(arr), arr.concat(arr).concat(arr)];
-    chartBox.updateItem(newCapthion, newTitle, ChartWrapped, allArr[index]);
-  });
-
+  // chartBox.addListener('dataChange', (index) => {
+  //   const newCapthion = chartBox.pagination.captions[index];
+  //   const newTitle = chartBox.titles[index];
+  //   const allArr = [arr, arr.concat(arr), arr.concat(arr).concat(arr)];
+  //   chartBox.updateItem(newCapthion, newTitle, ChartWrapped, allArr[index]);
+  // });
 
   arrPageForSinhron.forEach((item) => {
-    item.addListener('tabSelected', (index) => {
+    item.pagination.addListener('tabSelected', (index) => {
       arrPageForSinhron.forEach((el) => {
-        if (el !== item) {
-          el.select(index, true);
-          el.pagination.select(index, true);
+        el.pagination.node.innerText = pagList[index];
+        el.index = index;
+        el.updateItem(el.titleName, el.className, dataList[index]);
+        if (el.modifier === 'chart') {
+          el.updateItem(el.titleName, el.className, dataTable[index]);
         }
       });
     });
   });
+
+  // arrPageForSinhron.forEach((item) => {
+  //   item.addListener('tabSelected', (index) => {
+  //     arrPageForSinhron.forEach((el) => {
+  //       if (el !== item) {
+  //         el.select(index, true);
+  //         el.pagination.select(index, true);
+  //       }
+  //     });
+  //   });
+  // });
 
   new Footer();
 });
