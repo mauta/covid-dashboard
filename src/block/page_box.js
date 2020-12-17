@@ -11,8 +11,7 @@ export default class PageBox extends Control {
     this.items = [];
     this.modifier = modifier;
     this.innerItems = [];
-    this.titles= [];
-
+    this.titles = [];  
     this.btnFullScreen = new BtnFullScreen(this.node, () => {
       this.node.classList.toggle('pagebox__wrapper--full-screen');
       this.dispath('onFullScreen', this.modifier);
@@ -20,9 +19,6 @@ export default class PageBox extends Control {
         for (let i = 0; i < 3; i += 1) {
           this.innerItems[i].chart.reRender();
         }
-        // this.innerItems.forEach((el) => {
-        //   el.chart.reRender();
-        // });
       }
     });
 
@@ -34,14 +30,16 @@ export default class PageBox extends Control {
 
   select(index, noEvent) {
     !noEvent && this.dispath('tabSelected', index);
-    this.items.forEach((it, i) => it.node.style.display = (i != index) ? 'none' : '');
+    this.dispath('dataChange', index);
+    // this.items.forEach((it, i) => it.node.style.display = (i != index) ? 'none' : '');
   }
 
   addItem(caption, title, className, content) {
     this.page = new Control(this.itemWrapper.node, 'div', 'pagebox__page');
-    let titles= new Control(this.page.node, 'h2', 'pagebox__title', `Global ${title}`);
-    this.titles.push(titles);
-    let item = new className(this.page.node, content);
+    this.title = new Control(this.page.node, 'h2', 'pagebox__title', `Global ${title}`);
+    this.titles.push(this.title);
+    this.className = className;
+    const item = new className(this.page.node, content);
     this.items.push(this.page);
     this.pagination.addItem('div', caption);
     this.innerItems.push(item);
@@ -65,9 +63,9 @@ export default class PageBox extends Control {
 
   updateItem(caption, title, className, content) {
     this.page = new Control(this.itemWrapper.node, 'div', 'pagebox__page');
-    let titles= new Control(this.page.node, 'h2', 'pagebox__title', title);
+    const titles = new Control(this.page.node, 'h2', 'pagebox__title', title);
     this.titles.push(titles);
-    let item = new className(this.page.node, content);
+    const item = new className(this.page.node, content);
     this.items.push(this.page);
     this.innerItems.push(item);
   }

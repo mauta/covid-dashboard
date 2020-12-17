@@ -55,8 +55,8 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   ];
 
   chartBox.addItem('GC', 'Cases', ChartWrapped, arr);
-  chartBox.addItem('GD', 'Deaths', ChartWrapped, arr.concat(arr));
-  chartBox.addItem('GR', 'Recover', ChartWrapped, arr);
+  // chartBox.addItem('GD', 'Deaths', ChartWrapped, arr.concat(arr));
+  // chartBox.addItem('GR', 'Recover', ChartWrapped, arr);
   chartBox.pagination.select(0);
 
   const tableBox = new PageBox(main.node, 'table');
@@ -74,8 +74,8 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   listBox.innerItems.forEach((el) => {
     el.addListener('onSelectedCountry', (country) => {
       countryTitleCases.forEach((key) => {
-        key.titles.forEach((el) => {
-          el.node.innerHTML = country;
+        key.titles.forEach((jtem) => {
+          jtem.node.innerHTML = country;
         });
       });
       const dataCaseAPICountry = new DataAPI(json, main, country);
@@ -101,6 +101,24 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
       });
     });
   });
+
+  // arrPageForSinhron.forEach((item) => {
+  //   item.addListener('dataChange', (index) => {
+  //     const newCapthion = item.pagination.captions[index];
+  //     const newTitle = item.titles[index];
+  //     console.log(item.className);
+  //   // item.updateItem(newCapthion, newTitle, item.className, )
+  //   });
+  // });
+
+
+  chartBox.addListener('dataChange', (index) => {
+    const newCapthion = chartBox.pagination.captions[index];
+    const newTitle = chartBox.titles[index];
+    const allArr = [arr, arr.concat(arr), arr.concat(arr).concat(arr)];
+    chartBox.updateItem(newCapthion, newTitle, ChartWrapped, allArr[index]);
+  });
+
 
   arrPageForSinhron.forEach((item) => {
     item.addListener('tabSelected', (index) => {
