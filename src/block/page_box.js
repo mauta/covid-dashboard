@@ -12,6 +12,7 @@ export default class PageBox extends Control {
     this.modifier = modifier;
     this.innerItems = [];
     this.titles = [];
+    this.index = 0;
     this.btnFullScreen = new Btn(this.node, 'btn btn--full-screen', 'Open on full screen', () => {
       this.node.classList.toggle('pagebox__wrapper--full-screen');
       this.dispath('onFullScreen', this.modifier);
@@ -24,10 +25,8 @@ export default class PageBox extends Control {
 
     this.pagination = new ItemGroup(this.node, 'div', 'pagebox__marks', 'pagebox__mark pagebox__mark--active', 'pagebox__mark');
     this.btnPrevious = new Btn(this.pagination.node, 'btn btn-index btn-index--previous', 'previous', () => {});
-    this.pagination.addItem('div', paginationList[0]);
+    this.pagination.addItem('div', paginationList[this.index]);
     this.btnPrevious = new Btn(this.pagination.node, 'btn btn-index btn-index--next', 'next', () => {});
-
-    // добавить кнопки
 
     this.pagination.onSelect = (index) => {
       this.select(index);
@@ -40,14 +39,14 @@ export default class PageBox extends Control {
     // this.items.forEach((it, i) => it.node.style.display = (i != index) ? 'none' : '');
   }
 
-  addItem(caption, title, className, content) {
+  addItem(title, className, content) {
+    console.log(content);
     this.page = new Control(this.itemWrapper.node, 'div', 'pagebox__page');
-    this.title = new Control(this.page.node, 'h2', 'pagebox__title', `Global ${title}`);
+    this.title = new Control(this.page.node, 'h2', 'pagebox__title', `${title}`);
     this.titles.push(this.title);
     this.className = className;
     const item = new className(this.page.node, content);
     this.items.push(this.page);
-    // this.pagination.addItem('div', caption);
     this.innerItems.push(item);
     let resizeTimeout;
 
@@ -67,7 +66,7 @@ export default class PageBox extends Control {
     }
   }
 
-  updateItem(caption, title, className, content) {
+  updateItem(title, className, content) {
     this.page = new Control(this.itemWrapper.node, 'div', 'pagebox__page');
     const titles = new Control(this.page.node, 'h2', 'pagebox__title', title);
     this.titles.push(titles);

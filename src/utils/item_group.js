@@ -8,7 +8,6 @@ export default class ItemGroup extends Control {
     this.activeItemClass = activeItemClass;
     this.inactiveItemClass = inactiveItemClass;
     this.items = [];
-    this.captions = [];
     this.onSelect;
     this.tag = tag;
   }
@@ -17,8 +16,7 @@ export default class ItemGroup extends Control {
     const item = new Toggle(this.node, tagItem, this.activeItemClass, this.inactiveItemClass, caption, data, () => {
       this.select(this.items.findIndex((it) => item === it));
     });
-    this.captions.push(caption);
-    this.items.push(item);
+   this.items.push(item);
   }
 
   select(index, noEvent) {

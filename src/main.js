@@ -17,34 +17,11 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   new Header();
   const main = new Control(document.body, 'main', 'main');
   const dataCaseAPI = new DataAPI(json, main);
-  // список показателей для пагинации
-  const pagList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered'];
-  const mapBox = new PageBox(main.node, 'map', pagList);
-
-  mapBox.addItem('GC', 'Cases', MapWraper);
-  mapBox.addItem('GD', 'Cases', MapWraper);
-  mapBox.addItem('GR', 'Cases', MapWraper);
-  mapBox.pagination.select(0);
-
-  const listBox = new PageBox(main.node, 'list', pagList);
-
   // константы ниже для хранения объектов с цифрами по каждой стране
   const caseAPI = new CasesAPI(json);
   const globalCases = caseAPI.globalCountSort(caseAPI.globalCountCases());
   const globalDeaths = caseAPI.globalCountSort(caseAPI.globalCountDeaths());
   const globalRecovered = caseAPI.globalCountSort(caseAPI.globalCountRecovered());
-
-  listBox.addItem('GC', 'Cases', List, globalCases);
-  listBox.addItem('GD', 'Deaths', List, globalDeaths);
-  listBox.addItem('GR', 'Recovered', List, globalRecovered);
-  listBox.pagination.select(0);
-
-  const chartBox = new PageBox(main.node, 'chart', pagList);
-  fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
-    const chartsRequests = new ChartsAPI(jsonChart);
-    // console.log(chartsRequests.chartGS());
-  });
-
   const arr = [
     [68, '15.03.20'],
     [32, '15.03.20'],
@@ -55,12 +32,28 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     [25, '20.12.20'],
   ];
 
-  chartBox.addItem('GC', 'Cases', ChartWrapped, arr);
-  // chartBox.addItem('GD', 'Deaths', ChartWrapped, arr.concat(arr));
-  // chartBox.addItem('GR', 'Recover', ChartWrapped, arr);
-  chartBox.pagination.select(0);
+  // список показателей для пагинации
+  const pagList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered'];
+  const dataList = [globalCases, globalDeaths, globalRecovered, globalCases, globalDeaths, globalRecovered];
+  const dataTable = [arr, arr.concat(arr), arr.concat(arr).concat(arr)];
 
-  const tableBox = new PageBox(main.node, 'table',pagList);
+
+  const mapBox = new PageBox(main.node, 'map', pagList);
+  // mapBox.addItem('World', MapWraper, dataList[1]);
+  const listBox = new PageBox(main.node, 'list', pagList);
+  listBox.addItem('World', List, globalCases, dataList[0]);
+
+  const chartBox = new PageBox(main.node, 'chart', pagList);
+  chartBox.addItem('World', ChartWrapped, dataTable[0]);
+
+  // fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
+  //   const chartsRequests = new ChartsAPI(jsonChart);
+  //   console.log(chartsRequests.chartGS());
+  // });
+
+
+
+  const tableBox = new PageBox(main.node, 'table', pagList);
 
   const arrPageForSinhron = [chartBox, listBox, mapBox];
   const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];
@@ -68,8 +61,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
 
   const tableData = dataCaseAPI.tableDataCase();
   const hundredData = dataCaseAPI.hundredDataCase();
-  tableBox.addItem('GC', 'Cases', Table, tableData);
-  tableBox.addItem('1/100 000', 'Cases', Table, hundredData);
+  // tableBox.addItem('World', Table, tableData);
   tableBox.pagination.select(0);
 
   listBox.innerItems.forEach((el) => {
@@ -82,7 +74,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
       const dataCaseAPICountry = new DataAPI(json, main, country);
       const tableDataCountry = dataCaseAPICountry.tableDataCase();
       // здесь пока кривая функция для обновления данных в таблице
-      tableBox.updateItem('GC', country, Table, tableDataCountry);
+      tableBox.updateItem(country, Table, tableDataCountry);
     });
   });
 
@@ -102,15 +94,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
       });
     });
   });
-
-  // arrPageForSinhron.forEach((item) => {
-  //   item.addListener('dataChange', (index) => {
-  //     const newCapthion = item.pagination.captions[index];
-  //     const newTitle = item.titles[index];
-  //     console.log(item.className);
-  //   // item.updateItem(newCapthion, newTitle, item.className, )
-  //   });
-  // });
 
 
   chartBox.addListener('dataChange', (index) => {
