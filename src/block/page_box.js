@@ -18,6 +18,7 @@ export default class PageBox extends Control {
       this.dispath('onFullScreen', this.modifier);
       if (modifier === 'chart') {
         for (let i = 0; i < 3; i += 1) {
+          // здесь переделать ререндер
           this.innerItems[i].chart.reRender();
         }
       }
@@ -40,7 +41,7 @@ export default class PageBox extends Control {
   }
 
   addItem(title, className, content) {
-    console.log(content);
+    // console.log(content);
     this.page = new Control(this.itemWrapper.node, 'div', 'pagebox__page');
     this.title = new Control(this.page.node, 'h2', 'pagebox__title', `${title}`);
     this.titles.push(this.title);
