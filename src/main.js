@@ -33,20 +33,10 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const globalDeaths = caseAPI.globalCountSort(caseAPI.globalCountDeaths());
   const globalRecovered = caseAPI.globalCountSort(caseAPI.globalCountRecovered());
 
-  //   const cases = new Cases(main, allCases.toLocaleString('ru-RU'));
-
   listBox.addItem('GC', 'Cases', List, globalCases);
   listBox.addItem('GD', 'Deaths', List, globalDeaths);
   listBox.addItem('GR', 'Recovered', List, globalRecovered);
   listBox.pagination.select(0);
-
-  const tableBox = new PageBox(main.node, 'table');
-  const tableData = dataCaseAPI.tableDataCase();
-  const hundredData = dataCaseAPI.hundredDataCase();
-
-  tableBox.addItem('GC', 'Cases', Table, tableData);
-  tableBox.addItem('1/100 000', 'Cases', Table, hundredData);
-  tableBox.pagination.select(0);
 
   const chartBox = new PageBox(main.node, 'chart');
   fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
@@ -69,17 +59,31 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   chartBox.addItem('GR', 'Recover', ChartWrapped, arr);
   chartBox.pagination.select(0);
 
+  const tableBox = new PageBox(main.node, 'table');
+
   const arrPageForSinhron = [chartBox, listBox, mapBox];
   const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];
+  const countryTitleCases = [chartBox, tableBox, mapBox];
 
-  listBox.innerItems.forEach((el)=>{
+  const tableData = dataCaseAPI.tableDataCase();
+  const hundredData = dataCaseAPI.hundredDataCase();
+  tableBox.addItem('GC', 'Cases', Table, tableData);
+  tableBox.addItem('1/100 000', 'Cases', Table, hundredData);
+  tableBox.pagination.select(0);
+
+  listBox.innerItems.forEach((el) => {
     el.addListener('onSelectedCountry', (country) => {
-        chartBox.titles.forEach((el)=>{
-        el.node.innerHTML = country
-      })
+      countryTitleCases.forEach((key) => {
+        key.titles.forEach((el) => {
+          el.node.innerHTML = country;
+        });
+      });
+      const dataCaseAPICountry = new DataAPI(json, main, country);
+      const tableDataCountry = dataCaseAPICountry.tableDataCase();
+      // здесь пока кривая функция для обновления данных в таблице
+      tableBox.updateItem('GC', country, Table, tableDataCountry);
     });
-  })
-
+  });
 
   arrPageForHidden.forEach((item) => {
     item.addListener('onFullScreen', (modifier) => {
