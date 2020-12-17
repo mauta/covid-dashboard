@@ -1,8 +1,9 @@
 import Cases from './cases';
 
 export default class DataAPI {
-  constructor(json, main) {
+  constructor(json, main, country = '') {
     this.json = json;
+    this.country = country;
     this.allCases = 0;
     this.newCases = 0;
     this.alldeaths = 0;
@@ -18,6 +19,9 @@ export default class DataAPI {
     this.population = 0;
     this.main = main;
     this.countCase(this.json);
+    if (country !== '') {
+      this.countCaseCountry(this.json, this.country);
+    }
   }
 
   countCase(json) {
@@ -38,6 +42,26 @@ export default class DataAPI {
     this.hundredNewRecoveredsCase = (this.newrecovered / this.population) * 100000;
 
     const cases = new Cases(this.main, this.allCases.toLocaleString('ru-RU'));
+  }
+
+  countCaseCountry(json, country) {
+    json.forEach((keys) => {
+      if (keys.country === country) {
+        this.population = keys.population;
+        this.allCases = keys.cases;
+        this.newCases = keys.todayCases;
+        this.alldeaths = keys.deaths;
+        this.newdeaths = keys.todayDeaths;
+        this.allrecovered = keys.recovered;
+        this.newrecovered = keys.todayRecovered;
+        this.hundredAllCase = keys.casesPerOneMillion / 10;
+        this.hundredDeathsCase = keys.deathsPerOneMillion / 10;
+        this.hundredRecoveredsCase = keys.recoveredPerOneMillion / 10;
+      }
+      this.hundredNewAllCase = (this.newCases / this.population) * 100000;
+      this.hundredNewDeathsCase = (this.newdeaths / this.population) * 100000;
+      this.hundredNewRecoveredsCase = (this.newrecovered / this.population) * 100000;
+    });     
   }
 
   tableDataCase() {
