@@ -17,15 +17,16 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   new Header();
   const main = new Control(document.body, 'main', 'main');
   const dataCaseAPI = new DataAPI(json, main);
-
-  const mapBox = new PageBox(main.node, 'map');
+  // список показателей для пагинации
+  const pagList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered'];
+  const mapBox = new PageBox(main.node, 'map', pagList);
 
   mapBox.addItem('GC', 'Cases', MapWraper);
   mapBox.addItem('GD', 'Cases', MapWraper);
   mapBox.addItem('GR', 'Cases', MapWraper);
   mapBox.pagination.select(0);
 
-  const listBox = new PageBox(main.node, 'list');
+  const listBox = new PageBox(main.node, 'list', pagList);
 
   // константы ниже для хранения объектов с цифрами по каждой стране
   const caseAPI = new CasesAPI(json);
@@ -38,7 +39,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   listBox.addItem('GR', 'Recovered', List, globalRecovered);
   listBox.pagination.select(0);
 
-  const chartBox = new PageBox(main.node, 'chart');
+  const chartBox = new PageBox(main.node, 'chart', pagList);
   fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
     const chartsRequests = new ChartsAPI(jsonChart);
     // console.log(chartsRequests.chartGS());
@@ -59,7 +60,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   // chartBox.addItem('GR', 'Recover', ChartWrapped, arr);
   chartBox.pagination.select(0);
 
-  const tableBox = new PageBox(main.node, 'table');
+  const tableBox = new PageBox(main.node, 'table',pagList);
 
   const arrPageForSinhron = [chartBox, listBox, mapBox];
   const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];

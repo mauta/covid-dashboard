@@ -1,18 +1,18 @@
 /* eslint-disable no-new */
 import Control from '../utils/control';
 import ItemGroup from '../utils/item_group';
-import BtnFullScreen from './btn_fullscreen';
+import Btn from './btn';
 import ChartWrapped from './chart_Wrapped';
 
 export default class PageBox extends Control {
-  constructor(parentNode, modifier) {
+  constructor(parentNode, modifier, paginationList) {
     super(parentNode, 'section', `pagebox__wrapper pagebox__wrapper--${modifier}`);
     this.itemWrapper = new Control(this.node, 'div', 'pagebox__main');
     this.items = [];
     this.modifier = modifier;
     this.innerItems = [];
-    this.titles = [];  
-    this.btnFullScreen = new BtnFullScreen(this.node, () => {
+    this.titles = [];
+    this.btnFullScreen = new Btn(this.node, 'btn btn--full-screen', 'Open on full screen', () => {
       this.node.classList.toggle('pagebox__wrapper--full-screen');
       this.dispath('onFullScreen', this.modifier);
       if (modifier === 'chart') {
@@ -23,6 +23,12 @@ export default class PageBox extends Control {
     });
 
     this.pagination = new ItemGroup(this.node, 'div', 'pagebox__marks', 'pagebox__mark pagebox__mark--active', 'pagebox__mark');
+    this.btnPrevious = new Btn(this.pagination.node, 'btn btn-index btn-index--previous', 'previous', () => {});
+    this.pagination.addItem('div', paginationList[0]);
+    this.btnPrevious = new Btn(this.pagination.node, 'btn btn-index btn-index--next', 'next', () => {});
+
+    // добавить кнопки
+
     this.pagination.onSelect = (index) => {
       this.select(index);
     };
@@ -41,7 +47,7 @@ export default class PageBox extends Control {
     this.className = className;
     const item = new className(this.page.node, content);
     this.items.push(this.page);
-    this.pagination.addItem('div', caption);
+    // this.pagination.addItem('div', caption);
     this.innerItems.push(item);
     let resizeTimeout;
 
