@@ -24,7 +24,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const globalRecovered = caseAPI.globalCountSort(caseAPI.globalCountRecovered());
   const arr = [
     [68, '15.03.20'],
-    [32, '15.03.20'],
+    [74, '15.03.20'],
     [82, '16.06.20'],
     [1, '15.08.20'],
     [122, '15.03.20'],
@@ -44,7 +44,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   listBox.addItem('World', List, globalCases, dataList[0]);
 
   const chartBox = new PageBox(main.node, 'chart', pagList);
-  chartBox.addItem('World', ChartWrapped, dataTable[0]);
+  chartBox.addItem('World', ChartWrapped, dataTable[2]);
 
   // fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
   //   const chartsRequests = new ChartsAPI(jsonChart);
