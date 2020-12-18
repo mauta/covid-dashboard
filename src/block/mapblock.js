@@ -1,5 +1,6 @@
-import Control from '../utils/control';
+/* eslint-disable quote-props */
 import mapboxgl from 'mapbox-gl';
+import Control from '../utils/control';
 
 export default class MapWraper extends Control {
   constructor(parentNode, data) {
@@ -25,23 +26,30 @@ export default class MapWraper extends Control {
         }
       },
     }).addControl(new mapboxgl.AttributionControl({
-      compact: true
+      compact: true,
     }));
 
-    // добавляем сразу маркер с попапом
-    var marker = new mapboxgl.Marker({
-            color: "#008000",
-            draggable: false,
-            // меняем размер маркера
-            scale:1.2,
+    console.log(data[10].country);
 
-          }
-      )
-      .setLngLat([30.5, 50.5])
-      .setPopup(new mapboxgl.Popup({
+    this.map.on('load', () => {
+      const popup = new mapboxgl.Popup({
         closeButton: false,
-      }).setHTML("<h1>Hello World!</h1>")) // add popup
-      .addTo(this.map);
+        closeOnClick: false,
+      });
 
-    }
+      this.map.on('mousemove', (e) => {
+        const countries = this.map.queryRenderedFeatures(e.point, {
+          layers: ['countries-cnvat2'],
+        });
+
+        if (countries.length > 0) {
+          const b = data.filter((el) => el.country === countries[0].properties.ADMIN);
+
+          popup.setLngLat(e.lngLat).setHTML(`${b[0].country}\n ${b[0].count}`).addTo(this.map);
+        }
+      });
+
+      this.map.getCanvas().style.cursor = 'default';
+    });
   }
+}

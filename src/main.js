@@ -39,8 +39,12 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const dataList = [globalCases, globalDeaths, globalRecovered, globalCases, globalDeaths, globalRecovered];
   const dataTable = [arr, arr.concat(arr), arr.concat(arr).concat(arr), arr, arr.concat(arr), arr.concat(arr).concat(arr)];
 
+
+
+
+
   const mapBox = new PageBox(main.node, 'map', pagList);
-  mapBox.addItem('World', MapWraper, dataList[1]);
+  mapBox.addItem('World', MapWraper, dataList[0]);
   const listBox = new PageBox(main.node, 'list', pagList);
   listBox.addItem('World', List, dataList[0]);
 

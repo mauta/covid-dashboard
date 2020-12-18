@@ -579,19 +579,20 @@ class List extends _utils_item_group__WEBPACK_IMPORTED_MODULE_0__["default"] {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return MapWraper; });
-/* harmony import */ var _utils_control__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/control */ "./src/utils/control.js");
-/* harmony import */ var mapbox_gl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! mapbox-gl */ "./node_modules/mapbox-gl/dist/mapbox-gl.js");
-/* harmony import */ var mapbox_gl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(mapbox_gl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var mapbox_gl__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mapbox-gl */ "./node_modules/mapbox-gl/dist/mapbox-gl.js");
+/* harmony import */ var mapbox_gl__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(mapbox_gl__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _utils_control__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/control */ "./src/utils/control.js");
+/* eslint-disable quote-props */
 
 
 
-class MapWraper extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
+class MapWraper extends _utils_control__WEBPACK_IMPORTED_MODULE_1__["default"] {
   constructor(parentNode, data) {
     super(parentNode, 'div', 'map-wrapper');
     this.node.id = 'map';
 
-    mapbox_gl__WEBPACK_IMPORTED_MODULE_1___default.a.accessToken = 'pk.eyJ1IjoibWF1dGEiLCJhIjoiY2tpbjM4dHIyMDU3MDJ6bWx1YnhoNXYxNSJ9.kq3HP8TVE6Sc8u1-HU2QFg';
-    this.map = new mapbox_gl__WEBPACK_IMPORTED_MODULE_1___default.a.Map({
+    mapbox_gl__WEBPACK_IMPORTED_MODULE_0___default.a.accessToken = 'pk.eyJ1IjoibWF1dGEiLCJhIjoiY2tpbjM4dHIyMDU3MDJ6bWx1YnhoNXYxNSJ9.kq3HP8TVE6Sc8u1-HU2QFg';
+    this.map = new mapbox_gl__WEBPACK_IMPORTED_MODULE_0___default.a.Map({
       container: 'map',
       center: [-74.5, 40],
       zoom: 2,
@@ -608,27 +609,34 @@ class MapWraper extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
           };
         }
       },
-    }).addControl(new mapbox_gl__WEBPACK_IMPORTED_MODULE_1___default.a.AttributionControl({
-      compact: true
+    }).addControl(new mapbox_gl__WEBPACK_IMPORTED_MODULE_0___default.a.AttributionControl({
+      compact: true,
     }));
 
-    // добавляем сразу маркер с попапом
-    var marker = new mapbox_gl__WEBPACK_IMPORTED_MODULE_1___default.a.Marker({
-            color: "#008000",
-            draggable: false,
-            // меняем размер маркера
-            scale:1.2,
+    console.log(data[10].country);
 
-          }
-      )
-      .setLngLat([30.5, 50.5])
-      .setPopup(new mapbox_gl__WEBPACK_IMPORTED_MODULE_1___default.a.Popup({
+    this.map.on('load', () => {
+      const popup = new mapbox_gl__WEBPACK_IMPORTED_MODULE_0___default.a.Popup({
         closeButton: false,
-      }).setHTML("<h1>Hello World!</h1>")) // add popup
-      .addTo(this.map);
+        closeOnClick: false,
+      });
 
-    }
+      this.map.on('mousemove', (e) => {
+        const countries = this.map.queryRenderedFeatures(e.point, {
+          layers: ['countries-cnvat2'],
+        });
+
+        if (countries.length > 0) {
+          const b = data.filter((el) => el.country === countries[0].properties.ADMIN);
+
+          popup.setLngLat(e.lngLat).setHTML(`${b[0].country}\n ${b[0].count}`).addTo(this.map);
+        }
+      });
+
+      this.map.getCanvas().style.cursor = 'default';
+    });
   }
+}
 
 
 /***/ }),
@@ -932,8 +940,12 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const dataList = [globalCases, globalDeaths, globalRecovered, globalCases, globalDeaths, globalRecovered];
   const dataTable = [arr, arr.concat(arr), arr.concat(arr).concat(arr), arr, arr.concat(arr), arr.concat(arr).concat(arr)];
 
+
+
+
+
   const mapBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'map', pagList);
-  mapBox.addItem('World', _block_mapblock__WEBPACK_IMPORTED_MODULE_8__["default"], dataList[1]);
+  mapBox.addItem('World', _block_mapblock__WEBPACK_IMPORTED_MODULE_8__["default"], dataList[0]);
   const listBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'list', pagList);
   listBox.addItem('World', _block_list__WEBPACK_IMPORTED_MODULE_4__["default"], dataList[0]);
 
