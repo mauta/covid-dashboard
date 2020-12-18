@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-new */
 import Control from './utils/control';
 import Footer from './block/footer';
@@ -15,10 +16,13 @@ import ChartsAPI from './block/charts_api';
 const urlAPI = 'https://corona.lmao.ninja/v2/countries';
 const url = 'https://covid19-api.org/api/timeline';
 fetch(urlAPI).then((res) => res.json()).then((json) => {
+  const dataCaseAPI = new DataAPI(json, main);
+
   new Header();
   const main = new Control(document.body, 'main', 'main');
-  const dataCaseAPI = new DataAPI(json, main);
   const cases = new Cases(main, dataCaseAPI.countCases);
+
+
   // константы ниже для хранения объектов с цифрами по каждой стране
   const caseAPI = new CasesAPI(json);
   const globalCases = caseAPI.globalCountSort(caseAPI.globalCountCases());
@@ -34,22 +38,31 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     [25, '20.12.20'],
   ];
 
-  // список показателей для пагинации
+  // список показателей для пагинации - надо дописать все 12 пунктов
   const pagList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered'];
+  // список данных для пагинации - надо дописать все 12 пунктов, в той же очередности
   const dataList = [globalCases, globalDeaths, globalRecovered, globalCases, globalDeaths, globalRecovered];
+
+  // список показателей для пагинации в таблице - надо дописать все пункты
+  const tabList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered'];
+  // список данных для пагинации - надо дописать все 12 пунктов, в той же очередности
   const dataTable = [arr, arr.concat(arr), arr.concat(arr).concat(arr), arr, arr.concat(arr), arr.concat(arr).concat(arr)];
-
-
-
 
 
   const mapBox = new PageBox(main.node, 'map', pagList);
   mapBox.addItem('World', MapWraper, dataList[0]);
+
   const listBox = new PageBox(main.node, 'list', pagList);
   listBox.addItem('World', List, dataList[0]);
 
-  const chartBox = new PageBox(main.node, 'chart', pagList);
+  const chartBox = new PageBox(main.node, 'chart', tabList);
   chartBox.addItem('World', ChartWrapped, dataTable[0]);
+
+  mapBox.item.addListener('onMapCountrySelect', (country) => {
+    const indexCountry = listBox.item.countries.indexOf(country);
+    listBox.item.select(indexCountry, true);
+    listBox.item.items[indexCountry].node.scrollIntoView();
+  });
 
   // fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
   //   const chartsRequests = new ChartsAPI(jsonChart);

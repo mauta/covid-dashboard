@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable quote-props */
 import mapboxgl from 'mapbox-gl';
 import Control from '../utils/control';
@@ -29,12 +30,11 @@ export default class MapWraper extends Control {
       compact: true,
     }));
 
-    console.log(data[10].country);
-
     this.map.on('load', () => {
       const popup = new mapboxgl.Popup({
         closeButton: false,
         closeOnClick: false,
+        closeOnMove: true,
       });
 
       this.map.on('mousemove', (e) => {
@@ -43,9 +43,20 @@ export default class MapWraper extends Control {
         });
 
         if (countries.length > 0) {
-          const b = data.filter((el) => el.country === countries[0].properties.ADMIN);
+          const countryHovered = data.filter((el) => el.country === countries[0].properties.ADMIN)[0];
+          popup.setLngLat(e.lngLat).setHTML(`<div>${countryHovered.country}</div><div>${countryHovered.count.toLocaleString('ru-RU')}</div>`).addTo(this.map);
+        } else {
+          popup.remove();
+        }
+      });
 
-          popup.setLngLat(e.lngLat).setHTML(`${b[0].country}\n ${b[0].count}`).addTo(this.map);
+      this.map.on('click', (e) => {
+        const countries = this.map.queryRenderedFeatures(e.point, {
+          layers: ['countries-cnvat2'],
+        });
+        if (countries.length > 0) {
+          const countryClicked = data.filter((el) => el.country === countries[0].properties.ADMIN)[0];
+          this.dispath('onMapCountrySelect', countryClicked.country);
         }
       });
 
