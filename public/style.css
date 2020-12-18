@@ -517,6 +517,7 @@ td {
   height: 100%;
 }
 
+
 .popup__wrapper{
   position: absolute;
   width: 80px;
@@ -541,3 +542,18 @@ td {
   align-items: center;
   overflow: hidden;
 }
+
+.mapboxgl-popup-tip{
+  background-color: #008000;
+  border: solid var(--border-width);
+  border-radius: var(--border-radius); */
+}
+
+.mapboxgl-popup-content{
+  background-color: #0009;
+  border: solid 1px #008000;
+  border-radius: var(--border-radius);
+  font-family: 'Dosis', sans-serif;
+  font-size: larger;
+}
+

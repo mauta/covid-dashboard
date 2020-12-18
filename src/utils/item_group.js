@@ -26,4 +26,13 @@ export default class ItemGroup extends Control {
     this.dispath('onSelectedCountry', currentCountry);
     !noEvent && this.onSelect && this.onSelect(index);
   }
+
+  clearItems() {
+    this.items.forEach((el) => {
+      el.clear()
+    });
+    this.items = [];
+  }
+
+  
 }

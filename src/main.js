@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-new */
 import Control from './utils/control';
 import Footer from './block/footer';
@@ -19,6 +20,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const main = new Control(document.body, 'main', 'main');
   const dataCaseAPI = new DataAPI(json, main);
   const cases = new Cases(main, dataCaseAPI.countCases);
+
   // константы ниже для хранения объектов с цифрами по каждой стране
   const caseAPI = new CasesAPI(json);
   const globalCases = caseAPI.globalCountSort(caseAPI.globalCountCases());
@@ -34,18 +36,33 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     [25, '20.12.20'],
   ];
 
-  // список показателей для пагинации
+  // список показателей для пагинации - надо дописать все 12 пунктов
   const pagList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered'];
+  // список данных для пагинации - надо дописать все 12 пунктов, в той же очередности
   const dataList = [globalCases, globalDeaths, globalRecovered, globalCases, globalDeaths, globalRecovered];
+
+  // список показателей для пагинации в таблице - надо дописать все пункты
+  const tabList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered'];
+  // список данных для пагинации - надо дописать все 12 пунктов, в той же очередности
   const dataTable = [arr, arr.concat(arr), arr.concat(arr).concat(arr), arr, arr.concat(arr), arr.concat(arr).concat(arr)];
 
   const mapBox = new PageBox(main.node, 'map', pagList);
-  mapBox.addItem('World', MapWraper, dataList[1]);
+  mapBox.addItem('World', MapWraper, dataList[0]);
+
   const listBox = new PageBox(main.node, 'list', pagList);
   listBox.addItem('World', List, dataList[0]);
 
-  const chartBox = new PageBox(main.node, 'chart', pagList);
+  const chartBox = new PageBox(main.node, 'chart', tabList);
   chartBox.addItem('World', ChartWrapped, dataTable[0]);
+
+  mapBox.item.addListener('onMapCountrySelect', (country) => {
+
+
+    const indexCountry = listBox.item.countries.indexOf(country);
+    listBox.item.select(indexCountry, true);
+    listBox.item.items[indexCountry].node.scrollIntoView();
+  });
+
 
   // fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
   //   const chartsRequests = new ChartsAPI(jsonChart);
@@ -73,12 +90,14 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     const tableDataCountry = dataCaseAPICountry.tableDataCase();
     // здесь пока кривая функция для обновления данных в таблице
     tableBox.updateItem(country, Table, tableDataCountry);
-    // добавить обновление данных в других блоках
+    // здесь пока не настоящие данные в таблице
+    const chartDataCountry = dataTable[1];
+    chartBox.updateItem2(chartDataCountry);
   });
 
   arrPageForHidden.forEach((item) => {
     item.addListener('onFullScreen', (modifier) => {
-      const arrPageHide = arrPageForHidden.filter((el) => el.modifier !== modifier);
+           const arrPageHide = arrPageForHidden.filter((el) => el.modifier !== modifier);
       arrPageHide.forEach((el) => {
         if (el.node.classList.contains('pagebox__wrapper--hide')) {
           el.node.classList.remove('pagebox__wrapper--hide');
@@ -105,24 +124,14 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
       arrPageForSinhron.forEach((el) => {
         el.pagination.node.innerText = pagList[index];
         el.index = index;
-        el.updateItem(el.titleName, el.className, dataList[index]);
         if (el.modifier === 'chart') {
-          el.updateItem(el.titleName, el.className, dataTable[index]);
+          el.updateItem2(dataTable[index]);
+        } else if (el.modifier === 'map') {
+          el.updateItem1(dataList[index]);
         }
       });
     });
   });
-
-  // arrPageForSinhron.forEach((item) => {
-  //   item.addListener('tabSelected', (index) => {
-  //     arrPageForSinhron.forEach((el) => {
-  //       if (el !== item) {
-  //         el.select(index, true);
-  //         el.pagination.select(index, true);
-  //       }
-  //     });
-  //   });
-  // });
 
   new Footer();
 });
