@@ -3,9 +3,13 @@ import ItemGroup from '../utils/item_group';
 export default class List extends ItemGroup {
   constructor(parentNode, data) {
     super(parentNode, 'ul', 'list', 'list__item--active', 'list__item');
-    this.data = data;
-    this.countries = [];
+    this.update(data)
+  }
 
+  update(data){
+    this.clearItems();
+    this.countries = [];
+    this.data = data;
     this.data.forEach((item) => {
       const inner = `
        <img class="list__flag" src="${item.src}" width="20" height="16" alt="${item.country}">

@@ -56,10 +56,13 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   chartBox.addItem('World', ChartWrapped, dataTable[0]);
 
   mapBox.item.addListener('onMapCountrySelect', (country) => {
+
+
     const indexCountry = listBox.item.countries.indexOf(country);
     listBox.item.select(indexCountry, true);
     listBox.item.items[indexCountry].node.scrollIntoView();
   });
+
 
   // fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
   //   const chartsRequests = new ChartsAPI(jsonChart);
@@ -89,12 +92,12 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     tableBox.updateItem(country, Table, tableDataCountry);
     // здесь пока не настоящие данные в таблице
     const chartDataCountry = dataTable[1];
-    chartBox.updateItem(country, ChartWrapped, chartDataCountry);
+    chartBox.updateItem2(chartDataCountry);
   });
 
   arrPageForHidden.forEach((item) => {
     item.addListener('onFullScreen', (modifier) => {
-      const arrPageHide = arrPageForHidden.filter((el) => el.modifier !== modifier);
+           const arrPageHide = arrPageForHidden.filter((el) => el.modifier !== modifier);
       arrPageHide.forEach((el) => {
         if (el.node.classList.contains('pagebox__wrapper--hide')) {
           el.node.classList.remove('pagebox__wrapper--hide');
@@ -121,9 +124,10 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
       arrPageForSinhron.forEach((el) => {
         el.pagination.node.innerText = pagList[index];
         el.index = index;
-        el.updateItem(el.titleName, el.className, dataList[index]);
         if (el.modifier === 'chart') {
-          el.updateItem(el.titleName, el.className, dataTable[index]);
+          el.updateItem2(dataTable[index]);
+        } else if (el.modifier === 'map') {
+          el.updateItem1(dataList[index]);
         }
       });
     });

@@ -17,11 +17,8 @@ export default class PageBox extends Control {
     this.btnFullScreen = new Btn(this.node, 'btn btn--full-screen', 'Open on full screen', () => {
       this.node.classList.toggle('pagebox__wrapper--full-screen');
       this.dispath('onFullScreen', this.modifier);
-      if (modifier === 'chart') {
-        for (let i = 0; i < 3; i += 1) {
-          // здесь переделать ререндер
-          this.innerItems[i].chart.reRender();
-        }
+      if (modifier === 'chart') {      
+          this.item.chart.reRender();     
       }
     });
 
@@ -37,16 +34,6 @@ export default class PageBox extends Control {
       this.pagination.node.innerHTML = this.paginationList[this.index];
       this.pagination.dispath('tabSelected', this.index);
     });
-
-
-    // this.pagination = new ItemGroup(this.node, 'div', 'pagebox__marks', 'pagebox__mark pagebox__mark--active', 'pagebox__mark');
-    // this.btnPrevious = new Btn(this.pagination.node, 'btn btn-index btn-index--previous', 'previous', () => {});
-    // this.pagination.addItem('div', paginationList[this.index]);
-    // this.btnPrevious = new Btn(this.pagination.node, 'btn btn-index btn-index--next', 'next', () => {});
-
-    // this.pagination.onSelect = (index) => {
-    //   this.select(index);
-    // };
   }
 
   select(index, noEvent) {
@@ -68,23 +55,29 @@ export default class PageBox extends Control {
       if (!resizeTimeout) {
         resizeTimeout = setTimeout(() => {
           resizeTimeout = null;
-          this.innerItems.forEach((el) => {
-            el.chart.reRender();
-          });
-        }, 200);
-      }
-    };
-
-    if (this.item instanceof ChartWrapped) {
-      window.addEventListener('resize', resizeThrottler, false);
-    }
+          this.item.chart.reRender();      
+      }, 200);
   }
+};
 
-  updateItem(title, className, content) {
-    this.itemWrapper.clear();
-    this.page = new Control(this.itemWrapper.node, 'div', 'pagebox__page');
-    const titles = new Control(this.page.node, 'h2', 'pagebox__title', title);
-    this.titles.push(titles);
-    this.item = new className(this.page.node, content);
-  }
+if (this.item instanceof ChartWrapped) {
+  window.addEventListener('resize', resizeThrottler, false);
+}
+}
+
+updateItem(title, className, content) {
+  this.itemWrapper.clear();
+  this.page = new Control(this.itemWrapper.node, 'div', 'pagebox__page');
+  const titles = new Control(this.page.node, 'h2', 'pagebox__title', title);
+  this.titles.push(titles);
+  this.item = new className(this.page.node, content);
+}
+
+updateItem1(content) {
+  this.item.update(content)
+}
+
+updateItem2(content) {
+  this.item.chart.update(content)
+}
 }
