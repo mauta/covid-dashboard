@@ -16,12 +16,10 @@ import ChartsAPI from './block/charts_api';
 const urlAPI = 'https://corona.lmao.ninja/v2/countries';
 const url = 'https://covid19-api.org/api/timeline';
 fetch(urlAPI).then((res) => res.json()).then((json) => {
-  const dataCaseAPI = new DataAPI(json, main);
-
   new Header();
   const main = new Control(document.body, 'main', 'main');
+  const dataCaseAPI = new DataAPI(json, main);
   const cases = new Cases(main, dataCaseAPI.countCases);
-
 
   // константы ниже для хранения объектов с цифрами по каждой стране
   const caseAPI = new CasesAPI(json);
@@ -47,7 +45,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const tabList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered'];
   // список данных для пагинации - надо дописать все 12 пунктов, в той же очередности
   const dataTable = [arr, arr.concat(arr), arr.concat(arr).concat(arr), arr, arr.concat(arr), arr.concat(arr).concat(arr)];
-
 
   const mapBox = new PageBox(main.node, 'map', pagList);
   mapBox.addItem('World', MapWraper, dataList[0]);
@@ -90,7 +87,9 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     const tableDataCountry = dataCaseAPICountry.tableDataCase();
     // здесь пока кривая функция для обновления данных в таблице
     tableBox.updateItem(country, Table, tableDataCountry);
-    // добавить обновление данных в других блоках
+    // здесь пока не настоящие данные в таблице
+    const chartDataCountry = dataTable[1];
+    chartBox.updateItem(country, ChartWrapped, chartDataCountry);
   });
 
   arrPageForHidden.forEach((item) => {
@@ -129,17 +128,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
       });
     });
   });
-
-  // arrPageForSinhron.forEach((item) => {
-  //   item.addListener('tabSelected', (index) => {
-  //     arrPageForSinhron.forEach((el) => {
-  //       if (el !== item) {
-  //         el.select(index, true);
-  //         el.pagination.select(index, true);
-  //       }
-  //     });
-  //   });
-  // });
 
   new Footer();
 });

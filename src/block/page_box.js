@@ -81,6 +81,7 @@ export default class PageBox extends Control {
   }
 
   updateItem(title, className, content) {
+    this.itemWrapper.clear();
     this.page = new Control(this.itemWrapper.node, 'div', 'pagebox__page');
     const titles = new Control(this.page.node, 'h2', 'pagebox__title', title);
     this.titles.push(titles);
