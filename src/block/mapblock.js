@@ -1,10 +1,13 @@
-import Control from '../utils/control';
+/* eslint-disable max-len */
+/* eslint-disable quote-props */
 import mapboxgl from 'mapbox-gl';
+import Control from '../utils/control';
 
 export default class MapWraper extends Control {
   constructor(parentNode, data) {
     super(parentNode, 'div', 'map-wrapper');
     this.node.id = 'map';
+    this.data = data;
 
     mapboxgl.accessToken = 'pk.eyJ1IjoibWF1dGEiLCJhIjoiY2tpbjM4dHIyMDU3MDJ6bWx1YnhoNXYxNSJ9.kq3HP8TVE6Sc8u1-HU2QFg';
     this.map = new mapboxgl.Map({
@@ -25,23 +28,46 @@ export default class MapWraper extends Control {
         }
       },
     }).addControl(new mapboxgl.AttributionControl({
-      compact: true
+      compact: true,
     }));
 
-    // добавляем сразу маркер с попапом
-    var marker = new mapboxgl.Marker({
-            color: "#008000",
-            draggable: false,
-            // меняем размер маркера
-            scale:1.2,
-
-          }
-      )
-      .setLngLat([30.5, 50.5])
-      .setPopup(new mapboxgl.Popup({
+    this.map.on('load', () => {
+      const popup = new mapboxgl.Popup({
         closeButton: false,
-      }).setHTML("<h1>Hello World!</h1>")) // add popup
-      .addTo(this.map);
+        closeOnClick: false,
+        closeOnMove: true,
+      });
 
-    }
+      this.map.on('mousemove', (e) => {
+        const countries = this.map.queryRenderedFeatures(e.point, {
+          layers: ['countries-cnvat2'],
+        });
+
+        if (countries.length > 0) {
+          const countryHovered = this.data.filter((el) => el.countryInfo === countries[0].properties.ISO_A3)[0];
+          popup.setLngLat(e.lngLat).setHTML(`<div>${countryHovered.country}</div><div>${countryHovered.count.toLocaleString('ru-RU')}</div>`).addTo(this.map);
+        } else {
+          popup.remove();
+        }
+      });
+
+      this.map.on('click', (e) => {
+        const countries = this.map.queryRenderedFeatures(e.point, {
+          layers: ['countries-cnvat2'],
+        });
+        if (countries.length > 0) {
+          const countryClicked = this.data.filter((el) => el.countryInfo === countries[0].properties.ISO_A3)[0];
+          this.dispath('onMapCountrySelect', countryClicked.country);
+        }
+      });
+
+      this.map.getCanvas().style.cursor = 'default';
+    });
   }
+
+  update(data) {
+    console.log(this)
+    this.data = data;
+  }
+
+}

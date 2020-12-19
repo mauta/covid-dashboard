@@ -5,54 +5,98 @@ export default class CasesAPI {
     this.json = json;
   }
 
-  count(massCases, country, value, flag = '') {
+  count(massCases, country, value, iso3, flag = '') {
     massCases.push({
       src: flag,
       country,
       count: value,
+      countryInfo: iso3
     });
-    return massCases;
+    return massCases; 
   }
 
   globalCountCases(massCases = []) {
     this.json.forEach((keys) => {
-      this.count(massCases, keys.country, keys.cases, keys.countryInfo.flag);
+      this.count(massCases, keys.country, keys.cases, keys.countryInfo.iso3, keys.countryInfo.flag);
+    });
+    return massCases;
+  }
+
+  globalCountCases100(massCases = []) {
+    this.json.forEach((keys) => {
+      this.count(massCases, keys.country, keys.casesPerOneMillion / 10, keys.countryInfo.iso3, keys.countryInfo.flag);
     });
     return massCases;
   }
 
   globalCountDeaths(massCases = []) {
     this.json.forEach((keys) => {
-      this.count(massCases, keys.country, keys.deaths, keys.countryInfo.flag);
+      this.count(massCases, keys.country, keys.deaths, keys.countryInfo.iso3, keys.countryInfo.flag);
+    });
+    return massCases;
+  }
+
+  globalCountDeaths100(massCases = []) {
+    this.json.forEach((keys) => {
+      this.count(massCases, keys.country, keys.deathsPerOneMillion / 10, keys.countryInfo.iso3, keys.countryInfo.flag);
     });
     return massCases;
   }
 
   globalCountRecovered(massCases = []) {
     this.json.forEach((keys) => {
-      this.count(massCases, keys.country, keys.recovered, keys.countryInfo.flag);
+      this.count(massCases, keys.country, keys.recovered / 10, keys.countryInfo.iso3, keys.countryInfo.flag);
+    });
+    return massCases;
+  }
+
+  globalCountRecovered100(massCases = []) {
+    this.json.forEach((keys) => {
+      this.count(massCases, keys.country, keys.recoveredPerOneMillion / 10, keys.countryInfo.iso3, keys.countryInfo.flag);
     });
     return massCases;
   }
 
   newCountCases(massCases = []) {
     this.json.forEach((keys) => {
-      this.count(massCases, keys.country, keys.todayCases);
+      this.count(massCases, keys.country, keys.todayCases, keys.countryInfo.iso3, keys.countryInfo.flag);
     });
     return massCases;
   }
 
   newCountDeaths(massCases = []) {
     this.json.forEach((keys) => {
-      this.count(massCases, keys.country, keys.todayDeaths);
+      this.count(massCases, keys.country, keys.todayDeaths, keys.countryInfo.iso3, keys.countryInfo.flag);
     });
     return massCases;
   }
 
   newCountRecovered(massCases = []) {
     this.json.forEach((keys) => {
-      this.count(massCases, keys.country, keys.todayRecovered);
+      this.count(massCases, keys.country, keys.todayRecovered, keys.countryInfo.iso3, keys.countryInfo.flag);
     });
+    return massCases;
+  }
+
+  newCountCases100(massCases = []) {
+    this.json.forEach((keys) => {
+      this.count(massCases, keys.country, (keys.todayCases / keys.population) * 100000, keys.countryInfo.iso3, keys.countryInfo.flag);
+    });
+    return massCases;
+  }
+
+  newCountDeaths100(massCases = []) {
+    this.json.forEach((keys) => {
+      this.count(massCases, keys.country, (keys.todayDeaths / keys.population) * 100000, keys.countryInfo.iso3, keys.countryInfo.flag);
+    });
+    return massCases;
+  }
+
+  newCountRecovered100(massCases = []) {
+    this.json.forEach((keys) => {
+      this.count(massCases, keys.country, (keys.todayRecovered / keys.population) * 100000, keys.countryInfo.iso3, keys.countryInfo.flag);
+    });
+    
     return massCases;
   }
 
