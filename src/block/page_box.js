@@ -17,8 +17,8 @@ export default class PageBox extends Control {
     this.btnFullScreen = new Btn(this.node, 'btn btn--full-screen', 'Open on full screen', () => {
       this.node.classList.toggle('pagebox__wrapper--full-screen');
       this.dispath('onFullScreen', this.modifier);
-      if (modifier === 'chart') {      
-          this.item.chart.reRender();     
+      if (modifier === 'chart') {
+        this.item.chart.reRender();
       }
     });
 
@@ -55,29 +55,29 @@ export default class PageBox extends Control {
       if (!resizeTimeout) {
         resizeTimeout = setTimeout(() => {
           resizeTimeout = null;
-          this.item.chart.reRender();      
-      }, 200);
+          this.item.chart.reRender();
+        }, 200);
+      }
+    };
+
+    if (this.item instanceof ChartWrapped) {
+      window.addEventListener('resize', resizeThrottler, false);
+    }
   }
-};
 
-if (this.item instanceof ChartWrapped) {
-  window.addEventListener('resize', resizeThrottler, false);
-}
-}
+  updateItem(title, className, content) {
+    this.itemWrapper.clear();
+    this.page = new Control(this.itemWrapper.node, 'div', 'pagebox__page');
+    const titles = new Control(this.page.node, 'h2', 'pagebox__title', title);
+    this.titles.push(titles);
+    this.item = new className(this.page.node, content);
+  }
 
-updateItem(title, className, content) {
-  this.itemWrapper.clear();
-  this.page = new Control(this.itemWrapper.node, 'div', 'pagebox__page');
-  const titles = new Control(this.page.node, 'h2', 'pagebox__title', title);
-  this.titles.push(titles);
-  this.item = new className(this.page.node, content);
-}
+  updateItem1(content) {
+    this.item.update(content);
+  }
 
-updateItem1(content) {
-  this.item.update(content)
-}
-
-updateItem2(content) {
-  this.item.chart.update(content)
-}
+  updateItem2(content) {
+    this.item.chart.update(content);
+  }
 }

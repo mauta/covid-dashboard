@@ -27,7 +27,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const globalDeaths = caseAPI.globalCountSort(caseAPI.globalCountDeaths());
   const globalRecovered = caseAPI.globalCountSort(caseAPI.globalCountRecovered());
 
-
   // переменные ниже будут с соответствующими данными
   const lastCases = caseAPI.globalCountSort(caseAPI.newCountCases());
   const lastDeaths = caseAPI.globalCountSort(caseAPI.newCountDeaths());
@@ -52,22 +51,25 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   // список показателей для пагинации - надо дописать все 12 пунктов
 
   const pagList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered',
-  'all cases/100 000 population', 'all deaths/100 000 population', 'all recovered/100 000 population', 
-  'last cases/100 000 population', 'last deaths/100 000 population', 'last recovered/100 000 population'];
+    'all cases/100 000 population', 'all deaths/100 000 population', 'all recovered/100 000 population',
+    'last cases/100 000 population', 'last deaths/100 000 population', 'last recovered/100 000 population',
+  ];
   // список данных для пагинации - надо дописать все 12 пунктов, в той же очередности
   const dataList = [globalCases, globalDeaths, globalRecovered, lastCases, lastDeaths, lastRecovered,
-    globalCases100, globalDeaths100, globalRecovered100, lastCases100, lastDeaths100, lastRecovered100];
+    globalCases100, globalDeaths100, globalRecovered100, lastCases100, lastDeaths100, lastRecovered100,
+  ];
 
   // список показателей для пагинации в таблице - надо дописать все пункты
   const tabList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered',
-  'all cases/100 000 population', 'all deaths/100 000 population', 'all recovered/100 000 population', 
-  'last cases/100 000 population', 'last deaths/100 000 population', 'last recovered/100 000 population'];
+    'all cases/100 000 population', 'all deaths/100 000 population', 'all recovered/100 000 population',
+    'last cases/100 000 population', 'last deaths/100 000 population', 'last recovered/100 000 population',
+  ];
 
   // список данных для пагинации - надо дописать все 12 пунктов, в той же очередности
   // пока пусть просто arr, на свежую голову сделаю
   const dataTable = [arr, arr.concat(arr), arr.concat(arr).concat(arr), arr, arr.concat(arr), arr.concat(arr).concat(arr),
-    arr, arr, arr, arr, arr, arr];
-
+    arr, arr, arr, arr, arr, arr,
+  ];
 
   const mapBox = new PageBox(main.node, 'map', pagList);
   mapBox.addItem('World', MapWraper, dataList[0]);
@@ -81,9 +83,8 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   mapBox.item.addListener('onMapCountrySelect', (country) => {
     const indexCountry = listBox.item.countries.indexOf(country);
     listBox.item.select(indexCountry, true);
-    listBox.item.items[indexCountry].node.scrollIntoView(); 
+    listBox.item.items[indexCountry].node.scrollIntoView();
   });
-
 
   // fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
   //   const chartsRequests = new ChartsAPI(jsonChart);
@@ -117,7 +118,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
 
   arrPageForHidden.forEach((item) => {
     item.addListener('onFullScreen', (modifier) => {
-           const arrPageHide = arrPageForHidden.filter((el) => el.modifier !== modifier);
+      const arrPageHide = arrPageForHidden.filter((el) => el.modifier !== modifier);
       arrPageHide.forEach((el) => {
         if (el.node.classList.contains('pagebox__wrapper--hide')) {
           el.node.classList.remove('pagebox__wrapper--hide');
@@ -146,7 +147,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
         el.index = index;
         if (el.modifier === 'chart') {
           el.updateItem2(dataTable[index]);
-        } else if (el.modifier === 'map') {
+        } else {
           el.updateItem1(dataList[index]);
         }
       });

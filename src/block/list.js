@@ -3,11 +3,12 @@ import ItemGroup from '../utils/item_group';
 export default class List extends ItemGroup {
   constructor(parentNode, data) {
     super(parentNode, 'ul', 'list', 'list__item--active', 'list__item');
-    this.update(data)
+    this.update(data);
   }
 
-  update(data){
+  update(data) {
     this.clearItems();
+    this.clear();
     this.countries = [];
     this.data = data;
     this.data.forEach((item) => {
