@@ -26,6 +26,19 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const globalCases = caseAPI.globalCountSort(caseAPI.globalCountCases());
   const globalDeaths = caseAPI.globalCountSort(caseAPI.globalCountDeaths());
   const globalRecovered = caseAPI.globalCountSort(caseAPI.globalCountRecovered());
+
+
+  // переменные ниже будут с соответствующими данными
+  const lastCases = caseAPI.globalCountSort(caseAPI.newCountCases());
+  const lastDeaths = caseAPI.globalCountSort(caseAPI.newCountDeaths());
+  const lastRecovered = caseAPI.globalCountSort(caseAPI.newCountRecovered());
+  const globalCases100 = caseAPI.globalCountSort(caseAPI.globalCountCases100());
+  const globalDeaths100 = caseAPI.globalCountSort(caseAPI.globalCountDeaths100());
+  const globalRecovered100 = caseAPI.globalCountSort(caseAPI.globalCountRecovered100());
+  const lastCases100 = caseAPI.globalCountSort(caseAPI.newCountCases100());
+  const lastDeaths100 = caseAPI.globalCountSort(caseAPI.newCountDeaths100());
+  const lastRecovered100 = caseAPI.globalCountSort(caseAPI.newCountRecovered100());
+
   const arr = [
     [68, '15.03.20'],
     [74, '15.03.20'],
@@ -37,14 +50,24 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   ];
 
   // список показателей для пагинации - надо дописать все 12 пунктов
-  const pagList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered'];
+
+  const pagList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered',
+  'all cases/100 000 population', 'all deaths/100 000 population', 'all recovered/100 000 population', 
+  'last cases/100 000 population', 'last deaths/100 000 population', 'last recovered/100 000 population'];
   // список данных для пагинации - надо дописать все 12 пунктов, в той же очередности
-  const dataList = [globalCases, globalDeaths, globalRecovered, globalCases, globalDeaths, globalRecovered];
+  const dataList = [globalCases, globalDeaths, globalRecovered, lastCases, lastDeaths, lastRecovered,
+    globalCases100, globalDeaths100, globalRecovered100, lastCases100, lastDeaths100, lastRecovered100];
 
   // список показателей для пагинации в таблице - надо дописать все пункты
-  const tabList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered'];
+  const tabList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered',
+  'all cases/100 000 population', 'all deaths/100 000 population', 'all recovered/100 000 population', 
+  'last cases/100 000 population', 'last deaths/100 000 population', 'last recovered/100 000 population'];
+
   // список данных для пагинации - надо дописать все 12 пунктов, в той же очередности
-  const dataTable = [arr, arr.concat(arr), arr.concat(arr).concat(arr), arr, arr.concat(arr), arr.concat(arr).concat(arr)];
+  // пока пусть просто arr, на свежую голову сделаю
+  const dataTable = [arr, arr.concat(arr), arr.concat(arr).concat(arr), arr, arr.concat(arr), arr.concat(arr).concat(arr),
+    arr, arr, arr, arr, arr, arr];
+
 
   const mapBox = new PageBox(main.node, 'map', pagList);
   mapBox.addItem('World', MapWraper, dataList[0]);
@@ -56,11 +79,9 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   chartBox.addItem('World', ChartWrapped, dataTable[0]);
 
   mapBox.item.addListener('onMapCountrySelect', (country) => {
-
-
     const indexCountry = listBox.item.countries.indexOf(country);
     listBox.item.select(indexCountry, true);
-    listBox.item.items[indexCountry].node.scrollIntoView();
+    listBox.item.items[indexCountry].node.scrollIntoView(); 
   });
 
 
@@ -88,7 +109,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   listBox.item.addListener('onSelectedCountry', (country) => {
     const dataCaseAPICountry = new DataAPI(json, main, country);
     const tableDataCountry = dataCaseAPICountry.tableDataCase();
-    // здесь пока кривая функция для обновления данных в таблице
     tableBox.updateItem(country, Table, tableDataCountry);
     // здесь пока не настоящие данные в таблице
     const chartDataCountry = dataTable[1];
