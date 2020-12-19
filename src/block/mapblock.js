@@ -7,7 +7,9 @@ export default class MapWraper extends Control {
   constructor(parentNode, data) {
     super(parentNode, 'div', 'map-wrapper');
     this.node.id = 'map';
+
     this.data = data;
+
 
     mapboxgl.accessToken = 'pk.eyJ1IjoibWF1dGEiLCJhIjoiY2tpbjM4dHIyMDU3MDJ6bWx1YnhoNXYxNSJ9.kq3HP8TVE6Sc8u1-HU2QFg';
     this.map = new mapboxgl.Map({
@@ -44,7 +46,11 @@ export default class MapWraper extends Control {
         });
 
         if (countries.length > 0) {
+
           const countryHovered = this.data.filter((el) => el.countryInfo === countries[0].properties.ISO_A3)[0];
+
+//           const countryHovered = this.data.filter((el) => el.country === countries[0].properties.ADMIN)[0];
+
           popup.setLngLat(e.lngLat).setHTML(`<div>${countryHovered.country}</div><div>${countryHovered.count.toLocaleString('ru-RU')}</div>`).addTo(this.map);
         } else {
           popup.remove();
@@ -56,7 +62,11 @@ export default class MapWraper extends Control {
           layers: ['countries-cnvat2'],
         });
         if (countries.length > 0) {
+
           const countryClicked = this.data.filter((el) => el.countryInfo === countries[0].properties.ISO_A3)[0];
+
+//           const countryClicked = this.data.filter((el) => el.country === countries[0].properties.ADMIN)[0];
+
           this.dispath('onMapCountrySelect', countryClicked.country);
         }
       });
