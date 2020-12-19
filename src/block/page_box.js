@@ -20,6 +20,9 @@ export default class PageBox extends Control {
       if (modifier === 'chart') {
         this.item.chart.reRender();
       }
+      if (modifier === 'map') {
+        this.item.map.resize();
+      }
     });
 
     this.pagWrap = new Control(this.node, 'div', 'pagebox__marks');
@@ -73,8 +76,8 @@ export default class PageBox extends Control {
     this.item = new className(this.page.node, content);
   }
 
-  updateItem1(content) {
-    this.item.update(content);
+  updateItem1(content,tab) {
+    this.item.update(content,tab);
   }
 
   updateItem2(content) {

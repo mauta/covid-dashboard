@@ -64,6 +64,8 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     'all cases/100 000 population', 'all deaths/100 000 population', 'all recovered/100 000 population',
     'last cases/100 000 population', 'last deaths/100 000 population', 'last recovered/100 000 population',
   ];
+  // то как будут у тебя называться переменные внутри геоджейсона
+  const tabArr = ['cases','deaths','recovered','cases','deaths','recovered','cases','deaths','recovered','cases','deaths','recovered']
 
   // список данных для пагинации - надо дописать все 12 пунктов, в той же очередности
   // пока пусть просто arr, на свежую голову сделаю
@@ -148,7 +150,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
         if (el.modifier === 'chart') {
           el.updateItem2(dataTable[index]);
         } else {
-          el.updateItem1(dataList[index]);
+          el.updateItem1(dataList[index],tabArr[index]);
         }
       });
     });
