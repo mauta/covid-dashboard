@@ -2,107 +2,114 @@
 /* eslint-disable quote-props */
 import mapboxgl from 'mapbox-gl';
 import Control from '../utils/control';
+import Legend from './legend';
 
 export default class MapWraper extends Control {
   constructor(parentNode, data) {
     super(parentNode, 'div', 'map-wrapper');
     this.node.id = 'map';
     this.data = data;
-    this.tab = 'cases';
+    this.tab = 'globalCases';
+
+    const countArr = this.data.map((el) => el.count);
+    const tabValue25 = Math.max.apply(null, countArr) * 0.25;
+    const tabValue50 = Math.max.apply(null, countArr) * 0.50;
+    const tabValue75 = Math.max.apply(null, countArr) * 0.75;
+    this.legend = new Legend(this.node, Math.max.apply(null, countArr), this.tab);
 
     this.geoJS = {
       'type': 'FeatureCollection',
       'features': [{
-        'type': 'Feature',
-        'properties': {
-          'ADMIN': 'Australia',
-          'ISO_A3': 'AUS',
-          'cases': 1982090,
-          'deaths': 17610,
+          'type': 'Feature',
+          'properties': {
+            'ADMIN': 'Australia',
+            'ISO_A3': 'AUS',
+            'globalCases': 1982090,
+            'deaths': 17610,
+          },
+          'geometry': {
+            'type': 'Point',
+            'coordinates': [133, -27],
+          },
         },
-        'geometry': {
-          'type': 'Point',
-          'coordinates': [133, -27],
+        {
+          'type': 'Feature',
+          'properties': {
+            'ADMIN': 'Austria',
+            'ISO_A3': 'AUT',
+            'globalCases': 12090,
+            'deaths': 17610,
+          },
+          'geometry': {
+            'type': 'Point',
+            'coordinates': [13.3333, 47.3333],
+          },
         },
-      },
-      {
-        'type': 'Feature',
-        'properties': {
-          'ADMIN': 'Austria',
-          'ISO_A3': 'AUT',
-          'cases': 12090,
-          'deaths': 17610,
+        {
+          'type': 'Feature',
+          'properties': {
+            'ADMIN': 'Belarus',
+            'ISO_A3': 'BLR',
+            'globalCases': 1454000,
+            'deaths': 17610,
+          },
+          'geometry': {
+            'type': 'Point',
+            'coordinates': [28, 53],
+          },
         },
-        'geometry': {
-          'type': 'Point',
-          'coordinates': [13.3333, 47.3333],
+        {
+          'type': 'Feature',
+          'properties': {
+            'ADMIN': 'Brazil',
+            'ISO_A3': 'BRA',
+            'globalCases': 204590,
+            'deaths': 17610,
+          },
+          'geometry': {
+            'type': 'Point',
+            'coordinates': [-55, -10],
+          },
         },
-      },
-      {
-        'type': 'Feature',
-        'properties': {
-          'ADMIN': 'Belarus',
-          'ISO_A3': 'BLR',
-          'cases': 1454000,
-          'deaths': 17610,
+        {
+          'type': 'Feature',
+          'properties': {
+            'ADMIN': 'Canada',
+            'ISO_A3': 'CAN',
+            'globalCases': 50501090,
+            'deaths': 17610,
+          },
+          'geometry': {
+            'type': 'Point',
+            'coordinates': [-95, 60],
+          },
         },
-        'geometry': {
-          'type': 'Point',
-          'coordinates': [28, 53],
+        {
+          'type': 'Feature',
+          'properties': {
+            'ADMIN': 'Germany',
+            'ISO_A3': 'DEU',
+            'globalCases': 2945090,
+            'deaths': 17610,
+          },
+          'geometry': {
+            'type': 'Point',
+            'coordinates': [9, 51],
+          },
         },
-      },
-      {
-        'type': 'Feature',
-        'properties': {
-          'ADMIN': 'Brazil',
-          'ISO_A3': 'BRA',
-          'cases': 204590,
-          'deaths': 17610,
+        {
+          'type': 'Feature',
+          'properties': {
+            'ADMIN': 'Turkey',
+            'ISO_A3': 'TUR',
+            'globalCases': 190000940,
+            'deaths': 17610,
+          },
+          'geometry': {
+            'type': 'Point',
+            'coordinates': [35, 39],
+          },
         },
-        'geometry': {
-          'type': 'Point',
-          'coordinates': [-55, -10],
-        },
-      },
-      {
-        'type': 'Feature',
-        'properties': {
-          'ADMIN': 'Canada',
-          'ISO_A3': 'CAN',
-          'cases': 50501090,
-          'deaths': 17610,
-        },
-        'geometry': {
-          'type': 'Point',
-          'coordinates': [-95, 60],
-        },
-      },
-      {
-        'type': 'Feature',
-        'properties': {
-          'ADMIN': 'Germany',
-          'ISO_A3': 'DEU',
-          'cases': 2945090,
-          'deaths': 17610,
-        },
-        'geometry': {
-          'type': 'Point',
-          'coordinates': [9, 51],
-        },
-      },
-      {
-        'type': 'Feature',
-        'properties': {
-          'ADMIN': 'Turkey',
-          'ISO_A3': 'TUR',
-          'cases': 190000940,
-          'deaths': 17610,
-        },
-        'geometry': {
-          'type': 'Point',
-          'coordinates': [35, 39],
-        },
-      },
       ],
     };
 
@@ -169,10 +176,7 @@ export default class MapWraper extends Control {
         data: this.geoJS,
       });
 
-      const countArr = this.data.map((el) => el.count);
-      const tabValue25 = Math.max.apply(null, countArr) * 0.25;
-      const tabValue50 = Math.max.apply(null, countArr) * 0.50;
-      const tabValue75 = Math.max.apply(null, countArr) * 0.75;
+
 
       this.map.addLayer({
         id: 'circle-point',
