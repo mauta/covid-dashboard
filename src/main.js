@@ -27,6 +27,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const globalDeaths = caseAPI.globalCountSort(caseAPI.globalCountDeaths());
   const globalRecovered = caseAPI.globalCountSort(caseAPI.globalCountRecovered());
 
+  // переменные ниже будут с соответствующими данными
   const lastCases = caseAPI.globalCountSort(caseAPI.newCountCases());
   const lastDeaths = caseAPI.globalCountSort(caseAPI.newCountDeaths());
   const lastRecovered = caseAPI.globalCountSort(caseAPI.newCountRecovered());
@@ -47,15 +48,26 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     [25, '20.12.20'],
   ];
 
+// <<<<<<< branch-api
   const pagList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered',
     'all cases/100 000', 'all deaths/100 000', 'all recovered/100 000',
     'last cases/100 000', 'last deaths/100 000', 'last recovered/100 000',
   ];
  
+=======
+  // список показателей для пагинации - надо дописать все 12 пунктов
+
+  const pagList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered',
+    'all cases/100 000 population', 'all deaths/100 000 population', 'all recovered/100 000 population',
+    'last cases/100 000 population', 'last deaths/100 000 population', 'last recovered/100 000 population',
+  ];
+  // список данных для пагинации - надо дописать все 12 пунктов, в той же очередности
+// >>>>>>> develop
   const dataList = [globalCases, globalDeaths, globalRecovered, lastCases, lastDeaths, lastRecovered,
     globalCases100, globalDeaths100, globalRecovered100, lastCases100, lastDeaths100, lastRecovered100,
   ];
 
+// <<<<<<< branch-api
   const chartList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered',
     'all cases/100 000', 'all deaths/100 000', 'all recovered/100 000',
     'last cases/100 000', 'last deaths/100 000', 'last recovered/100 000',
@@ -63,18 +75,38 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
 
   const tabletList = ['all', 'last', 'all/100 000', 'last/100 000'];
 
+=======
+  // список показателей для пагинации в таблице - надо дописать все пункты
+  const tabList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered',
+    'all cases/100 000 population', 'all deaths/100 000 population', 'all recovered/100 000 population',
+    'last cases/100 000 population', 'last deaths/100 000 population', 'last recovered/100 000 population',
+  ];
+  // так будут у тебя называться переменные внутри геоджейсона
+  const tabArr = ['globalCases', 'globalDeaths', 'globalRecovered', 'lastCases', 'lastDeaths', 'lastRecovered',
+    'globalCases100', 'globalDeaths100', 'globalRecovered100', 'lastCases100', 'lastDeaths100', 'lastRecovered100'];
+
+  // список данных для пагинации - надо дописать все 12 пунктов, в той же очередности
+// >>>>>>> develop
   // пока пусть просто arr, на свежую голову сделаю
   const dataTable = [arr, arr.concat(arr), arr.concat(arr).concat(arr), arr, arr.concat(arr), arr.concat(arr).concat(arr),
     arr, arr, arr, arr, arr, arr,
   ];
 
   const mapBox = new PageBox(main.node, 'map', pagList);
+// <<<<<<< branch-api
   mapBox.addItem('World', MapWraper, dataList[0], json);
+=======
+  mapBox.addItem('World', MapWraper, dataList[0]);
+// >>>>>>> develop
 
   const listBox = new PageBox(main.node, 'list', pagList);
   listBox.addItem('World', List, dataList[0]);
 
+// <<<<<<< branch-api
   const chartBox = new PageBox(main.node, 'chart', chartList);
+=======
+  const chartBox = new PageBox(main.node, 'chart', tabList);
+// >>>>>>> develop
   chartBox.addItem('World', ChartWrapped, dataTable[0]);
 
   mapBox.item.addListener('onMapCountrySelect', (country) => {
@@ -88,11 +120,16 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   //   console.log(chartsRequests.chartGS());
   // });
 
+// <<<<<<< branch-api
   const tableBox = new PageBox(main.node, 'table', tabletList);
+=======
+  const tableBox = new PageBox(main.node, 'table', pagList);
+// >>>>>>> develop
 
   const arrPageForSinhron = [chartBox, listBox, mapBox];
   const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];
   const countryTitleCases = [chartBox, tableBox, mapBox];
+
   const tableCases = [tableBox];
 
   const tableDataAllCase = dataCaseAPI.tableDataCaseAll();
@@ -112,6 +149,22 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   listBox.item.addListener('onSelectedCountry', (country) => {
     const dataCaseAPICountry = new DataAPI(json, main, country);
     const tableDataCountry = dataCaseAPICountry.tableDataCaseAll();
+
+
+//   const tableData = dataCaseAPI.tableDataCase();
+//   const hundredData = dataCaseAPI.hundredDataCase();
+//   tableBox.addItem('World', Table, tableData);
+
+//   cases.search.addListener('onSearchCountry', (country) => {
+//     const indexCountry = listBox.item.countries.indexOf(country);
+//     listBox.item.select(indexCountry, true);
+//     listBox.item.items[indexCountry].node.scrollIntoView();
+//   });
+
+//   listBox.item.addListener('onSelectedCountry', (country) => {
+//     const dataCaseAPICountry = new DataAPI(json, main, country);
+//     const tableDataCountry = dataCaseAPICountry.tableDataCase();
+// >>>>>>> develop
     tableBox.updateItem(country, Table, tableDataCountry);
     // здесь пока не настоящие данные в таблице
     const chartDataCountry = dataTable[1];
@@ -150,7 +203,11 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
         if (el.modifier === 'chart') {
           el.updateItem2(dataTable[index]);
         } else {
+// <<<<<<< branch-api
           el.updateItem1(dataList[index]);
+=======
+          el.updateItem1(dataList[index],tabArr[index]);
+// >>>>>>> develop
         }
       });
     });

@@ -4,17 +4,17 @@
 
 import mapboxgl from 'mapbox-gl';
 import Control from '../utils/control';
+import Legend from './legend';
 
 export default class MapWraper extends Control {
   constructor(parentNode, data, json) {
     super(parentNode, 'div', 'map-wrapper');
     this.node.id = 'map';
     this.data = data;
-
-    // переменная с большим json
     this.geoJS = {
       'type': 'FeatureCollection',
       'features': this.geoJSON(json)
+
     };
 
     mapboxgl.accessToken = 'pk.eyJ1IjoibWF1dGEiLCJhIjoiY2tpbjM4dHIyMDU3MDJ6bWx1YnhoNXYxNSJ9.kq3HP8TVE6Sc8u1-HU2QFg';
@@ -75,13 +75,41 @@ export default class MapWraper extends Control {
       });
 
       this.map.getCanvas().style.cursor = 'default';
+ this.map.addSource('dataCircle', {
+        type: 'geojson',
+        data: this.geoJS,
+      });
+
+
+
+      this.map.addLayer({
+        id: 'circle-point',
+        type: 'circle',
+        source: 'dataCircle',
+        paint: {
+          'circle-color': '#008000',
+          'circle-radius': [
+            'step',
+            ['get', this.tab],
+            5,
+            tabValue25,
+            10,
+            tabValue50,
+            15,
+            tabValue75,
+            20,
+          ],
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#000',
+        },
+      });
     });
   }
 
   update(data) {
     this.data = data;
+    this.tab = tab;
   }
-
   geoJSON(json) {
     const features = [];
     json.forEach((key) => {
@@ -110,5 +138,6 @@ export default class MapWraper extends Control {
       });
     })
     return features;
+
   }
 }

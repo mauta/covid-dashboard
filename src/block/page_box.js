@@ -20,6 +20,10 @@ export default class PageBox extends Control {
       if (modifier === 'chart') {
         this.item.chart.reRender();
       }
+      if (modifier === 'map') {
+        this.item.map.resize();
+
+      }
     });
 
     this.pagWrap = new Control(this.node, 'div', 'pagebox__marks');
@@ -42,13 +46,16 @@ export default class PageBox extends Control {
     // this.items.forEach((it, i) => it.node.style.display = (i != index) ? 'none' : '');
   }
 
+
   addItem(title, className, content, json='') {
+
     this.page = new Control(this.itemWrapper.node, 'div', 'pagebox__page');
     this.titleName = title;
     this.title = new Control(this.page.node, 'h2', 'pagebox__title', title);
     this.titles.push(this.title);
     this.className = className;
     this.item = new className(this.page.node, content, json);
+
     let resizeTimeout;
 
     const resizeThrottler = () => {
@@ -73,8 +80,9 @@ export default class PageBox extends Control {
     this.item = new className(this.page.node, content);
   }
 
-  updateItem1(content) {
-    this.item.update(content);
+
+  updateItem1(content,tab) {
+    this.item.update(content,tab);
   }
 
   updateItem2(content) {
