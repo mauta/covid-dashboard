@@ -153,27 +153,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     // chartBox.updateItem2(chartDataCountry);
 
     const tableDataCountry = dataCaseAPICountry.tableDataCaseAll();
-
-
-    //   const tableData = dataCaseAPI.tableDataCase();
-    //   const hundredData = dataCaseAPI.hundredDataCase();
-    //   tableBox.addItem('World', Table, tableData);
-
-    //   cases.search.addListener('onSearchCountry', (country) => {
-    //     const indexCountry = listBox.item.countries.indexOf(country);
-    //     listBox.item.select(indexCountry, true);
-    //     listBox.item.items[indexCountry].node.scrollIntoView();
-    //   });
-
-    //   listBox.item.addListener('onSelectedCountry', (country) => {
-    //     const dataCaseAPICountry = new DataAPI(json, main, country);
-    //     const tableDataCountry = dataCaseAPICountry.tableDataCase();
-    // >>>>>>> develop
-    //     tableBox.updateItem(country, Table, tableDataCountry);
-    //     // здесь пока не настоящие данные в таблице
-    //     const chartDataCountry = dataTable[1];
-    //     chartBox.updateItem2(chartDataCountry);
-
   });
 
   arrPageForHidden.forEach((item) => {
