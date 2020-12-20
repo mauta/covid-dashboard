@@ -290,8 +290,8 @@ td {
   background-image: url(img/next.svg);
 }
 
-.btn-index--next {
-  background-image: url(img/next.svg);
+.btn-index--previous {
+  background-image: url(img/previous.svg);
 }
 
 
@@ -638,6 +638,10 @@ td {
 }
 
 .mapboxgl-ctrl-bottom-left{
+  display: none;
+}
+
+.mapboxgl-ctrl-bottom-right{
   display: none;
 }
 

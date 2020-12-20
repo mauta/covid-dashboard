@@ -47,8 +47,7 @@ export default class PageBox extends Control {
   }
 
 
-  addItem(title, className, content, json='') {
-
+  addItem(title, className, content, json = '') {
     this.page = new Control(this.itemWrapper.node, 'div', 'pagebox__page');
     this.titleName = title;
     this.title = new Control(this.page.node, 'h2', 'pagebox__title', title);

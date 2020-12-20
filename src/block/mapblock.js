@@ -11,10 +11,16 @@ export default class MapWraper extends Control {
     super(parentNode, 'div', 'map-wrapper');
     this.node.id = 'map';
     this.data = data;
+    this.tab = 'globalCases';
+
+    const countArr = this.data.map((el) => el.count);
+    const tabValue25 = Math.max.apply(null, countArr) * 0.05;
+    const tabValue50 = Math.max.apply(null, countArr) * 0.20;
+    const tabValue75 = Math.max.apply(null, countArr) * 0.98;
+    this.legend = new Legend(this.node, Math.max.apply(null, countArr), this.tab);
     this.geoJS = {
       'type': 'FeatureCollection',
-      'features': this.geoJSON(json)
-
+      'features': this.geoJSON(json),
     };
 
     mapboxgl.accessToken = 'pk.eyJ1IjoibWF1dGEiLCJhIjoiY2tpbjM4dHIyMDU3MDJ6bWx1YnhoNXYxNSJ9.kq3HP8TVE6Sc8u1-HU2QFg';
@@ -75,7 +81,7 @@ export default class MapWraper extends Control {
       });
 
       this.map.getCanvas().style.cursor = 'default';
- this.map.addSource('dataCircle', {
+      this.map.addSource('dataCircle', {
         type: 'geojson',
         data: this.geoJS,
       });
