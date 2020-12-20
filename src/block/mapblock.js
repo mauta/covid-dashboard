@@ -1,6 +1,8 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable guard-for-in */
 /* eslint-disable max-len */
 /* eslint-disable quote-props */
-/*eslint class-methods-use-this: ["error", { "exceptMethods": ["geoJSON"]}] */
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["geoJSON"]}] */
 
 import mapboxgl from 'mapbox-gl';
 import Control from '../utils/control';
@@ -13,7 +15,7 @@ export default class MapWraper extends Control {
     this.node.id = 'map';
     this.data = data;
     this.tab = 'globalCases';
-//     const countArr = this.data.map((el) => el.count);
+    //     const countArr = this.data.map((el) => el.count);
     this.tabValue25 = Math.max.apply(null, this.countArr) * 0.05;
     this.tabValue50 = Math.max.apply(null, this.countArr) * 0.20;
     this.tabValue75 = Math.max.apply(null, this.countArr) * 0.98;
@@ -38,9 +40,10 @@ export default class MapWraper extends Control {
       'globalRecovered100': caseAPI.globalCountSort(caseAPI.globalCountRecovered100())[0].count,
       'lastCases100': caseAPI.globalCountSort(caseAPI.newCountCases100())[0].count,
       'lastDeaths100': caseAPI.globalCountSort(caseAPI.newCountDeaths100())[0].count,
-      'lastRecovered100': caseAPI.globalCountSort(caseAPI.newCountRecovered100())[0].count
+      'lastRecovered100': caseAPI.globalCountSort(caseAPI.newCountRecovered100())[0].count,
     };
 
+    this.legend = new Legend(this.node, this.geoJSONMax['globalCases'], this.tab);
 
     mapboxgl.accessToken = 'pk.eyJ1IjoibWF1dGEiLCJhIjoiY2tpbjM4dHIyMDU3MDJ6bWx1YnhoNXYxNSJ9.kq3HP8TVE6Sc8u1-HU2QFg';
     this.map = new mapboxgl.Map({
@@ -65,7 +68,6 @@ export default class MapWraper extends Control {
     }));
 
     this.map.on('load', () => {
-
       this.map.addSource('dataCircle', {
         type: 'geojson',
         data: this.geoJS,
@@ -77,7 +79,6 @@ export default class MapWraper extends Control {
         closeButton: false,
         closeOnClick: false,
       });
-
 
       this.map.on('mousemove', (e) => {
         const countries = this.map.queryRenderedFeatures(e.point, {
@@ -103,58 +104,35 @@ export default class MapWraper extends Control {
         }
       });
 
-      console.log(this.geoJSONMax.entries())
-
-//       this.geoJSONMax.entries().forEach((item)=>{
-//         let {key, value} = item;
-//         // this.map.addLayer({
-//         //   id: 'globalDeaths',
-//         //   type: 'circle',
-//         //   source: 'dataCircle',
-//         //   paint: {
-//         //     'circle-color': '#008088',
-//         //     'circle-radius': [
-//         //       'step',
-//         //       ['get', 'globalCases'],
-//         //       5,
-//         //       this.tabValue25,
-//         //       10,
-//         //       this.tabValue50,
-//         //       15,
-//         //       this.tabValue75,
-//         //       20,
-//         //     ],
-//         //     'circle-stroke-width': 1,
-//         //     'circle-stroke-color': '#000',
-//         //   },
-//         // });
-//  console.log(key)
-//       })
-
-
-
-      // this.map.addLayer({
-      //   id: 'globalCases',
-      //   type: 'circle',
-      //   source: 'dataCircle',
-      //   paint: {
-      //     'circle-color': '#008000',
-      //     'circle-radius': [
-      //       'step',
-      //       ['get', 'globalCases'],
-      //       5,
-      //       this.tabValue25,
-      //       10,
-      //       this.tabValue50,
-      //       15,
-      //       this.tabValue75,
-      //       20,
-      //     ],
-      //     'circle-stroke-width': 1,
-      //     'circle-stroke-color': '#000',
-      //   },
-      // });
-
+      for (const item in this.geoJSONMax) {
+        const maximum = this.geoJSONMax[item];
+        const tabValue05 = maximum * 0.05;
+        const tabValue20 = maximum * 0.2;
+        const tabValue95 = maximum * 0.95;
+        this.map.addLayer({
+          id: item,
+          type: 'circle',
+          source: 'dataCircle',
+          paint: {
+            'circle-color': '#008000',
+            'circle-radius': [
+              'step',
+              ['get', item],
+              5,
+              tabValue05,
+              10,
+              tabValue20,
+              15,
+              tabValue95,
+              20,
+            ],
+            'circle-stroke-width': 1,
+            'circle-stroke-color': '#000',
+          },
+        });
+        this.map.setLayoutProperty(item, 'visibility', 'none');
+      }
+      this.map.setLayoutProperty(this.tab, 'visibility', 'visible');
       this.map.getCanvas().style.cursor = 'default';
     });
   }
@@ -162,10 +140,12 @@ export default class MapWraper extends Control {
   update(data, tab) {
     this.data = data;
     this.tab = tab;
-    this.map.moveLayer(this.tab);
-    this.legend.update(this.tab);
+    for (const item in this.geoJSONMax) {
+      this.map.setLayoutProperty(item, 'visibility', 'none');
+    }
+    this.map.setLayoutProperty(this.tab, 'visibility', 'visible');
+    this.legend.update(this.tab, this.geoJSONMax[this.tab]);
   }
-
 
   geoJSON(json) {
     const features = [];
@@ -186,7 +166,7 @@ export default class MapWraper extends Control {
           'globalRecovered100': key.recoveredPerOneMillion / 10,
           'lastCases100': (key.todayCases / key.population) * 100000,
           'lastDeaths100': (key.todayDeaths / key.population) * 100000,
-          'lastRecovered100': (key.todayRecovered / key.population) * 100000
+          'lastRecovered100': (key.todayRecovered / key.population) * 100000,
         },
         'geometry': {
           'type': 'Point',

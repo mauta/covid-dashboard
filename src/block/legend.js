@@ -24,16 +24,16 @@ export default class Header extends Control {
     this.legendS = new Control(this.node, 'div', 'legend__s', '');
     this.legendM = new Control(this.node, 'div', 'legend__m', '');
     this.legendL = new Control(this.node, 'div', 'legend__l', '');
-    this.update(this.tab);
+    this.update(this.tab, this.quater);
   }
 
-  update(tab) {
+  update(tab, quater) {
+    this.quater = quater;
     this.tab = tab;
     this.title.node.innerHTML = `${this.titles[this.tab]}`;
-    this.legendXS.node.innerHTML = `< ${Math.round(this.quater * 0.25).toLocaleString('ru-RU')}`;
-    this.legendS.node.innerHTML = `< ${Math.round(this.quater * 0.50).toLocaleString('ru-RU')}`;
-    this.legendM.node.innerHTML = `< ${Math.round(this.quater * 0.75).toLocaleString('ru-RU')}`;
-    this.legendL.node.innerHTML = `> ${Math.round(this.quater * 0.75).toLocaleString('ru-RU')}`;
-
+    this.legendXS.node.innerHTML = `< ${Math.round(this.quater * 0.05).toLocaleString('ru-RU')}`;
+    this.legendS.node.innerHTML = `< ${Math.round(this.quater * 0.20).toLocaleString('ru-RU')}`;
+    this.legendM.node.innerHTML = `< ${Math.round(this.quater * 0.95).toLocaleString('ru-RU')}`;
+    this.legendL.node.innerHTML = `> ${Math.round(this.quater * 0.95).toLocaleString('ru-RU')}`;
   }
 }

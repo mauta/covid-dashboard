@@ -234,6 +234,7 @@ class Chart extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
   constructor(parentNode, dataForChart) {
     super(parentNode, 'canvas', 'canvas');
     this.parentNode = parentNode;
+
     this.addListener('onResize', () => {
       this.reRender();
     });
@@ -245,6 +246,7 @@ class Chart extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
     const TOP_PDNG = 10;
     const SIZE_PDNG = 40;
     const AXE_PDNG = 20;
+    this.data = data;
     this.dataArr = data.map((el) => el[0]);
 
     this.ctx = this.node.getContext('2d');
@@ -291,6 +293,11 @@ class Chart extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
   reRender() {
     this.clear();
     this.render(this.data);
+  }
+
+  update(data) {
+    this.clear();
+    this.render(data);
   }
 }
 
@@ -459,26 +466,38 @@ class DataAPI {
     });
   }
 
-  tableDataCase() {
+  tableDataCaseAll() {
     const tableData = {
-      allCases: this.allCases.toLocaleString('ru-RU'),
-      newCases: this.newCases.toLocaleString('ru-RU'),
-      alldeaths: this.alldeaths.toLocaleString('ru-RU'),
-      newdeaths: this.newdeaths.toLocaleString('ru-RU'),
-      allrecovered: this.allrecovered.toLocaleString('ru-RU'),
-      newrecovered: this.newrecovered.toLocaleString('ru-RU'),
+      cases: this.allCases.toLocaleString('ru-RU'),
+      deaths: this.alldeaths.toLocaleString('ru-RU'),
+      recovered: this.allrecovered.toLocaleString('ru-RU'),
     };
     return tableData;
   }
 
-  hundredDataCase() {
+  tableDataCaseLast() {
+    const tableData = {
+      cases: this.newCases.toLocaleString('ru-RU'),
+      deaths: this.newdeaths.toLocaleString('ru-RU'),
+      recovered: this.newrecovered.toLocaleString('ru-RU'),
+    };
+    return tableData;
+  }
+
+  hundredDataCaseAll() {
     const hundredData = {
-      allCases: this.hundredAllCase.toLocaleString('ru-RU'),
-      newCases: this.hundredNewAllCase.toLocaleString('ru-RU'),
-      alldeaths: this.hundredDeathsCase.toLocaleString('ru-RU'),
-      newdeaths: this.hundredNewDeathsCase.toLocaleString('ru-RU'),
-      allrecovered: this.hundredRecoveredsCase.toLocaleString('ru-RU'),
-      newrecovered: this.hundredNewRecoveredsCase.toLocaleString('ru-RU'),
+      cases: this.hundredAllCase.toLocaleString('ru-RU'),
+      deaths: this.hundredDeathsCase.toLocaleString('ru-RU'),
+      recovered: this.hundredRecoveredsCase.toLocaleString('ru-RU'),
+    };
+    return hundredData;
+  }
+
+  hundredDataCaseLast() {
+    const hundredData = {
+      cases: this.hundredNewAllCase.toLocaleString('ru-RU'),
+      deaths: this.hundredNewDeathsCase.toLocaleString('ru-RU'),
+      recovered: this.hundredNewRecoveredsCase.toLocaleString('ru-RU'),
     };
     return hundredData;
   }
@@ -536,6 +555,60 @@ class Header extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
 /***/ }),
 
+/***/ "./src/block/legend.js":
+/*!*****************************!*\
+  !*** ./src/block/legend.js ***!
+  \*****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Header; });
+/* harmony import */ var _utils_control__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/control */ "./src/utils/control.js");
+
+
+class Header extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
+  constructor(parentNode, quater, tab) {
+    super(parentNode, 'div', 'legend', '');
+    this.titles = {
+      globalCases: 'All Cases',
+      globalDeaths: 'All Deaths',
+      globalRecovered: 'All recovered',
+      lastCases: 'Last cases',
+      lastDeaths: 'Last deaths',
+      lastRecovered: 'Last recovered',
+      globalCases100: '1/100 000 cases',
+      globalDeaths100: '1/100 000 deaths',
+      globalRecovered100: '1/100 000 recovered',
+      lastCases100: '1/100 000 last cases',
+      lastDeaths100: '1/100 000 last deaths',
+      lastRecovered100: '1/100 000 last recovered',
+    };
+    this.tab = tab;
+    this.quater = quater;
+    this.title = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'h3', 'legend__title', '');
+    this.legendXS = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'div', 'legend__xs', '');
+    this.legendS = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'div', 'legend__s', '');
+    this.legendM = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'div', 'legend__m', '');
+    this.legendL = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'div', 'legend__l', '');
+    this.update(this.tab, this.quater);
+  }
+
+  update(tab, quater) {
+    this.quater = quater;
+    this.tab = tab;
+    this.title.node.innerHTML = `${this.titles[this.tab]}`;
+    this.legendXS.node.innerHTML = `< ${Math.round(this.quater * 0.05).toLocaleString('ru-RU')}`;
+    this.legendS.node.innerHTML = `< ${Math.round(this.quater * 0.20).toLocaleString('ru-RU')}`;
+    this.legendM.node.innerHTML = `< ${Math.round(this.quater * 0.95).toLocaleString('ru-RU')}`;
+    this.legendL.node.innerHTML = `> ${Math.round(this.quater * 0.95).toLocaleString('ru-RU')}`;
+  }
+}
+
+
+/***/ }),
+
 /***/ "./src/block/list.js":
 /*!***************************!*\
   !*** ./src/block/list.js ***!
@@ -552,9 +625,14 @@ __webpack_require__.r(__webpack_exports__);
 class List extends _utils_item_group__WEBPACK_IMPORTED_MODULE_0__["default"] {
   constructor(parentNode, data) {
     super(parentNode, 'ul', 'list', 'list__item--active', 'list__item');
-    this.data = data;
-    this.countries = [];
+    this.update(data);
+  }
 
+  update(data) {
+    this.clearItems();
+    this.clear();
+    this.countries = [];
+    this.data = data;
     this.data.forEach((item) => {
       const inner = `
        <img class="list__flag" src="${item.src}" width="20" height="16" alt="${item.country}">
@@ -582,14 +660,54 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var mapbox_gl__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mapbox-gl */ "./node_modules/mapbox-gl/dist/mapbox-gl.js");
 /* harmony import */ var mapbox_gl__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(mapbox_gl__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _utils_control__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/control */ "./src/utils/control.js");
+/* harmony import */ var _legend__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./legend */ "./src/block/legend.js");
+/* harmony import */ var _utils_cases_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/cases_api */ "./src/utils/cases_api.js");
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable guard-for-in */
+/* eslint-disable max-len */
 /* eslint-disable quote-props */
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["geoJSON"]}] */
+
+
+
 
 
 
 class MapWraper extends _utils_control__WEBPACK_IMPORTED_MODULE_1__["default"] {
-  constructor(parentNode, data) {
+  constructor(parentNode, data, json) {
     super(parentNode, 'div', 'map-wrapper');
     this.node.id = 'map';
+    this.data = data;
+    this.tab = 'globalCases';
+    //     const countArr = this.data.map((el) => el.count);
+    this.tabValue25 = Math.max.apply(null, this.countArr) * 0.05;
+    this.tabValue50 = Math.max.apply(null, this.countArr) * 0.20;
+    this.tabValue75 = Math.max.apply(null, this.countArr) * 0.98;
+
+    this.legend = new _legend__WEBPACK_IMPORTED_MODULE_2__["default"](this.node, Math.max.apply(null, this.countArr), this.tab);
+
+    this.geoJS = {
+      'type': 'FeatureCollection',
+      'features': this.geoJSON(json),
+    };
+    const caseAPI = new _utils_cases_api__WEBPACK_IMPORTED_MODULE_3__["default"](json);
+
+    this.geoJSONMax = {
+      'globalCases': caseAPI.globalCountSort(caseAPI.globalCountCases())[0].count,
+      'globalDeaths': caseAPI.globalCountSort(caseAPI.globalCountDeaths())[0].count,
+      'globalRecovered': caseAPI.globalCountSort(caseAPI.globalCountRecovered())[0].count,
+      'lastCases': caseAPI.globalCountSort(caseAPI.newCountCases())[0].count,
+      'lastDeaths': caseAPI.globalCountSort(caseAPI.newCountDeaths())[0].count,
+      'lastRecovered': caseAPI.globalCountSort(caseAPI.newCountRecovered())[0].count,
+      'globalCases100': caseAPI.globalCountSort(caseAPI.globalCountCases100())[0].count,
+      'globalDeaths100': caseAPI.globalCountSort(caseAPI.globalCountDeaths100())[0].count,
+      'globalRecovered100': caseAPI.globalCountSort(caseAPI.globalCountRecovered100())[0].count,
+      'lastCases100': caseAPI.globalCountSort(caseAPI.newCountCases100())[0].count,
+      'lastDeaths100': caseAPI.globalCountSort(caseAPI.newCountDeaths100())[0].count,
+      'lastRecovered100': caseAPI.globalCountSort(caseAPI.newCountRecovered100())[0].count,
+    };
+
+    this.legend = new _legend__WEBPACK_IMPORTED_MODULE_2__["default"](this.node, this.geoJSONMax['globalCases'], this.tab);
 
     mapbox_gl__WEBPACK_IMPORTED_MODULE_0___default.a.accessToken = 'pk.eyJ1IjoibWF1dGEiLCJhIjoiY2tpbjM4dHIyMDU3MDJ6bWx1YnhoNXYxNSJ9.kq3HP8TVE6Sc8u1-HU2QFg';
     this.map = new mapbox_gl__WEBPACK_IMPORTED_MODULE_0___default.a.Map({
@@ -613,9 +731,14 @@ class MapWraper extends _utils_control__WEBPACK_IMPORTED_MODULE_1__["default"] {
       compact: true,
     }));
 
-    console.log(data[10].country);
-
     this.map.on('load', () => {
+      this.map.addSource('dataCircle', {
+        type: 'geojson',
+        data: this.geoJS,
+      });
+
+      this.countryLayer = this.map.getLayer('countries-cnvat2');
+
       const popup = new mapbox_gl__WEBPACK_IMPORTED_MODULE_0___default.a.Popup({
         closeButton: false,
         closeOnClick: false,
@@ -627,14 +750,96 @@ class MapWraper extends _utils_control__WEBPACK_IMPORTED_MODULE_1__["default"] {
         });
 
         if (countries.length > 0) {
-          const b = data.filter((el) => el.country === countries[0].properties.ADMIN);
-
-          popup.setLngLat(e.lngLat).setHTML(`${b[0].country}\n ${b[0].count}`).addTo(this.map);
+          const countryHovered = this.data.filter((el) => el.countryInfo === countries[0].properties.ISO_A3)[0];
+          popup.setLngLat(e.lngLat).setHTML(`<div>${countryHovered.country}</div><div>${countryHovered.count.toLocaleString('ru-RU')}</div>`).addTo(this.map);
+          // this.countryLayer.setPaintProperty(, 'fill-color', '#3bb2d0');
+        } else {
+          popup.remove();
         }
       });
 
+      this.map.on('click', (e) => {
+        const countries = this.map.queryRenderedFeatures(e.point, {
+          layers: ['countries-cnvat2'],
+        });
+        if (countries.length > 0) {
+          const countryClicked = this.data.filter((el) => el.countryInfo === countries[0].properties.ISO_A3)[0];
+          this.dispath('onMapCountrySelect', countryClicked.country);
+        }
+      });
+
+      for (const item in this.geoJSONMax) {
+        const maximum = this.geoJSONMax[item];
+        const tabValue05 = maximum * 0.05;
+        const tabValue20 = maximum * 0.2;
+        const tabValue95 = maximum * 0.95;
+        this.map.addLayer({
+          id: item,
+          type: 'circle',
+          source: 'dataCircle',
+          paint: {
+            'circle-color': '#008000',
+            'circle-radius': [
+              'step',
+              ['get', item],
+              5,
+              tabValue05,
+              10,
+              tabValue20,
+              15,
+              tabValue95,
+              20,
+            ],
+            'circle-stroke-width': 1,
+            'circle-stroke-color': '#000',
+          },
+        });
+        this.map.setLayoutProperty(item, 'visibility', 'none');
+      }
+      this.map.setLayoutProperty(this.tab, 'visibility', 'visible');
       this.map.getCanvas().style.cursor = 'default';
     });
+  }
+
+  update(data, tab) {
+    this.data = data;
+    this.tab = tab;
+    for (const item in this.geoJSONMax) {
+      this.map.setLayoutProperty(item, 'visibility', 'none');
+    }
+    this.map.setLayoutProperty(this.tab, 'visibility', 'visible');
+    // this.map.moveLayer(this.tab);
+    this.legend.update(this.tab, this.geoJSONMax[this.tab]);
+  }
+
+  geoJSON(json) {
+    const features = [];
+    json.forEach((key) => {
+      features.push({
+        'type': 'Feature',
+        'properties': {
+          'ADMIN': key.country,
+          'ISO_A3': key.countryInfo.iso3,
+          'globalCases': key.cases,
+          'globalDeaths': key.deaths,
+          'globalRecovered': key.recovered,
+          'lastCases': key.todayCases,
+          'lastDeaths': key.todayDeaths,
+          'lastRecovered': key.todayRecovered,
+          'globalCases100': key.casesPerOneMillion / 10,
+          'globalDeaths100': key.deathsPerOneMillion / 10,
+          'globalRecovered100': key.recoveredPerOneMillion / 10,
+          'lastCases100': (key.todayCases / key.population) * 100000,
+          'lastDeaths100': (key.todayDeaths / key.population) * 100000,
+          'lastRecovered100': (key.todayRecovered / key.population) * 100000,
+        },
+        'geometry': {
+          'type': 'Point',
+          'coordinates': [key.countryInfo.long, key.countryInfo.lat],
+        },
+      });
+    });
+    return features;
   }
 }
 
@@ -675,10 +880,11 @@ class PageBox extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
       this.node.classList.toggle('pagebox__wrapper--full-screen');
       this.dispath('onFullScreen', this.modifier);
       if (modifier === 'chart') {
-        for (let i = 0; i < 3; i += 1) {
-          // здесь переделать ререндер
-          this.innerItems[i].chart.reRender();
-        }
+        this.item.chart.reRender();
+      }
+      if (modifier === 'map') {
+        this.item.map.resize();
+
       }
     });
 
@@ -694,16 +900,6 @@ class PageBox extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
       this.pagination.node.innerHTML = this.paginationList[this.index];
       this.pagination.dispath('tabSelected', this.index);
     });
-
-
-    // this.pagination = new ItemGroup(this.node, 'div', 'pagebox__marks', 'pagebox__mark pagebox__mark--active', 'pagebox__mark');
-    // this.btnPrevious = new Btn(this.pagination.node, 'btn btn-index btn-index--previous', 'previous', () => {});
-    // this.pagination.addItem('div', paginationList[this.index]);
-    // this.btnPrevious = new Btn(this.pagination.node, 'btn btn-index btn-index--next', 'next', () => {});
-
-    // this.pagination.onSelect = (index) => {
-    //   this.select(index);
-    // };
   }
 
   select(index, noEvent) {
@@ -712,22 +908,22 @@ class PageBox extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
     // this.items.forEach((it, i) => it.node.style.display = (i != index) ? 'none' : '');
   }
 
-  addItem(title, className, content) {
+
+  addItem(title, className, content, json = '') {
     this.page = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.itemWrapper.node, 'div', 'pagebox__page');
     this.titleName = title;
     this.title = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.page.node, 'h2', 'pagebox__title', title);
     this.titles.push(this.title);
     this.className = className;
-    this.item = new className(this.page.node, content);
+    this.item = new className(this.page.node, content, json);
+
     let resizeTimeout;
 
     const resizeThrottler = () => {
       if (!resizeTimeout) {
         resizeTimeout = setTimeout(() => {
           resizeTimeout = null;
-          this.innerItems.forEach((el) => {
-            el.chart.reRender();
-          });
+          this.item.chart.reRender();
         }, 200);
       }
     };
@@ -738,10 +934,20 @@ class PageBox extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
   }
 
   updateItem(title, className, content) {
+    this.itemWrapper.clear();
     this.page = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.itemWrapper.node, 'div', 'pagebox__page');
     const titles = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.page.node, 'h2', 'pagebox__title', title);
     this.titles.push(titles);
     this.item = new className(this.page.node, content);
+  }
+
+
+  updateItem1(content,tab) {
+    this.item.update(content,tab);
+  }
+
+  updateItem2(content) {
+    this.item.chart.update(content);
   }
 }
 
@@ -866,12 +1072,18 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class Table extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
-  constructor(parentNode, data) { 
+  constructor(parentNode, data) {
     super(parentNode, 'table');
-    this.title = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'tr', '', '<td></td><td>all</td><td>new</td>');
-    this.cases = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'tr', '', `<td>cases</td><td>${data.allCases}</td><td>${data.newCases}</td>`);
-    this.deaths = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'tr', '', `<td>deaths</td><td>${data.alldeaths}</td><td>${data.newdeaths}</td>`);
-    this.recovered = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'tr', '', `<td>recovered</td><td>${data.allrecovered}</td><td>${data.newrecovered}</td>`);
+    this.cases = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'tr', '');
+    this.deaths = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'tr', '');
+    this.recovered = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'tr', '');
+    this.update(data);
+  }
+
+  update(data) {
+    this.cases.node.innerHTML = `<td>cases</td><td>${data.cases}</td>`;
+    this.deaths.node.innerHTML = `<td>deaths</td><td>${data.deaths}</td>`;
+    this.recovered.node.innerHTML = `<td>recovered</td><td>${data.recovered}</td>`;
   }
 }
 
@@ -899,6 +1111,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _block_data_api__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./block/data_api */ "./src/block/data_api.js");
 /* harmony import */ var _block_cases__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./block/cases */ "./src/block/cases.js");
 /* harmony import */ var _block_charts_api__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./block/charts_api */ "./src/block/charts_api.js");
+/* eslint-disable max-len */
 /* eslint-disable no-new */
 
 
@@ -920,11 +1133,24 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const main = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](document.body, 'main', 'main');
   const dataCaseAPI = new _block_data_api__WEBPACK_IMPORTED_MODULE_9__["default"](json, main);
   const cases = new _block_cases__WEBPACK_IMPORTED_MODULE_10__["default"](main, dataCaseAPI.countCases);
+
   // константы ниже для хранения объектов с цифрами по каждой стране
   const caseAPI = new _utils_cases_api__WEBPACK_IMPORTED_MODULE_7__["default"](json);
   const globalCases = caseAPI.globalCountSort(caseAPI.globalCountCases());
   const globalDeaths = caseAPI.globalCountSort(caseAPI.globalCountDeaths());
   const globalRecovered = caseAPI.globalCountSort(caseAPI.globalCountRecovered());
+
+  // переменные ниже будут с соответствующими данными
+  const lastCases = caseAPI.globalCountSort(caseAPI.newCountCases());
+  const lastDeaths = caseAPI.globalCountSort(caseAPI.newCountDeaths());
+  const lastRecovered = caseAPI.globalCountSort(caseAPI.newCountRecovered());
+  const globalCases100 = caseAPI.globalCountSort(caseAPI.globalCountCases100());
+  const globalDeaths100 = caseAPI.globalCountSort(caseAPI.globalCountDeaths100());
+  const globalRecovered100 = caseAPI.globalCountSort(caseAPI.globalCountRecovered100());
+  const lastCases100 = caseAPI.globalCountSort(caseAPI.newCountCases100());
+  const lastDeaths100 = caseAPI.globalCountSort(caseAPI.newCountDeaths100());
+  const lastRecovered100 = caseAPI.globalCountSort(caseAPI.newCountRecovered100());
+
   const arr = [
     [68, '15.03.20'],
     [74, '15.03.20'],
@@ -935,37 +1161,78 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     [25, '20.12.20'],
   ];
 
-  // список показателей для пагинации
-  const pagList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered'];
-  const dataList = [globalCases, globalDeaths, globalRecovered, globalCases, globalDeaths, globalRecovered];
-  const dataTable = [arr, arr.concat(arr), arr.concat(arr).concat(arr), arr, arr.concat(arr), arr.concat(arr).concat(arr)];
+  // cписок вкладок для карты, и списка
+  const pagList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered',
+    'all cases/100 000', 'all deaths/100 000', 'all recovered/100 000',
+    'last cases/100 000', 'last deaths/100 000', 'last recovered/100 000',
+  ];
+
+  // cписок вкладок для графика
+  const chartList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered',
+    'all cases/100 000', 'all deaths/100 000', 'all recovered/100 000',
+    'last cases/100 000', 'last deaths/100 000', 'last recovered/100 000',
+  ];
+
+  const dataList = [globalCases, globalDeaths, globalRecovered, lastCases, lastDeaths, lastRecovered,
+    globalCases100, globalDeaths100, globalRecovered100, lastCases100, lastDeaths100, lastRecovered100,
+  ];
 
 
+// cписок вкладок для таблицы
+  const tabletList = ['all', 'last', 'all/100 000', 'last/100 000'];
+
+// так будут у тебя называться переменные внутри геоджейсона
+  const tabArr = ['globalCases', 'globalDeaths', 'globalRecovered', 'lastCases', 'lastDeaths', 'lastRecovered',
+    'globalCases100', 'globalDeaths100', 'globalRecovered100', 'lastCases100', 'lastDeaths100', 'lastRecovered100'];
 
 
+ // пока пусть просто arr, на свежую голову сделаю
+
+  const dataTable = [arr, arr.concat(arr), arr.concat(arr).concat(arr), arr, arr.concat(arr), arr.concat(arr).concat(arr),
+    arr, arr, arr, arr, arr, arr,
+  ];
 
   const mapBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'map', pagList);
-  mapBox.addItem('World', _block_mapblock__WEBPACK_IMPORTED_MODULE_8__["default"], dataList[0]);
+  mapBox.addItem('World', _block_mapblock__WEBPACK_IMPORTED_MODULE_8__["default"], dataList[0], json);
+
+
   const listBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'list', pagList);
   listBox.addItem('World', _block_list__WEBPACK_IMPORTED_MODULE_4__["default"], dataList[0]);
 
-  const chartBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'chart', pagList);
+
+  const chartBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'chart', chartList);
   chartBox.addItem('World', _block_chart_Wrapped__WEBPACK_IMPORTED_MODULE_6__["default"], dataTable[0]);
+
+  mapBox.item.addListener('onMapCountrySelect', (country) => {
+    const indexCountry = listBox.item.countries.indexOf(country);
+    listBox.item.select(indexCountry, true);
+    listBox.item.items[indexCountry].node.scrollIntoView();
+  });
 
   // fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
   //   const chartsRequests = new ChartsAPI(jsonChart);
   //   console.log(chartsRequests.chartGS());
   // });
 
-  const tableBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'table', pagList);
+
+  const tableBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'table', tabletList);
+
 
   const arrPageForSinhron = [chartBox, listBox, mapBox];
   const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];
-  const countryTitleCases = [chartBox, tableBox, mapBox];
+  // const countryTitleCases = [chartBox, tableBox, mapBox];
 
-  const tableData = dataCaseAPI.tableDataCase();
-  const hundredData = dataCaseAPI.hundredDataCase();
-  tableBox.addItem('World', _block_table__WEBPACK_IMPORTED_MODULE_5__["default"], tableData);
+  const tableCases = [tableBox];
+
+
+  let tableDataAllCase = dataCaseAPI.tableDataCaseAll();
+  let tableDataLastCase = dataCaseAPI.tableDataCaseLast();
+  let tableDataAllHundred = dataCaseAPI.hundredDataCaseAll();
+  let tableDataLastHundred = dataCaseAPI.hundredDataCaseLast();
+
+  let pageDataList = [tableDataAllCase, tableDataLastCase, tableDataAllHundred, tableDataLastHundred];
+
+  tableBox.addItem('World', _block_table__WEBPACK_IMPORTED_MODULE_5__["default"], tableDataAllCase);
 
   cases.search.addListener('onSearchCountry', (country) => {
     const indexCountry = listBox.item.countries.indexOf(country);
@@ -975,10 +1242,41 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
 
   listBox.item.addListener('onSelectedCountry', (country) => {
     const dataCaseAPICountry = new _block_data_api__WEBPACK_IMPORTED_MODULE_9__["default"](json, main, country);
-    const tableDataCountry = dataCaseAPICountry.tableDataCase();
-    // здесь пока кривая функция для обновления данных в таблице
-    tableBox.updateItem(country, _block_table__WEBPACK_IMPORTED_MODULE_5__["default"], tableDataCountry);
-    // добавить обновление данных в других блоках
+
+    tableDataAllCase = dataCaseAPICountry.tableDataCaseAll();
+    tableDataLastCase = dataCaseAPICountry.tableDataCaseLast();
+    tableDataAllHundred = dataCaseAPICountry.hundredDataCaseAll();
+    tableDataLastHundred = dataCaseAPICountry.hundredDataCaseLast();
+    pageDataList = [tableDataAllCase, tableDataLastCase, tableDataAllHundred, tableDataLastHundred];
+    tableBox.updateItem(country, _block_table__WEBPACK_IMPORTED_MODULE_5__["default"], tableDataAllCase);
+    tableCases[0].pagination.node.innerText = tabletList[0];
+    tableCases[0].index = 0;
+    // здесь пока не настоящие данные в таблице
+    // const chartDataCountry = dataTable[1];
+    // chartBox.updateItem2(chartDataCountry);
+
+    const tableDataCountry = dataCaseAPICountry.tableDataCaseAll();
+
+
+    //   const tableData = dataCaseAPI.tableDataCase();
+    //   const hundredData = dataCaseAPI.hundredDataCase();
+    //   tableBox.addItem('World', Table, tableData);
+
+    //   cases.search.addListener('onSearchCountry', (country) => {
+    //     const indexCountry = listBox.item.countries.indexOf(country);
+    //     listBox.item.select(indexCountry, true);
+    //     listBox.item.items[indexCountry].node.scrollIntoView();
+    //   });
+
+    //   listBox.item.addListener('onSelectedCountry', (country) => {
+    //     const dataCaseAPICountry = new DataAPI(json, main, country);
+    //     const tableDataCountry = dataCaseAPICountry.tableDataCase();
+    // >>>>>>> develop
+//     tableBox.updateItem(country, Table, tableDataCountry);
+//     // здесь пока не настоящие данные в таблице
+//     const chartDataCountry = dataTable[1];
+//     chartBox.updateItem2(chartDataCountry);
+
   });
 
   arrPageForHidden.forEach((item) => {
@@ -1010,24 +1308,26 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
       arrPageForSinhron.forEach((el) => {
         el.pagination.node.innerText = pagList[index];
         el.index = index;
-        el.updateItem(el.titleName, el.className, dataList[index]);
         if (el.modifier === 'chart') {
-          el.updateItem(el.titleName, el.className, dataTable[index]);
+          el.updateItem2(dataTable[index]);
+        } else {
+
+//           el.updateItem1(dataList[index]);
+          el.updateItem1(dataList[index],tabArr[index]);
         }
       });
     });
   });
 
-  // arrPageForSinhron.forEach((item) => {
-  //   item.addListener('tabSelected', (index) => {
-  //     arrPageForSinhron.forEach((el) => {
-  //       if (el !== item) {
-  //         el.select(index, true);
-  //         el.pagination.select(index, true);
-  //       }
-  //     });
-  //   });
-  // });
+  tableCases.forEach((item) => {
+    item.pagination.addListener('tabSelected', (index) => {
+      tableCases.forEach((el) => {
+        el.pagination.node.innerText = tabletList[index];
+        el.index = index;
+        el.updateItem1(pageDataList[index]);
+      });
+    });
+  });
 
   new _block_footer__WEBPACK_IMPORTED_MODULE_1__["default"]();
 });
@@ -1052,54 +1352,98 @@ class CasesAPI {
     this.json = json;
   }
 
-  count(massCases, country, value, flag = '') {
+  count(massCases, country, value, iso3, flag = '') {
     massCases.push({
       src: flag,
       country,
       count: value,
+      countryInfo: iso3
     });
-    return massCases;
+    return massCases; 
   }
 
   globalCountCases(massCases = []) {
     this.json.forEach((keys) => {
-      this.count(massCases, keys.country, keys.cases, keys.countryInfo.flag);
+      this.count(massCases, keys.country, keys.cases, keys.countryInfo.iso3, keys.countryInfo.flag);
+    });
+    return massCases;
+  }
+
+  globalCountCases100(massCases = []) {
+    this.json.forEach((keys) => {
+      this.count(massCases, keys.country, keys.casesPerOneMillion / 10, keys.countryInfo.iso3, keys.countryInfo.flag);
     });
     return massCases;
   }
 
   globalCountDeaths(massCases = []) {
     this.json.forEach((keys) => {
-      this.count(massCases, keys.country, keys.deaths, keys.countryInfo.flag);
+      this.count(massCases, keys.country, keys.deaths, keys.countryInfo.iso3, keys.countryInfo.flag);
+    });
+    return massCases;
+  }
+
+  globalCountDeaths100(massCases = []) {
+    this.json.forEach((keys) => {
+      this.count(massCases, keys.country, keys.deathsPerOneMillion / 10, keys.countryInfo.iso3, keys.countryInfo.flag);
     });
     return massCases;
   }
 
   globalCountRecovered(massCases = []) {
     this.json.forEach((keys) => {
-      this.count(massCases, keys.country, keys.recovered, keys.countryInfo.flag);
+      this.count(massCases, keys.country, keys.recovered / 10, keys.countryInfo.iso3, keys.countryInfo.flag);
+    });
+    return massCases;
+  }
+
+  globalCountRecovered100(massCases = []) {
+    this.json.forEach((keys) => {
+      this.count(massCases, keys.country, keys.recoveredPerOneMillion / 10, keys.countryInfo.iso3, keys.countryInfo.flag);
     });
     return massCases;
   }
 
   newCountCases(massCases = []) {
     this.json.forEach((keys) => {
-      this.count(massCases, keys.country, keys.todayCases);
+      this.count(massCases, keys.country, keys.todayCases, keys.countryInfo.iso3, keys.countryInfo.flag);
     });
     return massCases;
   }
 
   newCountDeaths(massCases = []) {
     this.json.forEach((keys) => {
-      this.count(massCases, keys.country, keys.todayDeaths);
+      this.count(massCases, keys.country, keys.todayDeaths, keys.countryInfo.iso3, keys.countryInfo.flag);
     });
     return massCases;
   }
 
   newCountRecovered(massCases = []) {
     this.json.forEach((keys) => {
-      this.count(massCases, keys.country, keys.todayRecovered);
+      this.count(massCases, keys.country, keys.todayRecovered, keys.countryInfo.iso3, keys.countryInfo.flag);
     });
+    return massCases;
+  }
+
+  newCountCases100(massCases = []) {
+    this.json.forEach((keys) => {
+      this.count(massCases, keys.country, (keys.todayCases / keys.population) * 100000, keys.countryInfo.iso3, keys.countryInfo.flag);
+    });
+    return massCases;
+  }
+
+  newCountDeaths100(massCases = []) {
+    this.json.forEach((keys) => {
+      this.count(massCases, keys.country, (keys.todayDeaths / keys.population) * 100000, keys.countryInfo.iso3, keys.countryInfo.flag);
+    });
+    return massCases;
+  }
+
+  newCountRecovered100(massCases = []) {
+    this.json.forEach((keys) => {
+      this.count(massCases, keys.country, (keys.todayRecovered / keys.population) * 100000, keys.countryInfo.iso3, keys.countryInfo.flag);
+    });
+    
     return massCases;
   }
 
@@ -1190,6 +1534,15 @@ class ItemGroup extends _control__WEBPACK_IMPORTED_MODULE_1__["default"] {
     this.dispath('onSelectedCountry', currentCountry);
     !noEvent && this.onSelect && this.onSelect(index);
   }
+
+  clearItems() {
+    this.items.forEach((el) => {
+      el.clear()
+    });
+    this.items = [];
+  }
+
+  
 }
 
 
