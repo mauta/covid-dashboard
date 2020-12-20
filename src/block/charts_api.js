@@ -1,14 +1,29 @@
 export default class ChartsAPI {
   constructor(json) {
     this.json = json;
-    // this.chartGS(this.json);
   }
 
-  chartGS() {
-    const arrGS = [];
+  chartGC() {
+    const arr = [];
     this.json.forEach((keys) => {
-      arrGS.push([keys.total_cases, keys.last_update]);
+      arr.push([keys.total_cases, keys.last_update.split('T').shift()]);
     });
-    return arrGS;
+    return arr;
+  }
+
+  chartDC() {
+    const arr = [];
+    this.json.forEach((keys) => {
+      arr.push([keys.total_deaths, keys.last_update.split('T').shift()]);
+    });
+    return arr;
+  }
+
+  chartRC() {
+    const arr = [];
+    this.json.forEach((keys) => {
+      arr.push([keys.total_recovered, keys.last_update.split('T').shift()]);
+    });
+    return arr;
   }
 }
