@@ -15,7 +15,7 @@ export default class Popup extends Control {
 
   show(content) {
     this.node.className = this.className;
-    this.node.textContent = content;
+    this.node.innerHTML = `<div>${content[1]}</div><div>${content[0]}</div>`;
   }
 
   hide() {
