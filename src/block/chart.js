@@ -4,6 +4,7 @@ export default class Chart extends Control {
   constructor(parentNode, dataForChart) {
     super(parentNode, 'canvas', 'canvas');
     this.parentNode = parentNode;
+
     this.addListener('onResize', () => {
       this.reRender();
     });
@@ -15,6 +16,7 @@ export default class Chart extends Control {
     const TOP_PDNG = 10;
     const SIZE_PDNG = 40;
     const AXE_PDNG = 20;
+    this.data = data;
     this.dataArr = data.map((el) => el[0]);
 
     this.ctx = this.node.getContext('2d');
@@ -61,5 +63,10 @@ export default class Chart extends Control {
   reRender() {
     this.clear();
     this.render(this.data);
+  }
+
+  update(data) {
+    this.clear();
+    this.render(data);
   }
 }
