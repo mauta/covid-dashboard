@@ -5,6 +5,7 @@
 import mapboxgl from 'mapbox-gl';
 import Control from '../utils/control';
 import Legend from './legend';
+import CasesAPI from '../utils/cases_api';
 
 export default class MapWraper extends Control {
   constructor(parentNode, data, json) {
@@ -12,8 +13,6 @@ export default class MapWraper extends Control {
     this.node.id = 'map';
     this.data = data;
     this.tab = 'globalCases';
-    this.countArr = this.data.map((el) => el.count);
-    this.countArr = this.data.map((el) => el.count);
     this.tabValue25 = Math.max.apply(null, this.countArr) * 0.05;
     this.tabValue50 = Math.max.apply(null, this.countArr) * 0.20;
     this.tabValue75 = Math.max.apply(null, this.countArr) * 0.98;
@@ -23,6 +22,22 @@ export default class MapWraper extends Control {
       'type': 'FeatureCollection',
       'features': this.geoJSON(json),
     };
+    const caseAPI = new CasesAPI(json);
+
+    this.geoJSONMax = {
+      'globalCases': caseAPI.globalCountSort(caseAPI.globalCountCases())[0].count,
+      'globalDeaths': caseAPI.globalCountSort(caseAPI.globalCountDeaths())[0].count,
+      'globalRecovered': caseAPI.globalCountSort(caseAPI.globalCountRecovered())[0].count,
+      'lastCases': caseAPI.globalCountSort(caseAPI.newCountCases())[0].count,
+      'lastDeaths': caseAPI.globalCountSort(caseAPI.newCountDeaths())[0].count,
+      'lastRecovered': caseAPI.globalCountSort(caseAPI.newCountRecovered())[0].count,
+      'globalCases100': caseAPI.globalCountSort(caseAPI.globalCountCases100())[0].count,
+      'globalDeaths100': caseAPI.globalCountSort(caseAPI.globalCountDeaths100())[0].count,
+      'globalRecovered100': caseAPI.globalCountSort(caseAPI.globalCountRecovered100())[0].count,
+      'lastCases100': caseAPI.globalCountSort(caseAPI.newCountCases100())[0].count,
+      'lastDeaths100': caseAPI.globalCountSort(caseAPI.newCountDeaths100())[0].count,
+      'lastRecovered100': caseAPI.globalCountSort(caseAPI.newCountRecovered100())[0].count
+    }
 
     mapboxgl.accessToken = 'pk.eyJ1IjoibWF1dGEiLCJhIjoiY2tpbjM4dHIyMDU3MDJ6bWx1YnhoNXYxNSJ9.kq3HP8TVE6Sc8u1-HU2QFg';
     this.map = new mapboxgl.Map({
@@ -52,6 +67,10 @@ export default class MapWraper extends Control {
         data: this.geoJS,
       });
 
+      this.countryLayer = this.map.getLayer('countries-cnvat2');
+
+
+
       const popup = new mapboxgl.Popup({
         closeButton: false,
         closeOnClick: false,
@@ -65,6 +84,7 @@ export default class MapWraper extends Control {
         if (countries.length > 0) {
           const countryHovered = this.data.filter((el) => el.countryInfo === countries[0].properties.ISO_A3)[0];
           popup.setLngLat(e.lngLat).setHTML(`<div>${countryHovered.country}</div><div>${countryHovered.count.toLocaleString('ru-RU')}</div>`).addTo(this.map);
+          // this.countryLayer.setPaintProperty(, 'fill-color', '#3bb2d0');
         } else {
           popup.remove();
         }
@@ -80,49 +100,57 @@ export default class MapWraper extends Control {
         }
       });
 
-      this.map.addLayer({
-        id: 'globalDeaths',
-        type: 'circle',
-        source: 'dataCircle',
-        paint: {
-          'circle-color': '#008088',
-          'circle-radius': [
-            'step',
-            ['get', 'globalCases'],
-            5,
-            this.tabValue25,
-            10,
-            this.tabValue50,
-            15,
-            this.tabValue75,
-            20,
-          ],
-          'circle-stroke-width': 1,
-          'circle-stroke-color': '#000',
-        },
-      });
+      console.log(this.geoJSONMax.entries())
 
-      this.map.addLayer({
-        id: 'globalCases',
-        type: 'circle',
-        source: 'dataCircle',
-        paint: {
-          'circle-color': '#008000',
-          'circle-radius': [
-            'step',
-            ['get', 'globalCases'],
-            5,
-            this.tabValue25,
-            10,
-            this.tabValue50,
-            15,
-            this.tabValue75,
-            20,
-          ],
-          'circle-stroke-width': 1,
-          'circle-stroke-color': '#000',
-        },
-      });
+//       this.geoJSONMax.entries().forEach((item)=>{
+//         let {key, value} = item;
+//         // this.map.addLayer({
+//         //   id: 'globalDeaths',
+//         //   type: 'circle',
+//         //   source: 'dataCircle',
+//         //   paint: {
+//         //     'circle-color': '#008088',
+//         //     'circle-radius': [
+//         //       'step',
+//         //       ['get', 'globalCases'],
+//         //       5,
+//         //       this.tabValue25,
+//         //       10,
+//         //       this.tabValue50,
+//         //       15,
+//         //       this.tabValue75,
+//         //       20,
+//         //     ],
+//         //     'circle-stroke-width': 1,
+//         //     'circle-stroke-color': '#000',
+//         //   },
+//         // });
+//  console.log(key)
+//       })
+
+
+
+      // this.map.addLayer({
+      //   id: 'globalCases',
+      //   type: 'circle',
+      //   source: 'dataCircle',
+      //   paint: {
+      //     'circle-color': '#008000',
+      //     'circle-radius': [
+      //       'step',
+      //       ['get', 'globalCases'],
+      //       5,
+      //       this.tabValue25,
+      //       10,
+      //       this.tabValue50,
+      //       15,
+      //       this.tabValue75,
+      //       20,
+      //     ],
+      //     'circle-stroke-width': 1,
+      //     'circle-stroke-color': '#000',
+      //   },
+      // });
 
       this.map.getCanvas().style.cursor = 'default';
     });
