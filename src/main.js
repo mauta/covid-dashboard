@@ -27,7 +27,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const globalDeaths = caseAPI.globalCountSort(caseAPI.globalCountDeaths());
   const globalRecovered = caseAPI.globalCountSort(caseAPI.globalCountRecovered());
 
-  // переменные ниже будут с соответствующими данными
   const lastCases = caseAPI.globalCountSort(caseAPI.newCountCases());
   const lastDeaths = caseAPI.globalCountSort(caseAPI.newCountDeaths());
   const lastRecovered = caseAPI.globalCountSort(caseAPI.newCountRecovered());
@@ -112,7 +111,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
 
   listBox.item.addListener('onSelectedCountry', (country) => {
     const dataCaseAPICountry = new DataAPI(json, main, country);
-    const tableDataCountry = dataCaseAPICountry.tableDataCase();
+    const tableDataCountry = dataCaseAPICountry.tableDataCaseAll();
     tableBox.updateItem(country, Table, tableDataCountry);
     // здесь пока не настоящие данные в таблице
     const chartDataCountry = dataTable[1];
