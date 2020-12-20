@@ -131,6 +131,8 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     tableDataLastHundred = dataCaseAPICountry.hundredDataCaseLast();
     pageDataList = [tableDataAllCase, tableDataLastCase, tableDataAllHundred, tableDataLastHundred];
     tableBox.updateItem(country, Table, tableDataAllCase);
+    tableCases[0].pagination.node.innerText = tabletList[0];
+    tableCases[0].index = 0;
     // здесь пока не настоящие данные в таблице
     // const chartDataCountry = dataTable[1];
     // chartBox.updateItem2(chartDataCountry);
