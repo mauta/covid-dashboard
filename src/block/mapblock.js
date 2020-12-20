@@ -1,116 +1,20 @@
 /* eslint-disable max-len */
 /* eslint-disable quote-props */
+/*eslint class-methods-use-this: ["error", { "exceptMethods": ["geoJSON"]}] */
+
 import mapboxgl from 'mapbox-gl';
 import Control from '../utils/control';
 import Legend from './legend';
 
 export default class MapWraper extends Control {
-  constructor(parentNode, data) {
+  constructor(parentNode, data, json) {
     super(parentNode, 'div', 'map-wrapper');
     this.node.id = 'map';
     this.data = data;
-    this.tab = 'globalCases';
-
-    const countArr = this.data.map((el) => el.count);
-    const tabValue25 = Math.max.apply(null, countArr) * 0.25;
-    const tabValue50 = Math.max.apply(null, countArr) * 0.50;
-    const tabValue75 = Math.max.apply(null, countArr) * 0.75;
-    this.legend = new Legend(this.node, Math.max.apply(null, countArr), this.tab);
-
     this.geoJS = {
       'type': 'FeatureCollection',
-      'features': [{
-          'type': 'Feature',
-          'properties': {
-            'ADMIN': 'Australia',
-            'ISO_A3': 'AUS',
-            'globalCases': 1982090,
-            'deaths': 17610,
-          },
-          'geometry': {
-            'type': 'Point',
-            'coordinates': [133, -27],
-          },
-        },
-        {
-          'type': 'Feature',
-          'properties': {
-            'ADMIN': 'Austria',
-            'ISO_A3': 'AUT',
-            'globalCases': 12090,
-            'deaths': 17610,
-          },
-          'geometry': {
-            'type': 'Point',
-            'coordinates': [13.3333, 47.3333],
-          },
-        },
-        {
-          'type': 'Feature',
-          'properties': {
-            'ADMIN': 'Belarus',
-            'ISO_A3': 'BLR',
-            'globalCases': 1454000,
-            'deaths': 17610,
-          },
-          'geometry': {
-            'type': 'Point',
-            'coordinates': [28, 53],
-          },
-        },
-        {
-          'type': 'Feature',
-          'properties': {
-            'ADMIN': 'Brazil',
-            'ISO_A3': 'BRA',
-            'globalCases': 204590,
-            'deaths': 17610,
-          },
-          'geometry': {
-            'type': 'Point',
-            'coordinates': [-55, -10],
-          },
-        },
-        {
-          'type': 'Feature',
-          'properties': {
-            'ADMIN': 'Canada',
-            'ISO_A3': 'CAN',
-            'globalCases': 50501090,
-            'deaths': 17610,
-          },
-          'geometry': {
-            'type': 'Point',
-            'coordinates': [-95, 60],
-          },
-        },
-        {
-          'type': 'Feature',
-          'properties': {
-            'ADMIN': 'Germany',
-            'ISO_A3': 'DEU',
-            'globalCases': 2945090,
-            'deaths': 17610,
-          },
-          'geometry': {
-            'type': 'Point',
-            'coordinates': [9, 51],
-          },
-        },
-        {
-          'type': 'Feature',
-          'properties': {
-            'ADMIN': 'Turkey',
-            'ISO_A3': 'TUR',
-            'globalCases': 190000940,
-            'deaths': 17610,
-          },
-          'geometry': {
-            'type': 'Point',
-            'coordinates': [35, 39],
-          },
-        },
-      ],
+      'features': this.geoJSON(json)
+
     };
 
     mapboxgl.accessToken = 'pk.eyJ1IjoibWF1dGEiLCJhIjoiY2tpbjM4dHIyMDU3MDJ6bWx1YnhoNXYxNSJ9.kq3HP8TVE6Sc8u1-HU2QFg';
@@ -171,7 +75,7 @@ export default class MapWraper extends Control {
       });
 
       this.map.getCanvas().style.cursor = 'default';
-      this.map.addSource('dataCircle', {
+ this.map.addSource('dataCircle', {
         type: 'geojson',
         data: this.geoJS,
       });
@@ -202,8 +106,38 @@ export default class MapWraper extends Control {
     });
   }
 
-  update(data, tab) {
+  update(data) {
     this.data = data;
     this.tab = tab;
+  }
+  geoJSON(json) {
+    const features = [];
+    json.forEach((key) => {
+      features.push({
+        'type': 'Feature',
+        'properties': {
+          'ADMIN': key.country,
+          'ISO_A3': key.countryInfo.iso3,
+          'globalCases': key.cases,
+          'globalDeaths': key.deaths,
+          'globalRecovered': key.recovered,
+          'lastCases': key.todayCases,
+          'lastDeaths': key.todayDeaths,
+          'lastRecovered': key.todayRecovered,
+          'globalCases100': key.casesPerOneMillion / 10,
+          'globalDeaths100': key.deathsPerOneMillion / 10,
+          'globalRecovered100': key.recoveredPerOneMillion / 10,
+          'lastCases100': (key.todayCases / key.population) * 100000,
+          'lastDeaths100': (key.todayDeaths / key.population) * 100000,
+          'lastRecovered100': (key.todayRecovered / key.population) * 100000
+        },
+        'geometry': {
+          'type': 'Point',
+          'coordinates': [key.countryInfo.long, key.countryInfo.lat],
+        },
+      });
+    })
+    return features;
+
   }
 }

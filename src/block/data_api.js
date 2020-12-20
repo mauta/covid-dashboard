@@ -62,26 +62,38 @@ export default class DataAPI {
     });
   }
 
-  tableDataCase() {
+  tableDataCaseAll() {
     const tableData = {
-      allCases: this.allCases.toLocaleString('ru-RU'),
-      newCases: this.newCases.toLocaleString('ru-RU'),
-      alldeaths: this.alldeaths.toLocaleString('ru-RU'),
-      newdeaths: this.newdeaths.toLocaleString('ru-RU'),
-      allrecovered: this.allrecovered.toLocaleString('ru-RU'),
-      newrecovered: this.newrecovered.toLocaleString('ru-RU'),
+      cases: this.allCases.toLocaleString('ru-RU'),
+      deaths: this.alldeaths.toLocaleString('ru-RU'),
+      recovered: this.allrecovered.toLocaleString('ru-RU'),
     };
     return tableData;
   }
 
-  hundredDataCase() {
+  tableDataCaseLast() {
+    const tableData = {
+      cases: this.newCases.toLocaleString('ru-RU'),
+      deaths: this.newdeaths.toLocaleString('ru-RU'),
+      recovered: this.newrecovered.toLocaleString('ru-RU'),
+    };
+    return tableData;
+  }
+
+  hundredDataCaseAll() {
     const hundredData = {
-      allCases: this.hundredAllCase.toLocaleString('ru-RU'),
-      newCases: this.hundredNewAllCase.toLocaleString('ru-RU'),
-      alldeaths: this.hundredDeathsCase.toLocaleString('ru-RU'),
-      newdeaths: this.hundredNewDeathsCase.toLocaleString('ru-RU'),
-      allrecovered: this.hundredRecoveredsCase.toLocaleString('ru-RU'),
-      newrecovered: this.hundredNewRecoveredsCase.toLocaleString('ru-RU'),
+      cases: this.hundredAllCase.toLocaleString('ru-RU'),
+      deaths: this.hundredDeathsCase.toLocaleString('ru-RU'),
+      recovered: this.hundredRecoveredsCase.toLocaleString('ru-RU'),
+    };
+    return hundredData;
+  }
+
+  hundredDataCaseLast() {
+    const hundredData = {
+      cases: this.hundredNewAllCase.toLocaleString('ru-RU'),
+      deaths: this.hundredNewDeathsCase.toLocaleString('ru-RU'),
+      recovered: this.hundredNewRecoveredsCase.toLocaleString('ru-RU'),
     };
     return hundredData;
   }
