@@ -13,11 +13,13 @@ export default class MapWraper extends Control {
     this.node.id = 'map';
     this.data = data;
     this.tab = 'globalCases';
+//     const countArr = this.data.map((el) => el.count);
     this.tabValue25 = Math.max.apply(null, this.countArr) * 0.05;
     this.tabValue50 = Math.max.apply(null, this.countArr) * 0.20;
     this.tabValue75 = Math.max.apply(null, this.countArr) * 0.98;
 
     this.legend = new Legend(this.node, Math.max.apply(null, this.countArr), this.tab);
+
     this.geoJS = {
       'type': 'FeatureCollection',
       'features': this.geoJSON(json),
@@ -37,7 +39,8 @@ export default class MapWraper extends Control {
       'lastCases100': caseAPI.globalCountSort(caseAPI.newCountCases100())[0].count,
       'lastDeaths100': caseAPI.globalCountSort(caseAPI.newCountDeaths100())[0].count,
       'lastRecovered100': caseAPI.globalCountSort(caseAPI.newCountRecovered100())[0].count
-    }
+    };
+
 
     mapboxgl.accessToken = 'pk.eyJ1IjoibWF1dGEiLCJhIjoiY2tpbjM4dHIyMDU3MDJ6bWx1YnhoNXYxNSJ9.kq3HP8TVE6Sc8u1-HU2QFg';
     this.map = new mapboxgl.Map({
@@ -62,6 +65,7 @@ export default class MapWraper extends Control {
     }));
 
     this.map.on('load', () => {
+
       this.map.addSource('dataCircle', {
         type: 'geojson',
         data: this.geoJS,
@@ -69,12 +73,11 @@ export default class MapWraper extends Control {
 
       this.countryLayer = this.map.getLayer('countries-cnvat2');
 
-
-
       const popup = new mapboxgl.Popup({
         closeButton: false,
         closeOnClick: false,
       });
+
 
       this.map.on('mousemove', (e) => {
         const countries = this.map.queryRenderedFeatures(e.point, {
@@ -162,6 +165,7 @@ export default class MapWraper extends Control {
     this.map.moveLayer(this.tab);
     this.legend.update(this.tab);
   }
+
 
   geoJSON(json) {
     const features = [];

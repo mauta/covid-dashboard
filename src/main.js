@@ -64,16 +64,17 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     globalCases100, globalDeaths100, globalRecovered100, lastCases100, lastDeaths100, lastRecovered100,
   ];
 
-  // cписок вкладок для таблицы
+
+// cписок вкладок для таблицы
   const tabletList = ['all', 'last', 'all/100 000', 'last/100 000'];
 
-  // так будут у тебя называться переменные внутри геоджейсона
+// так будут у тебя называться переменные внутри геоджейсона
   const tabArr = ['globalCases', 'globalDeaths', 'globalRecovered', 'lastCases', 'lastDeaths', 'lastRecovered',
-    'globalCases100', 'globalDeaths100', 'globalRecovered100', 'lastCases100', 'lastDeaths100', 'lastRecovered100'
-  ];
+    'globalCases100', 'globalDeaths100', 'globalRecovered100', 'lastCases100', 'lastDeaths100', 'lastRecovered100'];
 
 
-  // пока пусть просто arr, на свежую голову сделаю
+ // пока пусть просто arr, на свежую голову сделаю
+
   const dataTable = [arr, arr.concat(arr), arr.concat(arr).concat(arr), arr, arr.concat(arr), arr.concat(arr).concat(arr),
     arr, arr, arr, arr, arr, arr,
   ];
@@ -110,12 +111,14 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
 
   const tableCases = [tableBox];
 
-  const tableDataAllCase = dataCaseAPI.tableDataCaseAll();
-  const tableDataLastCase = dataCaseAPI.tableDataCaseLast();
-  const tableDataAllHundred = dataCaseAPI.hundredDataCaseAll();
-  const tableDataLastHundred = dataCaseAPI.hundredDataCaseLast();
 
-  const pageDataList = [tableDataAllCase, tableDataLastCase, tableDataAllHundred, tableDataLastHundred];
+  let tableDataAllCase = dataCaseAPI.tableDataCaseAll();
+  let tableDataLastCase = dataCaseAPI.tableDataCaseLast();
+  let tableDataAllHundred = dataCaseAPI.hundredDataCaseAll();
+  let tableDataLastHundred = dataCaseAPI.hundredDataCaseLast();
+
+  let pageDataList = [tableDataAllCase, tableDataLastCase, tableDataAllHundred, tableDataLastHundred];
+
   tableBox.addItem('World', Table, tableDataAllCase);
 
   cases.search.addListener('onSearchCountry', (country) => {
@@ -126,6 +129,19 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
 
   listBox.item.addListener('onSelectedCountry', (country) => {
     const dataCaseAPICountry = new DataAPI(json, main, country);
+
+    tableDataAllCase = dataCaseAPICountry.tableDataCaseAll();
+    tableDataLastCase = dataCaseAPICountry.tableDataCaseLast();
+    tableDataAllHundred = dataCaseAPICountry.hundredDataCaseAll();
+    tableDataLastHundred = dataCaseAPICountry.hundredDataCaseLast();
+    pageDataList = [tableDataAllCase, tableDataLastCase, tableDataAllHundred, tableDataLastHundred];
+    tableBox.updateItem(country, Table, tableDataAllCase);
+    tableCases[0].pagination.node.innerText = tabletList[0];
+    tableCases[0].index = 0;
+    // здесь пока не настоящие данные в таблице
+    // const chartDataCountry = dataTable[1];
+    // chartBox.updateItem2(chartDataCountry);
+
     const tableDataCountry = dataCaseAPICountry.tableDataCaseAll();
 
 
@@ -143,10 +159,11 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     //     const dataCaseAPICountry = new DataAPI(json, main, country);
     //     const tableDataCountry = dataCaseAPICountry.tableDataCase();
     // >>>>>>> develop
-    tableBox.updateItem(country, Table, tableDataCountry);
-    // здесь пока не настоящие данные в таблице
-    const chartDataCountry = dataTable[1];
-    chartBox.updateItem2(chartDataCountry);
+//     tableBox.updateItem(country, Table, tableDataCountry);
+//     // здесь пока не настоящие данные в таблице
+//     const chartDataCountry = dataTable[1];
+//     chartBox.updateItem2(chartDataCountry);
+
   });
 
   arrPageForHidden.forEach((item) => {
@@ -181,7 +198,9 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
         if (el.modifier === 'chart') {
           el.updateItem2(dataTable[index]);
         } else {
-          el.updateItem1(dataList[index], tabArr[index]);
+
+//           el.updateItem1(dataList[index]);
+          el.updateItem1(dataList[index],tabArr[index]);
         }
       });
     });

@@ -34,5 +34,6 @@ export default class Header extends Control {
     this.legendS.node.innerHTML = `< ${Math.round(this.quater * 0.50).toLocaleString('ru-RU')}`;
     this.legendM.node.innerHTML = `< ${Math.round(this.quater * 0.75).toLocaleString('ru-RU')}`;
     this.legendL.node.innerHTML = `> ${Math.round(this.quater * 0.75).toLocaleString('ru-RU')}`;
+
   }
 }
