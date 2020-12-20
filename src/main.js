@@ -109,12 +109,12 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
 
   const tableCases = [tableBox];
 
-  const tableDataAllCase = dataCaseAPI.tableDataCaseAll();
-  const tableDataLastCase = dataCaseAPI.tableDataCaseLast();
-  const tableDataAllHundred = dataCaseAPI.hundredDataCaseAll();
-  const tableDataLastHundred = dataCaseAPI.hundredDataCaseLast();
+  let tableDataAllCase = dataCaseAPI.tableDataCaseAll();
+  let tableDataLastCase = dataCaseAPI.tableDataCaseLast();
+  let tableDataAllHundred = dataCaseAPI.hundredDataCaseAll();
+  let tableDataLastHundred = dataCaseAPI.hundredDataCaseLast();
 
-  const pageDataList = [tableDataAllCase, tableDataLastCase, tableDataAllHundred, tableDataLastHundred];
+  let pageDataList = [tableDataAllCase, tableDataLastCase, tableDataAllHundred, tableDataLastHundred];
   tableBox.addItem('World', Table, tableDataAllCase);
 
   cases.search.addListener('onSearchCountry', (country) => {
@@ -125,27 +125,15 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
 
   listBox.item.addListener('onSelectedCountry', (country) => {
     const dataCaseAPICountry = new DataAPI(json, main, country);
-    const tableDataCountry = dataCaseAPICountry.tableDataCaseAll();
-
-
-//   const tableData = dataCaseAPI.tableDataCase();
-//   const hundredData = dataCaseAPI.hundredDataCase();
-//   tableBox.addItem('World', Table, tableData);
-
-//   cases.search.addListener('onSearchCountry', (country) => {
-//     const indexCountry = listBox.item.countries.indexOf(country);
-//     listBox.item.select(indexCountry, true);
-//     listBox.item.items[indexCountry].node.scrollIntoView();
-//   });
-
-//   listBox.item.addListener('onSelectedCountry', (country) => {
-//     const dataCaseAPICountry = new DataAPI(json, main, country);
-//     const tableDataCountry = dataCaseAPICountry.tableDataCase();
-// >>>>>>> develop
-    tableBox.updateItem(country, Table, tableDataCountry);
+    tableDataAllCase = dataCaseAPICountry.tableDataCaseAll();
+    tableDataLastCase = dataCaseAPICountry.tableDataCaseLast();
+    tableDataAllHundred = dataCaseAPICountry.hundredDataCaseAll();
+    tableDataLastHundred = dataCaseAPICountry.hundredDataCaseLast();
+    pageDataList = [tableDataAllCase, tableDataLastCase, tableDataAllHundred, tableDataLastHundred];
+    tableBox.updateItem(country, Table, tableDataAllCase);
     // здесь пока не настоящие данные в таблице
-    const chartDataCountry = dataTable[1];
-    chartBox.updateItem2(chartDataCountry);
+    // const chartDataCountry = dataTable[1];
+    // chartBox.updateItem2(chartDataCountry);
   });
 
   arrPageForHidden.forEach((item) => {
@@ -180,11 +168,8 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
         if (el.modifier === 'chart') {
           el.updateItem2(dataTable[index]);
         } else {
-// <<<<<<< branch-api
           el.updateItem1(dataList[index]);
-// =======
           el.updateItem1(dataList[index],tabArr[index]);
-// >>>>>>> develop
         }
       });
     });

@@ -5,6 +5,7 @@
 import mapboxgl from 'mapbox-gl';
 import Control from '../utils/control';
 import Legend from './legend';
+import CasesAPI from '../utils/cases_api';
 
 export default class MapWraper extends Control {
   constructor(parentNode, data, json) {
@@ -21,6 +22,22 @@ export default class MapWraper extends Control {
     this.geoJS = {
       'type': 'FeatureCollection',
       'features': this.geoJSON(json),
+    };
+    const caseAPI = new CasesAPI(json);
+
+    this.geoJSONMax = {
+      'globalCases': caseAPI.globalCountSort(caseAPI.globalCountCases())[0].count,
+      'globalDeaths': caseAPI.globalCountSort(caseAPI.globalCountDeaths())[0].count,
+      'globalRecovered': caseAPI.globalCountSort(caseAPI.globalCountRecovered())[0].count,
+      'lastCases': caseAPI.globalCountSort(caseAPI.newCountCases())[0].count,
+      'lastDeaths': caseAPI.globalCountSort(caseAPI.newCountDeaths())[0].count,
+      'lastRecovered': caseAPI.globalCountSort(caseAPI.newCountRecovered())[0].count,
+      'globalCases100': caseAPI.globalCountSort(caseAPI.globalCountCases100())[0].count,
+      'globalDeaths100': caseAPI.globalCountSort(caseAPI.globalCountDeaths100())[0].count,
+      'globalRecovered100': caseAPI.globalCountSort(caseAPI.globalCountRecovered100())[0].count,
+      'lastCases100': caseAPI.globalCountSort(caseAPI.newCountCases100())[0].count,
+      'lastDeaths100': caseAPI.globalCountSort(caseAPI.newCountDeaths100())[0].count,
+      'lastRecovered100': caseAPI.globalCountSort(caseAPI.newCountRecovered100())[0].count
     };
 
     mapboxgl.accessToken = 'pk.eyJ1IjoibWF1dGEiLCJhIjoiY2tpbjM4dHIyMDU3MDJ6bWx1YnhoNXYxNSJ9.kq3HP8TVE6Sc8u1-HU2QFg';
@@ -86,8 +103,6 @@ export default class MapWraper extends Control {
         data: this.geoJS,
       });
 
-
-
       this.map.addLayer({
         id: 'circle-point',
         type: 'circle',
@@ -144,6 +159,5 @@ export default class MapWraper extends Control {
       });
     })
     return features;
-
   }
 }
