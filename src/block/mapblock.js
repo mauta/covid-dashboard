@@ -12,12 +12,13 @@ export default class MapWraper extends Control {
     this.node.id = 'map';
     this.data = data;
     this.tab = 'globalCases';
+    this.countArr = this.data.map((el) => el.count);
+    this.countArr = this.data.map((el) => el.count);
+    this.tabValue25 = Math.max.apply(null, this.countArr) * 0.05;
+    this.tabValue50 = Math.max.apply(null, this.countArr) * 0.20;
+    this.tabValue75 = Math.max.apply(null, this.countArr) * 0.98;
 
-    const countArr = this.data.map((el) => el.count);
-    const tabValue25 = Math.max.apply(null, countArr) * 0.05;
-    const tabValue50 = Math.max.apply(null, countArr) * 0.20;
-    const tabValue75 = Math.max.apply(null, countArr) * 0.98;
-    this.legend = new Legend(this.node, Math.max.apply(null, countArr), this.tab);
+    this.legend = new Legend(this.node, Math.max.apply(null, this.countArr), this.tab);
     this.geoJS = {
       'type': 'FeatureCollection',
       'features': this.geoJSON(json),
@@ -46,6 +47,11 @@ export default class MapWraper extends Control {
     }));
 
     this.map.on('load', () => {
+      this.map.addSource('dataCircle', {
+        type: 'geojson',
+        data: this.geoJS,
+      });
+
       const popup = new mapboxgl.Popup({
         closeButton: false,
         closeOnClick: false,
@@ -58,9 +64,6 @@ export default class MapWraper extends Control {
 
         if (countries.length > 0) {
           const countryHovered = this.data.filter((el) => el.countryInfo === countries[0].properties.ISO_A3)[0];
-
-          //           const countryHovered = this.data.filter((el) => el.country === countries[0].properties.ADMIN)[0];
-
           popup.setLngLat(e.lngLat).setHTML(`<div>${countryHovered.country}</div><div>${countryHovered.count.toLocaleString('ru-RU')}</div>`).addTo(this.map);
         } else {
           popup.remove();
@@ -73,49 +76,65 @@ export default class MapWraper extends Control {
         });
         if (countries.length > 0) {
           const countryClicked = this.data.filter((el) => el.countryInfo === countries[0].properties.ISO_A3)[0];
-
-          //           const countryClicked = this.data.filter((el) => el.country === countries[0].properties.ADMIN)[0];
-
           this.dispath('onMapCountrySelect', countryClicked.country);
         }
       });
 
-      this.map.getCanvas().style.cursor = 'default';
-      this.map.addSource('dataCircle', {
-        type: 'geojson',
-        data: this.geoJS,
-      });
-
-
-
       this.map.addLayer({
-        id: 'circle-point',
+        id: 'globalDeaths',
         type: 'circle',
         source: 'dataCircle',
         paint: {
-          'circle-color': '#008000',
+          'circle-color': '#008088',
           'circle-radius': [
             'step',
-            ['get', this.tab],
+            ['get', 'globalCases'],
             5,
-            tabValue25,
+            this.tabValue25,
             10,
-            tabValue50,
+            this.tabValue50,
             15,
-            tabValue75,
+            this.tabValue75,
             20,
           ],
           'circle-stroke-width': 1,
           'circle-stroke-color': '#000',
         },
       });
+
+      this.map.addLayer({
+        id: 'globalCases',
+        type: 'circle',
+        source: 'dataCircle',
+        paint: {
+          'circle-color': '#008000',
+          'circle-radius': [
+            'step',
+            ['get', 'globalCases'],
+            5,
+            this.tabValue25,
+            10,
+            this.tabValue50,
+            15,
+            this.tabValue75,
+            20,
+          ],
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#000',
+        },
+      });
+
+      this.map.getCanvas().style.cursor = 'default';
     });
   }
 
-  update(data) {
+  update(data, tab) {
     this.data = data;
     this.tab = tab;
+    this.map.moveLayer(this.tab);
+    this.legend.update(this.tab);
   }
+
   geoJSON(json) {
     const features = [];
     json.forEach((key) => {
@@ -142,8 +161,7 @@ export default class MapWraper extends Control {
           'coordinates': [key.countryInfo.long, key.countryInfo.lat],
         },
       });
-    })
+    });
     return features;
-
   }
 }
