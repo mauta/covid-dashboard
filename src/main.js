@@ -48,24 +48,22 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     [25, '20.12.20'],
   ];
 
-  // список показателей для пагинации - надо дописать все 12 пунктов
-
   const pagList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered',
     'all cases/100 000', 'all deaths/100 000', 'all recovered/100 000',
     'last cases/100 000', 'last deaths/100 000', 'last recovered/100 000',
   ];
-  // список данных для пагинации - надо дописать все 12 пунктов, в той же очередности
+ 
   const dataList = [globalCases, globalDeaths, globalRecovered, lastCases, lastDeaths, lastRecovered,
     globalCases100, globalDeaths100, globalRecovered100, lastCases100, lastDeaths100, lastRecovered100,
   ];
 
-  // список показателей для пагинации в таблице - надо дописать все пункты
-  const tabList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered',
+  const chartList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered',
     'all cases/100 000', 'all deaths/100 000', 'all recovered/100 000',
     'last cases/100 000', 'last deaths/100 000', 'last recovered/100 000',
   ];
 
-  // список данных для пагинации - надо дописать все 12 пунктов, в той же очередности
+  const tabletList = ['all', 'last', 'all/100 000', 'last/100 000'];
+
   // пока пусть просто arr, на свежую голову сделаю
   const dataTable = [arr, arr.concat(arr), arr.concat(arr).concat(arr), arr, arr.concat(arr), arr.concat(arr).concat(arr),
     arr, arr, arr, arr, arr, arr,
@@ -77,7 +75,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const listBox = new PageBox(main.node, 'list', pagList);
   listBox.addItem('World', List, dataList[0]);
 
-  const chartBox = new PageBox(main.node, 'chart', tabList);
+  const chartBox = new PageBox(main.node, 'chart', chartList);
   chartBox.addItem('World', ChartWrapped, dataTable[0]);
 
   mapBox.item.addListener('onMapCountrySelect', (country) => {
@@ -91,15 +89,20 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   //   console.log(chartsRequests.chartGS());
   // });
 
-  const tableBox = new PageBox(main.node, 'table', pagList);
+  const tableBox = new PageBox(main.node, 'table', tabletList);
 
   const arrPageForSinhron = [chartBox, listBox, mapBox];
   const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];
   const countryTitleCases = [chartBox, tableBox, mapBox];
+  const tableCases = [tableBox];
 
-  const tableData = dataCaseAPI.tableDataCase();
-  const hundredData = dataCaseAPI.hundredDataCase();
-  tableBox.addItem('World', Table, tableData);
+  const tableDataAllCase = dataCaseAPI.tableDataCaseAll();
+  const tableDataLastCase = dataCaseAPI.tableDataCaseLast();
+  const tableDataAllHundred = dataCaseAPI.hundredDataCaseAll();
+  const tableDataLastHundred = dataCaseAPI.hundredDataCaseLast();
+  
+  const pageDataList = [tableDataAllCase, tableDataLastCase, tableDataAllHundred, tableDataLastHundred];
+  tableBox.addItem('World', Table, tableDataAllCase);
 
   cases.search.addListener('onSearchCountry', (country) => {
     const indexCountry = listBox.item.countries.indexOf(country);
@@ -150,6 +153,16 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
         } else {
           el.updateItem1(dataList[index]);
         }
+      });
+    });
+  });
+
+  tableCases.forEach((item) => {
+    item.pagination.addListener('tabSelected', (index) => {
+      tableCases.forEach((el) => {
+        el.pagination.node.innerText = tabletList[index];
+        el.index = index;
+        el.updateItem1(pageDataList[index]);
       });
     });
   });

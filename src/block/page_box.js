@@ -80,4 +80,8 @@ export default class PageBox extends Control {
   updateItem2(content) {
     this.item.chart.update(content);
   }
+
+  updateItem3(content) {
+    this.item.table.update(content);
+  }
 }
