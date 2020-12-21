@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import Toggle from './toggle';
 import Control from './control';
 
@@ -22,11 +23,15 @@ export default class ItemGroup extends Control {
   select(index, noEvent) {
     this.items.forEach((it) => it.changeState(false));
     this.items[index].changeState(true);
-    const currentCountry = this.items[index].data
-
+    const currentCountry = this.items[index].data;
     this.dispath('onSelectedCountry', currentCountry);
+    !noEvent && this.onSelect && this.onSelect(index);
+  }
 
-
-   !noEvent && this.onSelect && this.onSelect(index);
+  clearItems() {
+    this.items.forEach((el) => {
+      el.clear();
+    });
+    this.items = [];
   }
 }
