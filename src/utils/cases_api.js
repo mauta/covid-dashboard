@@ -5,6 +5,14 @@ export default class CasesAPI {
     this.json = json;
   }
 
+  countPopulation() {
+    let poputation = 0;
+    this.json.forEach((keys) => {
+      poputation += keys.population;
+    });
+    return poputation;
+  }
+
   count(massCases, country, value, iso3, flag = '') {
     massCases.push({
       src: flag,
@@ -12,7 +20,7 @@ export default class CasesAPI {
       count: value,
       countryInfo: iso3
     });
-    return massCases; 
+    return massCases;
   }
 
   globalCountCases(massCases = []) {
@@ -96,7 +104,7 @@ export default class CasesAPI {
     this.json.forEach((keys) => {
       this.count(massCases, keys.country, (keys.todayRecovered / keys.population) * 100000, keys.countryInfo.iso3, keys.countryInfo.flag);
     });
-    
+
     return massCases;
   }
 

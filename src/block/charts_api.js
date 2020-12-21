@@ -4,36 +4,57 @@ export default class ChartsAPI {
     this.json = json;
   }
 
-  chartGC(arr = []) {
+  chartGC(population = 0, arr = []) {
     this.json.forEach((keys) => {
-      arr.push([keys.total_cases, keys.last_update.split('T').shift().substring(2)]);
+      if (population !== 0) {
+        arr.push([((keys.total_cases / population) * 100000).toFixed(2), keys.last_update.split('T').shift().substring(2)]);
+      } else {
+        arr.push([keys.total_cases, keys.last_update.split('T').shift().substring(2)]);
+      };
     });
     return arr;
   }
 
-  chartDC(arr = []) {
+  chartDC(population = 0, arr = []) {
     this.json.forEach((keys) => {
-      arr.push([keys.total_deaths, keys.last_update.split('T').shift().substring(2)]);
+      if (population !== 0) {
+        arr.push([((keys.total_deaths / population) * 100000).toFixed(2), keys.last_update.split('T').shift().substring(2)]);
+      } else {
+        arr.push([keys.total_deaths, keys.last_update.split('T').shift().substring(2)]);
+      };
     });
     return arr;
   }
 
-  chartRC(arr = []) {
+  chartRC(population = 0, arr = []) {
     this.json.forEach((keys) => {
-      arr.push([keys.total_recovered, keys.last_update.split('T').shift().substring(2)]);
+      if (population !== 0) {
+        arr.push([((keys.total_recovered / population) * 100000).toFixed(2), keys.last_update.split('T').shift().substring(2)]);
+      } else {
+        arr.push([keys.total_recovered, keys.last_update.split('T').shift().substring(2)]);
+      };
     });
     return arr;
   }
 
-  chartByDay(json, arr = []) {
+  chartByDay(json, population = 100000, arr = []) {
     const obj = Object.keys(json);
     for (var i = 0; i < obj.length; i++) {
       let objStr = this.correctDate(obj[i]);
       if (i === 0) {
-        arr.push([json[obj[i]], objStr]);
+        arr.push([((json[obj[i]] / population) * 100000).toFixed(2), objStr]);
       } else {
-        arr.push([json[obj[i]] - json[obj[i - 1]], objStr]);
+        arr.push([(((json[obj[i]] - json[obj[i - 1]]) / population) * 100000).toFixed(2), objStr]);
       }
+    }
+    return arr;
+  }
+
+  chartByCountry(json, population = 100000, arr = []) {
+    const obj = Object.keys(json);
+    for (var i = 0; i < obj.length; i++) {
+      let objStr = this.correctDate(obj[i]);
+      arr.push([json[obj[i]], objStr]);
     }
     return arr;
   }

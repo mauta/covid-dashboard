@@ -24,6 +24,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
 
   // константы ниже для хранения объектов с цифрами по каждой стране
   const caseAPI = new CasesAPI(json);
+  const populationAll = caseAPI.countPopulation();
   const globalCases = caseAPI.globalCountSort(caseAPI.globalCountCases());
   const globalDeaths = caseAPI.globalCountSort(caseAPI.globalCountDeaths());
   const globalRecovered = caseAPI.globalCountSort(caseAPI.globalCountRecovered());
@@ -59,29 +60,38 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     'globalCases100', 'globalDeaths100', 'globalRecovered100', 'lastCases100', 'lastDeaths100', 'lastRecovered100'
   ];
 
+  const arr = [
+    [68, '15.03.20'],
+    [74, '15.03.20'],
+    [82, '16.06.20'],
+    [1, '15.08.20'],
+    [122, '15.03.20'],
+    [12, '15.03.20'],
+    [25, '20.12.20'],
+  ];
+
   fetch(apiDay).then((resChartDay) => resChartDay.json()).then((jsonChartDay) => {
     const chartsRequestsDay = new ChartsAPI(jsonChartDay);
     const chartsRequestsAllDay = chartsRequestsDay.chartByDay(jsonChartDay.cases);
     const chartsRequestsDeathsDay = chartsRequestsDay.chartByDay(jsonChartDay.deaths);
     const chartsRequestsRecoveredDay = chartsRequestsDay.chartByDay(jsonChartDay.recovered);
+
+    const chartsRequestsAllDay100 = chartsRequestsDay.chartByDay(jsonChartDay.cases, populationAll);
+    const chartsRequestsDeathsDay100 = chartsRequestsDay.chartByDay(jsonChartDay.deaths, populationAll);
+    const chartsRequestsRecoveredDay100 = chartsRequestsDay.chartByDay(jsonChartDay.recovered, populationAll);
+
     fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
       const chartsRequests = new ChartsAPI(jsonChart);
       const chartsRequestsAll = chartsRequests.chartGC().reverse();
       const chartsRequestsAllDeaths = chartsRequests.chartDC().reverse();
       const chartsRequestsAllRec = chartsRequests.chartRC().reverse();
-      const arr = [
-        [68, '15.03.20'],
-        [74, '15.03.20'],
-        [82, '16.06.20'],
-        [1, '15.08.20'],
-        [122, '15.03.20'],
-        [12, '15.03.20'],
-        [25, '20.12.20'],
-      ];
 
-      // пока пусть просто arr, на свежую голову сделаю
-      const dataTable = [chartsRequestsAll, chartsRequestsAllDeaths, chartsRequestsAllRec, chartsRequestsAllDay, chartsRequestsDeathsDay, chartsRequestsRecoveredDay,
-        arr, arr, arr, arr, arr, arr,
+      const chartsRequestsAll100 = chartsRequests.chartGC(populationAll).reverse();
+      const chartsRequestsAllDeaths100 = chartsRequests.chartDC(populationAll).reverse();
+      const chartsRequestsAllRec100 = chartsRequests.chartRC(populationAll).reverse();
+
+      let dataTable = [chartsRequestsAll, chartsRequestsAllDeaths, chartsRequestsAllRec, chartsRequestsAllDay, chartsRequestsDeathsDay, chartsRequestsRecoveredDay,
+        chartsRequestsAll100, chartsRequestsAllDeaths100, chartsRequestsAllRec100, chartsRequestsAllDay100, chartsRequestsDeathsDay100, chartsRequestsRecoveredDay100,
       ];
 
       const chartBox = new PageBox(main.node, 'chart', chartList);
@@ -102,9 +112,9 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
       const tableBox = new PageBox(main.node, 'table', tabletList);
 
       const arrPageForSinhron = [chartBox, listBox, mapBox];
-      const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];
-      // const countryTitleCases = [chartBox, tableBox, mapBox];
+      const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];;
       const tableCases = [tableBox];
+      const chartCases = [chartBox];
 
       let tableDataAllCase = dataCaseAPI.tableDataCaseAll();
       let tableDataLastCase = dataCaseAPI.tableDataCaseLast();
@@ -118,6 +128,8 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
         listBox.item.select(indexCountry, true);
         listBox.item.items[indexCountry].node.scrollIntoView();
       });
+
+      let pageIndex = 0;
 
       listBox.item.addListener('onSelectedCountry', (country) => {
         // это нужный кусок для карты
@@ -139,9 +151,28 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
         tableBox.updateItem(country, Table, tableDataAllCase);
         tableCases[0].pagination.node.innerText = tabletList[0];
         tableCases[0].index = 0;
-        // здесь пока не настоящие данные в таблице
-        // const chartDataCountry = dataTable[1];
-        // chartBox.updateItem2(chartDataCountry);
+
+        const chartCountry = `https://disease.sh/v3/covid-19/historical/${country}?lastdays=366`;
+        fetch(chartCountry).then((apiChart) => apiChart.json()).then((jsonchartCountry) => {
+          const chartsRequestsCountry = new ChartsAPI(jsonchartCountry);
+          const chartsRequestsAllCountry = chartsRequestsCountry.chartByCountry(jsonchartCountry.timeline.cases);
+          const chartsRequestsDeathsCountry = chartsRequestsCountry.chartByCountry(jsonchartCountry.timeline.deaths);
+          const chartsRequestsRecoveredCountry = chartsRequestsCountry.chartByCountry(jsonchartCountry.timeline.recovered);
+
+          const chartsRequestsAllCountryDay = chartsRequestsCountry.chartByDay(jsonchartCountry.timeline.cases);
+          const chartsRequestsDeathsCountryDay = chartsRequestsCountry.chartByDay(jsonchartCountry.timeline.deaths);
+          const chartsRequestsRecoveredCountryDay = chartsRequestsCountry.chartByDay(jsonchartCountry.timeline.recovered);
+
+          dataTable = [chartsRequestsAllCountry, chartsRequestsDeathsCountry, chartsRequestsRecoveredCountry,
+            chartsRequestsAllCountryDay, chartsRequestsDeathsCountryDay, chartsRequestsRecoveredCountryDay,
+            arr, arr, arr, arr, arr, arr,
+          ];
+
+          // const chartDataCountry = dataTable[0];
+          // chartCases[0].pagination.node.innerText = chartList[0];
+          // chartCases[0].index = 0;
+          chartBox.updateItem(country, ChartWrapped, dataTable[pageIndex]);
+        });
       });
 
       arrPageForHidden.forEach((item) => {
@@ -170,6 +201,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
 
       arrPageForSinhron.forEach((item) => {
         item.pagination.addListener('tabSelected', (index) => {
+          pageIndex = index;
           arrPageForSinhron.forEach((el) => {
             if (el.modifier === 'chart') {
               el.pagination.node.innerText = chartList[index];
@@ -199,8 +231,5 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
       });
     });
   });
-
-
-
   new Footer();
 });
