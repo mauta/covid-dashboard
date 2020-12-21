@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import Toggle from './toggle';
 import Control from './control';
 
@@ -29,10 +30,8 @@ export default class ItemGroup extends Control {
 
   clearItems() {
     this.items.forEach((el) => {
-      el.clear()
+      el.clear();
     });
     this.items = [];
   }
-
-  
 }
