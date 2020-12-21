@@ -187,7 +187,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
         if (el.modifier === 'chart') {
           el.updateItem2(dataTable[index]);
         } else {
-
           //           el.updateItem1(dataList[index]);
           el.updateItem1(dataList[index], tabArr[index]);
         }

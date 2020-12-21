@@ -15,11 +15,10 @@ export default class MapWraper extends Control {
     this.node.id = 'map';
     this.data = data;
     this.tab = 'globalCases';
-    //     const countArr = this.data.map((el) => el.count);
     this.tabValue25 = Math.max.apply(null, this.countArr) * 0.05;
     this.tabValue50 = Math.max.apply(null, this.countArr) * 0.20;
     this.tabValue75 = Math.max.apply(null, this.countArr) * 0.98;
-
+    this.currentCountry = '';
     this.legend = new Legend(this.node, Math.max.apply(null, this.countArr), this.tab);
 
     this.geoJS = {
@@ -43,7 +42,7 @@ export default class MapWraper extends Control {
       'lastRecovered100': caseAPI.globalCountSort(caseAPI.newCountRecovered100())[0].count,
     };
 
-    this.legend = new Legend(this.node, this.geoJSONMax['globalCases'], this.tab);
+    this.legend = new Legend(this.node, this.geoJSONMax.globalCases, this.tab);
 
     mapboxgl.accessToken = 'pk.eyJ1IjoibWF1dGEiLCJhIjoiY2tpbjM4dHIyMDU3MDJ6bWx1YnhoNXYxNSJ9.kq3HP8TVE6Sc8u1-HU2QFg';
     this.map = new mapboxgl.Map({
@@ -67,17 +66,70 @@ export default class MapWraper extends Control {
       compact: true,
     }));
 
+    let hoveredCountry = null;
+
     this.map.on('load', () => {
       this.map.addSource('dataCircle', {
         type: 'geojson',
         data: this.geoJS,
       });
 
-      this.countryLayer = this.map.getLayer('countries-cnvat2');
+      this.map.addSource('dataCountry', {
+        type: 'geojson',
+        data: 'countries.geojson',
+      });
+
+      this.map.addLayer({
+        id: 'countryBorder',
+        type: 'fill',
+        source: 'dataCountry',
+        paint: {
+          'fill-color': 'rgba(0, 128, 0, 0.3)',
+          'fill-opacity': [
+            'case',
+            ['boolean', ['feature-state', 'hover'], false],
+            1,
+            0,
+          ],
+        },
+      });
 
       const popup = new mapboxgl.Popup({
         closeButton: false,
         closeOnClick: false,
+      });
+
+      this.map.on('mousemove', 'countryBorder', (e) => {
+        if (e.features.length > 0) {
+          if (hoveredCountry) {
+            this.map.setFeatureState({
+              source: 'dataCountry',
+              id: hoveredCountry,
+            }, {
+              hover: false,
+            });
+          }
+
+          hoveredCountry = e.features[0].id;
+          this.map.setFeatureState({
+            source: 'dataCountry',
+            id: hoveredCountry,
+          }, {
+            hover: true,
+          });
+        }
+      });
+
+      this.map.on('mouseleave', 'countryBorder', () => {
+        if (hoveredCountry) {
+          this.map.setFeatureState({
+            source: 'dataCountry',
+            id: hoveredCountry
+          }, {
+            hover: false
+          }, );
+        }
+        hoveredCountry = null;
       });
 
       this.map.on('mousemove', (e) => {
