@@ -1,6 +1,6 @@
+/* eslint-disable new-cap */
 /* eslint-disable no-new */
 import Control from '../utils/control';
-import ItemGroup from '../utils/item_group';
 import Btn from './btn';
 import ChartWrapped from './chart_Wrapped';
 
@@ -22,7 +22,6 @@ export default class PageBox extends Control {
       }
       if (modifier === 'map') {
         this.item.map.resize();
-
       }
     });
 
@@ -39,13 +38,6 @@ export default class PageBox extends Control {
       this.pagination.dispath('tabSelected', this.index);
     });
   }
-
-  select(index, noEvent) {
-    // noEvent && this.dispath('tabSelected', index);
-    this.dispath('dataChange', index);
-    // this.items.forEach((it, i) => it.node.style.display = (i != index) ? 'none' : '');
-  }
-
 
   addItem(title, className, content, json = '') {
     this.page = new Control(this.itemWrapper.node, 'div', 'pagebox__page');
@@ -79,12 +71,13 @@ export default class PageBox extends Control {
     this.item = new className(this.page.node, content);
   }
 
-
-  updateItem1(content,tab) {
-    this.item.update(content,tab);
+  updateItem1(content, tab) {
+    this.item.update(content, tab);
   }
 
   updateItem2(content) {
     this.item.chart.update(content);
+    console.log(this.item);
+    this.item.update(content);
   }
 }
