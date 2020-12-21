@@ -1147,10 +1147,6 @@ class Search extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
       } else {
         this.input.node.classList.remove('search__input--invalid');
       }
-      if (this.arrCountry.length === 1) {
-        this.input.node.value = this.arrCountry[0];
-        this.ul.node.classList.add('search__list--hidden');
-      }
       if (this.arrCountry.length === 0) {
         this.ul.node.classList.add('search__list--hidden');
       }
@@ -1159,6 +1155,18 @@ class Search extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
         const country = this.arrCountry[0][0].toUpperCase() + this.arrCountry[0].slice(1);
         this.dispath('onSearchCountry', country);
       }
+    });
+
+    this.items.forEach((item) => {
+      item.node.addEventListener('click', () => {
+        const country = item.node.innerText;
+        this.dispath('onSearchCountry', country[0].toUpperCase() + country.slice(1));
+        this.input.node.value = '';
+        this.items.forEach((key) => {
+          key.node.style.display = 'none';
+        });
+        this.ul.node.classList.add('search__list--hidden');
+      });
     });
   }
 }
@@ -1268,7 +1276,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   // cписок вкладок для графика
   const chartList = ['all cases', 'all deaths', 'all recovered', 'cases by day', 'deaths by day', 'recovered by day',
     'all cases/100 000', 'all deaths/100 000', 'all recovered/100 000',
-    'cases/100 000 by day', 'deaths/100 000 by day', 'recovered/100 000 by day'
+    'cases/100 000 by day', 'deaths/100 000 by day', 'recovered/100 000 by day',
   ];
 
   const dataList = [globalCases, globalDeaths, globalRecovered, lastCases, lastDeaths, lastRecovered,
@@ -1278,7 +1286,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   // cписок вкладок для таблицы
   const tabletList = ['all', 'last', 'all/100 000', 'last/100 000'];
   const tabArr = ['globalCases', 'globalDeaths', 'globalRecovered', 'lastCases', 'lastDeaths', 'lastRecovered',
-    'globalCases100', 'globalDeaths100', 'globalRecovered100', 'lastCases100', 'lastDeaths100', 'lastRecovered100'
+    'globalCases100', 'globalDeaths100', 'globalRecovered100', 'lastCases100', 'lastDeaths100', 'lastRecovered100',
   ];
 
   const arr = [
@@ -1333,7 +1341,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
       const tableBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'table', tabletList);
 
       const arrPageForSinhron = [chartBox, listBox, mapBox];
-      const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];;
+      const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];
       const tableCases = [tableBox];
       const chartCases = [chartBox];
 
@@ -1345,7 +1353,10 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
       tableBox.addItem('World', _block_table__WEBPACK_IMPORTED_MODULE_5__["default"], tableDataAllCase);
 
       cases.search.addListener('onSearchCountry', (country) => {
+        console.log(country);
         const indexCountry = listBox.item.countries.indexOf(country);
+        console.log(listBox.item.countries);
+        console.log(indexCountry);
         listBox.item.select(indexCountry, true);
         listBox.item.items[indexCountry].node.scrollIntoView();
       });
@@ -1634,6 +1645,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ItemGroup; });
 /* harmony import */ var _toggle__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./toggle */ "./src/utils/toggle.js");
 /* harmony import */ var _control__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./control */ "./src/utils/control.js");
+/* eslint-disable max-len */
 
 
 
@@ -1665,12 +1677,10 @@ class ItemGroup extends _control__WEBPACK_IMPORTED_MODULE_1__["default"] {
 
   clearItems() {
     this.items.forEach((el) => {
-      el.clear()
+      el.clear();
     });
     this.items = [];
   }
-
-  
 }
 
 
