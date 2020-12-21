@@ -37,7 +37,20 @@ export default class ChartsAPI {
     return arr;
   }
 
-  chartByDay(json, population = 100000, arr = []) {
+  chartByDay(json, arr = []) {
+    const obj = Object.keys(json);
+    for (var i = 0; i < obj.length; i++) {
+      let objStr = this.correctDate(obj[i]);
+      if (i === 0) {
+        arr.push([json[obj[i]], objStr]);
+      } else {
+        arr.push([(json[obj[i]] - json[obj[i - 1]]), objStr]);
+      }
+    }
+    return arr;
+  }
+
+  chartByDay100(json, population, arr = []) {
     const obj = Object.keys(json);
     for (var i = 0; i < obj.length; i++) {
       let objStr = this.correctDate(obj[i]);
@@ -50,11 +63,42 @@ export default class ChartsAPI {
     return arr;
   }
 
-  chartByCountry(json, population = 100000, arr = []) {
+  chartByCountry(json, arr = []) {
     const obj = Object.keys(json);
     for (var i = 0; i < obj.length; i++) {
       let objStr = this.correctDate(obj[i]);
       arr.push([json[obj[i]], objStr]);
+    }
+    return arr;
+  }
+
+  chartByCountry100(json, jsonGlobal, country, arr = []) {
+    console.log(json, jsonGlobal, country);
+    let population;
+    jsonGlobal.forEach((element) => {
+      if (element.country === country) {
+        population = element.population;
+      }
+    });
+    const obj = Object.keys(json);
+    for (var i = 0; i < obj.length; i++) {
+      let objStr = this.correctDate(obj[i]);
+      arr.push([((json[obj[i]] / population) * 100000).toFixed(2), objStr]);
+    }
+    return arr;
+  }
+
+  chartByDayCountry100(json, jsonGlobal, country, arr = []) {
+    let population;
+    jsonGlobal.forEach((element) => {
+      if (element.country === country) {
+        population = element.population;
+      }
+    });
+    const obj = Object.keys(json);
+    for (var i = 0; i < obj.length; i++) {
+      let objStr = this.correctDate(obj[i]);
+      arr.push([(((json[obj[i]] - json[obj[i - 1]]) / population) * 100000).toFixed(2), objStr]);
     }
     return arr;
   }

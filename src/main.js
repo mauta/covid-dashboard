@@ -76,9 +76,9 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     const chartsRequestsDeathsDay = chartsRequestsDay.chartByDay(jsonChartDay.deaths);
     const chartsRequestsRecoveredDay = chartsRequestsDay.chartByDay(jsonChartDay.recovered);
 
-    const chartsRequestsAllDay100 = chartsRequestsDay.chartByDay(jsonChartDay.cases, populationAll);
-    const chartsRequestsDeathsDay100 = chartsRequestsDay.chartByDay(jsonChartDay.deaths, populationAll);
-    const chartsRequestsRecoveredDay100 = chartsRequestsDay.chartByDay(jsonChartDay.recovered, populationAll);
+    const chartsRequestsAllDay100 = chartsRequestsDay.chartByDay100(jsonChartDay.cases, populationAll);
+    const chartsRequestsDeathsDay100 = chartsRequestsDay.chartByDay100(jsonChartDay.deaths, populationAll);
+    const chartsRequestsRecoveredDay100 = chartsRequestsDay.chartByDay100(jsonChartDay.recovered, populationAll);
 
     fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
       const chartsRequests = new ChartsAPI(jsonChart);
@@ -161,18 +161,23 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
           const chartsRequestsDeathsCountry = chartsRequestsCountry.chartByCountry(jsonchartCountry.timeline.deaths);
           const chartsRequestsRecoveredCountry = chartsRequestsCountry.chartByCountry(jsonchartCountry.timeline.recovered);
 
+          const chartsRequestsAllCountry100 = chartsRequestsCountry.chartByCountry100(jsonchartCountry.timeline.cases, json, country);
+          const chartsRequestsDeathsCountry100 = chartsRequestsCountry.chartByCountry100(jsonchartCountry.timeline.deaths, json, country);
+          const chartsRequestsRecoveredCountry100 = chartsRequestsCountry.chartByCountry100(jsonchartCountry.timeline.recovered, json, country);
+
           const chartsRequestsAllCountryDay = chartsRequestsCountry.chartByDay(jsonchartCountry.timeline.cases);
           const chartsRequestsDeathsCountryDay = chartsRequestsCountry.chartByDay(jsonchartCountry.timeline.deaths);
           const chartsRequestsRecoveredCountryDay = chartsRequestsCountry.chartByDay(jsonchartCountry.timeline.recovered);
 
+          const chartsRequestsAllCountryDay100 = chartsRequestsCountry.chartByDayCountry100(jsonchartCountry.timeline.cases, json, country);
+          const chartsRequestsDeathsCountryDay100 = chartsRequestsCountry.chartByDayCountry100(jsonchartCountry.timeline.deaths, json, country);
+          const chartsRequestsRecoveredCountryDay100 = chartsRequestsCountry.chartByDayCountry100(jsonchartCountry.timeline.recovered, json, country);
+
           dataTable = [chartsRequestsAllCountry, chartsRequestsDeathsCountry, chartsRequestsRecoveredCountry,
             chartsRequestsAllCountryDay, chartsRequestsDeathsCountryDay, chartsRequestsRecoveredCountryDay,
-            arr, arr, arr, arr, arr, arr,
+            chartsRequestsAllCountry100, chartsRequestsDeathsCountry100, chartsRequestsRecoveredCountry100,
+            chartsRequestsAllCountryDay100, chartsRequestsDeathsCountryDay100, chartsRequestsRecoveredCountryDay100
           ];
-
-          // const chartDataCountry = dataTable[0];
-          // chartCases[0].pagination.node.innerText = chartList[0];
-          // chartCases[0].index = 0;
           chartBox.updateItem2(dataTable[pageIndex]);
           chartBox.title.node.textContent = country;
         });
