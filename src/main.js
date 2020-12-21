@@ -317,6 +317,19 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
         });
       });
 
+
+//   arrPageForSinhron.forEach((item) => {
+//     item.pagination.addListener('tabSelected', (index) => {
+//       arrPageForSinhron.forEach((el) => {
+//         el.pagination.node.innerText = pagList[index];
+//         el.index = index;
+//         if (el.modifier === 'chart') {
+//           el.updateItem2(dataTable[index]);
+//         } else {
+//           //           el.updateItem1(dataList[index]);
+//           el.updateItem1(dataList[index], tabArr[index]);
+//         }
+
       // chartBox.addListener('dataChange', (index) => {
       //   const newCapthion = chartBox.pagination.captions[index];
       //   const newTitle = chartBox.titles[index];
@@ -343,6 +356,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
             // }
           });
         });
+
       });
 
       tableCases.forEach((item) => {

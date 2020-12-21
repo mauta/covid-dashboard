@@ -679,11 +679,11 @@ class MapWraper extends _utils_control__WEBPACK_IMPORTED_MODULE_1__["default"] {
     this.node.id = 'map';
     this.data = data;
     this.tab = 'globalCases';
-    //     const countArr = this.data.map((el) => el.count);
+    console.log(this.data)
     this.tabValue25 = Math.max.apply(null, this.countArr) * 0.05;
     this.tabValue50 = Math.max.apply(null, this.countArr) * 0.20;
     this.tabValue75 = Math.max.apply(null, this.countArr) * 0.98;
-
+    this.currentCountry = '';
     this.legend = new _legend__WEBPACK_IMPORTED_MODULE_2__["default"](this.node, Math.max.apply(null, this.countArr), this.tab);
 
     this.geoJS = {
@@ -707,7 +707,7 @@ class MapWraper extends _utils_control__WEBPACK_IMPORTED_MODULE_1__["default"] {
       'lastRecovered100': caseAPI.globalCountSort(caseAPI.newCountRecovered100())[0].count,
     };
 
-    this.legend = new _legend__WEBPACK_IMPORTED_MODULE_2__["default"](this.node, this.geoJSONMax['globalCases'], this.tab);
+    this.legend = new _legend__WEBPACK_IMPORTED_MODULE_2__["default"](this.node, this.geoJSONMax.globalCases, this.tab);
 
     mapbox_gl__WEBPACK_IMPORTED_MODULE_0___default.a.accessToken = 'pk.eyJ1IjoibWF1dGEiLCJhIjoiY2tpbjM4dHIyMDU3MDJ6bWx1YnhoNXYxNSJ9.kq3HP8TVE6Sc8u1-HU2QFg';
     this.map = new mapbox_gl__WEBPACK_IMPORTED_MODULE_0___default.a.Map({
@@ -731,17 +731,70 @@ class MapWraper extends _utils_control__WEBPACK_IMPORTED_MODULE_1__["default"] {
       compact: true,
     }));
 
+    let hoveredCountry = null;
+
     this.map.on('load', () => {
       this.map.addSource('dataCircle', {
         type: 'geojson',
         data: this.geoJS,
       });
 
-      this.countryLayer = this.map.getLayer('countries-cnvat2');
+      this.map.addSource('dataCountry', {
+        type: 'geojson',
+        data: 'countries.geojson',
+      });
+
+      this.map.addLayer({
+        id: 'countryBorder',
+        type: 'fill',
+        source: 'dataCountry',
+        paint: {
+          'fill-color': 'rgba(0, 128, 0, 0.3)',
+          'fill-opacity': [
+            'case',
+            ['boolean', ['feature-state', 'hover'], false],
+            1,
+            0,
+          ],
+        },
+      });
 
       const popup = new mapbox_gl__WEBPACK_IMPORTED_MODULE_0___default.a.Popup({
         closeButton: false,
         closeOnClick: false,
+      });
+
+      this.map.on('mousemove', 'countryBorder', (e) => {
+        if (e.features.length > 0) {
+          if (hoveredCountry) {
+            this.map.setFeatureState({
+              source: 'dataCountry',
+              id: hoveredCountry,
+            }, {
+              hover: false,
+            });
+          }
+
+          hoveredCountry = e.features[0].id;
+          this.map.setFeatureState({
+            source: 'dataCountry',
+            id: hoveredCountry,
+          }, {
+            hover: true,
+          });
+        }
+      });
+
+      this.map.on('mouseleave', 'countryBorder', () => {
+        if (hoveredCountry) {
+          this.map.setFeatureState({
+            source: 'dataCountry',
+            id: hoveredCountry
+          }, {
+            hover: false
+          }, );
+        }
+        hoveredCountry = null;
       });
 
       this.map.on('mousemove', (e) => {
@@ -808,7 +861,6 @@ class MapWraper extends _utils_control__WEBPACK_IMPORTED_MODULE_1__["default"] {
       this.map.setLayoutProperty(item, 'visibility', 'none');
     }
     this.map.setLayoutProperty(this.tab, 'visibility', 'visible');
-    // this.map.moveLayer(this.tab);
     this.legend.update(this.tab, this.geoJSONMax[this.tab]);
   }
 
@@ -1070,7 +1122,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_control__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/control */ "./src/utils/control.js");
 
 
-
 class Table extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
   constructor(parentNode, data) {
     super(parentNode, 'table');
@@ -1178,15 +1229,16 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   ];
 
 
-// cписок вкладок для таблицы
+  // cписок вкладок для таблицы
   const tabletList = ['all', 'last', 'all/100 000', 'last/100 000'];
 
-// так будут у тебя называться переменные внутри геоджейсона
+  // так будут у тебя называться переменные внутри геоджейсона
   const tabArr = ['globalCases', 'globalDeaths', 'globalRecovered', 'lastCases', 'lastDeaths', 'lastRecovered',
-    'globalCases100', 'globalDeaths100', 'globalRecovered100', 'lastCases100', 'lastDeaths100', 'lastRecovered100'];
+    'globalCases100', 'globalDeaths100', 'globalRecovered100', 'lastCases100', 'lastDeaths100', 'lastRecovered100'
+  ];
 
 
- // пока пусть просто arr, на свежую голову сделаю
+  // пока пусть просто arr, на свежую голову сделаю
 
   const dataTable = [arr, arr.concat(arr), arr.concat(arr).concat(arr), arr, arr.concat(arr), arr.concat(arr).concat(arr),
     arr, arr, arr, arr, arr, arr,
@@ -1241,8 +1293,17 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   });
 
   listBox.item.addListener('onSelectedCountry', (country) => {
+    // это нужный кусок для карты
+    const countryJson = json.filter((key) => key.country === country);
+    mapBox.item.map.flyTo({
+      center: [
+        countryJson[0].countryInfo.long,
+        countryJson[0].countryInfo.lat,
+      ],
+      zoom: 4,
+      essential: true,
+    });
     const dataCaseAPICountry = new _block_data_api__WEBPACK_IMPORTED_MODULE_9__["default"](json, main, country);
-
     tableDataAllCase = dataCaseAPICountry.tableDataCaseAll();
     tableDataLastCase = dataCaseAPICountry.tableDataCaseLast();
     tableDataAllHundred = dataCaseAPICountry.hundredDataCaseAll();
@@ -1256,27 +1317,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     // chartBox.updateItem2(chartDataCountry);
 
     const tableDataCountry = dataCaseAPICountry.tableDataCaseAll();
-
-
-    //   const tableData = dataCaseAPI.tableDataCase();
-    //   const hundredData = dataCaseAPI.hundredDataCase();
-    //   tableBox.addItem('World', Table, tableData);
-
-    //   cases.search.addListener('onSearchCountry', (country) => {
-    //     const indexCountry = listBox.item.countries.indexOf(country);
-    //     listBox.item.select(indexCountry, true);
-    //     listBox.item.items[indexCountry].node.scrollIntoView();
-    //   });
-
-    //   listBox.item.addListener('onSelectedCountry', (country) => {
-    //     const dataCaseAPICountry = new DataAPI(json, main, country);
-    //     const tableDataCountry = dataCaseAPICountry.tableDataCase();
-    // >>>>>>> develop
-//     tableBox.updateItem(country, Table, tableDataCountry);
-//     // здесь пока не настоящие данные в таблице
-//     const chartDataCountry = dataTable[1];
-//     chartBox.updateItem2(chartDataCountry);
-
   });
 
   arrPageForHidden.forEach((item) => {
@@ -1311,9 +1351,8 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
         if (el.modifier === 'chart') {
           el.updateItem2(dataTable[index]);
         } else {
-
-//           el.updateItem1(dataList[index]);
-          el.updateItem1(dataList[index],tabArr[index]);
+          //           el.updateItem1(dataList[index]);
+          el.updateItem1(dataList[index], tabArr[index]);
         }
       });
     });

@@ -1,6 +1,5 @@
 import Control from '../utils/control';
 
-
 export default class Table extends Control {
   constructor(parentNode, data) {
     super(parentNode, 'table');
