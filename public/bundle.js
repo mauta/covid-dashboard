@@ -331,6 +331,7 @@ class ChartWrapped extends _utils_control__WEBPACK_IMPORTED_MODULE_2__["default"
     this.height = this.node.offsetHeight;
     this.dataArr = data.map((el) => el[0]);
     this.maxY = Math.max.apply(null, this.dataArr);
+    this.data = data;
 
     this.node.addEventListener('mousemove', (ev) => {
       const rect = this.node.getBoundingClientRect();
@@ -348,7 +349,7 @@ class ChartWrapped extends _utils_control__WEBPACK_IMPORTED_MODULE_2__["default"
 
       if (diffLeft > 0 && diffRight > 0 && diffY < 0 && diffYbottom > 0) {
         this.popup.setPosition(ev.clientX - rect.left, ev.clientY - rect.top);
-        this.popup.show(data[dataIndex]);
+        this.popup.show(this.data[dataIndex]);
         this.onMouseMove(ev);
       } else {
         this.popup.hide();
@@ -358,6 +359,12 @@ class ChartWrapped extends _utils_control__WEBPACK_IMPORTED_MODULE_2__["default"
     this.chart.node.addEventListener('mouseleave', () => {
       this.popup.hide();
     });
+  }
+
+  update(data) {
+    this.data = data;
+    this.dataArr = data.map((el) => el[0]);
+    this.maxY = Math.max.apply(null, this.dataArr);
   }
 }
 
@@ -721,6 +728,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_control__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/control */ "./src/utils/control.js");
 /* harmony import */ var _legend__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./legend */ "./src/block/legend.js");
 /* harmony import */ var _utils_cases_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/cases_api */ "./src/utils/cases_api.js");
+/* eslint-disable consistent-return */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable guard-for-in */
 /* eslint-disable max-len */
@@ -967,11 +975,10 @@ class MapWraper extends _utils_control__WEBPACK_IMPORTED_MODULE_1__["default"] {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return PageBox; });
 /* harmony import */ var _utils_control__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/control */ "./src/utils/control.js");
-/* harmony import */ var _utils_item_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/item_group */ "./src/utils/item_group.js");
-/* harmony import */ var _btn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./btn */ "./src/block/btn.js");
-/* harmony import */ var _chart_Wrapped__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./chart_Wrapped */ "./src/block/chart_Wrapped.js");
+/* harmony import */ var _btn__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./btn */ "./src/block/btn.js");
+/* harmony import */ var _chart_Wrapped__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./chart_Wrapped */ "./src/block/chart_Wrapped.js");
+/* eslint-disable new-cap */
 /* eslint-disable no-new */
-
 
 
 
@@ -986,7 +993,7 @@ class PageBox extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this.titles = [];
     this.index = 0;
     this.paginationList = paginationList;
-    this.btnFullScreen = new _btn__WEBPACK_IMPORTED_MODULE_2__["default"](this.node, 'btn btn--full-screen', 'Open on full screen', () => {
+    this.btnFullScreen = new _btn__WEBPACK_IMPORTED_MODULE_1__["default"](this.node, 'btn btn--full-screen', 'Open on full screen', () => {
       this.node.classList.toggle('pagebox__wrapper--full-screen');
       this.dispath('onFullScreen', this.modifier);
       if (modifier === 'chart') {
@@ -994,30 +1001,22 @@ class PageBox extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
       }
       if (modifier === 'map') {
         this.item.map.resize();
-
       }
     });
 
     this.pagWrap = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.node, 'div', 'pagebox__marks');
-    this.btnPrevious = new _btn__WEBPACK_IMPORTED_MODULE_2__["default"](this.pagWrap.node, 'btn btn-index btn-index--previous', 'previous', () => {
+    this.btnPrevious = new _btn__WEBPACK_IMPORTED_MODULE_1__["default"](this.pagWrap.node, 'btn btn-index btn-index--previous', 'previous', () => {
       this.index = (this.index - 1 + this.paginationList.length) % this.paginationList.length;
       this.pagination.node.innerHTML = this.paginationList[this.index];
       this.pagination.dispath('tabSelected', this.index);
     });
     this.pagination = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.pagWrap.node, 'div', 'pagebox__mark', this.paginationList[this.index]);
-    this.btnPrevious = new _btn__WEBPACK_IMPORTED_MODULE_2__["default"](this.pagWrap.node, 'btn btn-index btn-index--next', 'next', () => {
+    this.btnPrevious = new _btn__WEBPACK_IMPORTED_MODULE_1__["default"](this.pagWrap.node, 'btn btn-index btn-index--next', 'next', () => {
       this.index = (this.index + 1) % this.paginationList.length;
       this.pagination.node.innerHTML = this.paginationList[this.index];
       this.pagination.dispath('tabSelected', this.index);
     });
   }
-
-  select(index, noEvent) {
-    // noEvent && this.dispath('tabSelected', index);
-    this.dispath('dataChange', index);
-    // this.items.forEach((it, i) => it.node.style.display = (i != index) ? 'none' : '');
-  }
-
 
   addItem(title, className, content, json = '') {
     this.page = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](this.itemWrapper.node, 'div', 'pagebox__page');
@@ -1038,7 +1037,7 @@ class PageBox extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
       }
     };
 
-    if (this.item instanceof _chart_Wrapped__WEBPACK_IMPORTED_MODULE_3__["default"]) {
+    if (this.item instanceof _chart_Wrapped__WEBPACK_IMPORTED_MODULE_2__["default"]) {
       window.addEventListener('resize', resizeThrottler, false);
     }
   }
@@ -1051,13 +1050,13 @@ class PageBox extends _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this.item = new className(this.page.node, content);
   }
 
-
-  updateItem1(content,tab) {
-    this.item.update(content,tab);
+  updateItem1(content, tab) {
+    this.item.update(content, tab);
   }
 
   updateItem2(content) {
     this.item.chart.update(content);
+    this.item.update(content);
   }
 }
 
@@ -1354,7 +1353,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
       let pageIndex = 0;
 
       listBox.item.addListener('onSelectedCountry', (country) => {
-        // это нужный кусок для карты
         const countryJson = json.filter((key) => key.country === country);
         mapBox.item.map.flyTo({
           center: [
@@ -1393,7 +1391,8 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
           // const chartDataCountry = dataTable[0];
           // chartCases[0].pagination.node.innerText = chartList[0];
           // chartCases[0].index = 0;
-          chartBox.updateItem(country, _block_chart_Wrapped__WEBPACK_IMPORTED_MODULE_6__["default"], dataTable[pageIndex]);
+          chartBox.updateItem2(dataTable[pageIndex]);
+          chartBox.title.node.textContent = country;
         });
       });
 
@@ -1433,11 +1432,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
               el.updateItem1(dataList[index], tabArr[index]);
             }
             el.index = index;
-            // if (el.modifier === 'chart') {
-            //   el.updateItem2(dataTable[index]);
-            // } else {
-            //   el.updateItem1(dataList[index], tabArr[index]);
-            // }
           });
         });
       });
