@@ -12,6 +12,7 @@ export default class ChartWrapped extends Control {
     this.height = this.node.offsetHeight;
     this.dataArr = data.map((el) => el[0]);
     this.maxY = Math.max.apply(null, this.dataArr);
+    this.data = data;
 
     this.node.addEventListener('mousemove', (ev) => {
       const rect = this.node.getBoundingClientRect();
@@ -29,7 +30,7 @@ export default class ChartWrapped extends Control {
 
       if (diffLeft > 0 && diffRight > 0 && diffY < 0 && diffYbottom > 0) {
         this.popup.setPosition(ev.clientX - rect.left, ev.clientY - rect.top);
-        this.popup.show(data[dataIndex]);
+        this.popup.show(this.data[dataIndex]);
         this.onMouseMove(ev);
       } else {
         this.popup.hide();
@@ -39,5 +40,11 @@ export default class ChartWrapped extends Control {
     this.chart.node.addEventListener('mouseleave', () => {
       this.popup.hide();
     });
+  }
+
+  update(data) {
+    this.data = data;
+    this.dataArr = data.map((el) => el[0]);
+    this.maxY = Math.max.apply(null, this.dataArr);
   }
 }
