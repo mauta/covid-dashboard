@@ -124,10 +124,10 @@ export default class MapWraper extends Control {
         if (hoveredCountry) {
           this.map.setFeatureState({
             source: 'dataCountry',
-            id: hoveredCountry
+            id: hoveredCountry,
           }, {
-            hover: false
-          }, );
+            hover: false,
+          });
         }
         hoveredCountry = null;
       });

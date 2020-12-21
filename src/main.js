@@ -44,11 +44,10 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     'last cases/100 000', 'last deaths/100 000', 'last recovered/100 000',
   ];
 
-
   // cписок вкладок для графика
   const chartList = ['all cases', 'all deaths', 'all recovered', 'cases by day', 'deaths by day', 'recovered by day',
     'all cases/100 000', 'all deaths/100 000', 'all recovered/100 000',
-    'cases/100 000 by day', 'deaths/100 000 by day', 'recovered/100 000 by day'
+    'cases/100 000 by day', 'deaths/100 000 by day', 'recovered/100 000 by day',
   ];
 
   const dataList = [globalCases, globalDeaths, globalRecovered, lastCases, lastDeaths, lastRecovered,
@@ -58,20 +57,8 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   // cписок вкладок для таблицы
   const tabletList = ['all', 'last', 'all/100 000', 'last/100 000'];
   const tabArr = ['globalCases', 'globalDeaths', 'globalRecovered', 'lastCases', 'lastDeaths', 'lastRecovered',
-    'globalCases100', 'globalDeaths100', 'globalRecovered100', 'lastCases100', 'lastDeaths100', 'lastRecovered100'
+    'globalCases100', 'globalDeaths100', 'globalRecovered100', 'lastCases100', 'lastDeaths100', 'lastRecovered100',
   ];
-
-  // переменные ниже будут с соответствующими данными
-  const lastCases = caseAPI.globalCountSort(caseAPI.newCountCases());
-  const lastDeaths = caseAPI.globalCountSort(caseAPI.newCountDeaths());
-  const lastRecovered = caseAPI.globalCountSort(caseAPI.newCountRecovered());
-  const globalCases100 = caseAPI.globalCountSort(caseAPI.globalCountCases100());
-  const globalDeaths100 = caseAPI.globalCountSort(caseAPI.globalCountDeaths100());
-  const globalRecovered100 = caseAPI.globalCountSort(caseAPI.globalCountRecovered100());
-  const lastCases100 = caseAPI.globalCountSort(caseAPI.newCountCases100());
-  const lastDeaths100 = caseAPI.globalCountSort(caseAPI.newCountDeaths100());
-  const lastRecovered100 = caseAPI.globalCountSort(caseAPI.newCountRecovered100());
-
 
   fetch(apiDay).then((resChartDay) => resChartDay.json()).then((jsonChartDay) => {
     const chartsRequestsDay = new ChartsAPI(jsonChartDay);
@@ -115,7 +102,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
       const tableBox = new PageBox(main.node, 'table', tabletList);
 
       const arrPageForSinhron = [chartBox, listBox, mapBox];
-      const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];;
+      const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];
       const tableCases = [tableBox];
       const chartCases = [chartBox];
 
@@ -130,134 +117,117 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
         const indexCountry = listBox.item.countries.indexOf(country);
         listBox.item.select(indexCountry, true);
         listBox.item.items[indexCountry].node.scrollIntoView();
-        
-  // cписок вкладок для карты, и списка
-//   const pagList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered',
-//     'all cases/100 000', 'all deaths/100 000', 'all recovered/100 000',
-//     'last cases/100 000', 'last deaths/100 000', 'last recovered/100 000',
-//   ];
 
-//   // cписок вкладок для графика
-//   const chartList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered',
-//     'all cases/100 000', 'all deaths/100 000', 'all recovered/100 000',
-//     'last cases/100 000', 'last deaths/100 000', 'last recovered/100 000',
-//   ];
+        // cписок вкладок для карты, и списка
+        //   const pagList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered',
+        //     'all cases/100 000', 'all deaths/100 000', 'all recovered/100 000',
+        //     'last cases/100 000', 'last deaths/100 000', 'last recovered/100 000',
+        //   ];
 
-//   const dataList = [globalCases, globalDeaths, globalRecovered, lastCases, lastDeaths, lastRecovered,
-//     globalCases100, globalDeaths100, globalRecovered100, lastCases100, lastDeaths100, lastRecovered100,
-//   ];
+        //   // cписок вкладок для графика
+        //   const chartList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered',
+        //     'all cases/100 000', 'all deaths/100 000', 'all recovered/100 000',
+        //     'last cases/100 000', 'last deaths/100 000', 'last recovered/100 000',
+        //   ];
 
+        //   const dataList = [globalCases, globalDeaths, globalRecovered, lastCases, lastDeaths, lastRecovered,
+        //     globalCases100, globalDeaths100, globalRecovered100, lastCases100, lastDeaths100, lastRecovered100,
+        //   ];
 
-//   // cписок вкладок для таблицы
-//   const tabletList = ['all', 'last', 'all/100 000', 'last/100 000'];
+        //   // cписок вкладок для таблицы
+        //   const tabletList = ['all', 'last', 'all/100 000', 'last/100 000'];
 
-//   // так будут у тебя называться переменные внутри геоджейсона
-//   const tabArr = ['globalCases', 'globalDeaths', 'globalRecovered', 'lastCases', 'lastDeaths', 'lastRecovered',
-//     'globalCases100', 'globalDeaths100', 'globalRecovered100', 'lastCases100', 'lastDeaths100', 'lastRecovered100'
-//   ];
+        //   // так будут у тебя называться переменные внутри геоджейсона
+        //   const tabArr = ['globalCases', 'globalDeaths', 'globalRecovered', 'lastCases', 'lastDeaths', 'lastRecovered',
+        //     'globalCases100', 'globalDeaths100', 'globalRecovered100', 'lastCases100', 'lastDeaths100', 'lastRecovered100'
+        //   ];
 
+        //   // пока пусть просто arr, на свежую голову сделаю
 
-//   // пока пусть просто arr, на свежую голову сделаю
+        //   const mapBox = new PageBox(main.node, 'map', pagList);
+        //   mapBox.addItem('World', MapWraper, dataList[0], json);
 
-//   const dataTable = [arr, arr.concat(arr), arr.concat(arr).concat(arr), arr, arr.concat(arr), arr.concat(arr).concat(arr),
-//     arr, arr, arr, arr, arr, arr,
-//   ];
+        //   const listBox = new PageBox(main.node, 'list', pagList);
+        //   listBox.addItem('World', List, dataList[0]);
 
-//   const mapBox = new PageBox(main.node, 'map', pagList);
-//   mapBox.addItem('World', MapWraper, dataList[0], json);
+        //   const chartBox = new PageBox(main.node, 'chart', chartList);
+        //   chartBox.addItem('World', ChartWrapped, dataTable[0]);
 
-
-//   const listBox = new PageBox(main.node, 'list', pagList);
-//   listBox.addItem('World', List, dataList[0]);
-
-
-//   const chartBox = new PageBox(main.node, 'chart', chartList);
-//   chartBox.addItem('World', ChartWrapped, dataTable[0]);
-
-//   mapBox.item.addListener('onMapCountrySelect', (country) => {
-//     const indexCountry = listBox.item.countries.indexOf(country);
-//     listBox.item.select(indexCountry, true);
-//     listBox.item.items[indexCountry].node.scrollIntoView();
-//   });
-
-//   // fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
-//   //   const chartsRequests = new ChartsAPI(jsonChart);
-//   //   console.log(chartsRequests.chartGS());
-//   // });
+        //   mapBox.item.addListener('onMapCountrySelect', (country) => {
+        //     const indexCountry = listBox.item.countries.indexOf(country);
+        //     listBox.item.select(indexCountry, true);
+        //     listBox.item.items[indexCountry].node.scrollIntoView();
+        //   });
 
 
-//   const tableBox = new PageBox(main.node, 'table', tabletList);
+        //   const tableBox = new PageBox(main.node, 'table', tabletList);
 
+        //   const arrPageForSinhron = [chartBox, listBox, mapBox];
+        //   const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];
+        //   // const countryTitleCases = [chartBox, tableBox, mapBox];
 
-//   const arrPageForSinhron = [chartBox, listBox, mapBox];
-//   const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];
-//   // const countryTitleCases = [chartBox, tableBox, mapBox];
+        //   const tableCases = [tableBox];
 
-//   const tableCases = [tableBox];
+        //   let tableDataAllCase = dataCaseAPI.tableDataCaseAll();
+        //   let tableDataLastCase = dataCaseAPI.tableDataCaseLast();
+        //   let tableDataAllHundred = dataCaseAPI.hundredDataCaseAll();
+        //   let tableDataLastHundred = dataCaseAPI.hundredDataCaseLast();
 
+        //   let pageDataList = [tableDataAllCase, tableDataLastCase, tableDataAllHundred, tableDataLastHundred];
 
-//   let tableDataAllCase = dataCaseAPI.tableDataCaseAll();
-//   let tableDataLastCase = dataCaseAPI.tableDataCaseLast();
-//   let tableDataAllHundred = dataCaseAPI.hundredDataCaseAll();
-//   let tableDataLastHundred = dataCaseAPI.hundredDataCaseLast();
+        //   tableBox.addItem('World', Table, tableDataAllCase);
 
-//   let pageDataList = [tableDataAllCase, tableDataLastCase, tableDataAllHundred, tableDataLastHundred];
+        //   cases.search.addListener('onSearchCountry', (country) => {
+        //     const indexCountry = listBox.item.countries.indexOf(country);
+        //     listBox.item.select(indexCountry, true);
+        //     listBox.item.items[indexCountry].node.scrollIntoView();
+        //   });
 
-//   tableBox.addItem('World', Table, tableDataAllCase);
+        //   listBox.item.addListener('onSelectedCountry', (country) => {
+        //     // это нужный кусок для карты
+        //     const countryJson = json.filter((key) => key.country === country);
+        //     mapBox.item.map.flyTo({
+        //       center: [
+        //         countryJson[0].countryInfo.long,
+        //         countryJson[0].countryInfo.lat,
+        //       ],
+        //       zoom: 4,
+        //       essential: true,
+        //     });
+        //     const dataCaseAPICountry = new DataAPI(json, main, country);
+        //     tableDataAllCase = dataCaseAPICountry.tableDataCaseAll();
+        //     tableDataLastCase = dataCaseAPICountry.tableDataCaseLast();
+        //     tableDataAllHundred = dataCaseAPICountry.hundredDataCaseAll();
+        //     tableDataLastHundred = dataCaseAPICountry.hundredDataCaseLast();
+        //     pageDataList = [tableDataAllCase, tableDataLastCase, tableDataAllHundred, tableDataLastHundred];
+        //     tableBox.updateItem(country, Table, tableDataAllCase);
+        //     tableCases[0].pagination.node.innerText = tabletList[0];
+        //     tableCases[0].index = 0;
+        //     // здесь пока не настоящие данные в таблице
+        //     // const chartDataCountry = dataTable[1];
+        //     // chartBox.updateItem2(chartDataCountry);
 
-//   cases.search.addListener('onSearchCountry', (country) => {
-//     const indexCountry = listBox.item.countries.indexOf(country);
-//     listBox.item.select(indexCountry, true);
-//     listBox.item.items[indexCountry].node.scrollIntoView();
-//   });
+        //     const tableDataCountry = dataCaseAPICountry.tableDataCaseAll();
+        //   });
 
-//   listBox.item.addListener('onSelectedCountry', (country) => {
-//     // это нужный кусок для карты
-//     const countryJson = json.filter((key) => key.country === country);
-//     mapBox.item.map.flyTo({
-//       center: [
-//         countryJson[0].countryInfo.long,
-//         countryJson[0].countryInfo.lat,
-//       ],
-//       zoom: 4,
-//       essential: true,
-//     });
-//     const dataCaseAPICountry = new DataAPI(json, main, country);
-//     tableDataAllCase = dataCaseAPICountry.tableDataCaseAll();
-//     tableDataLastCase = dataCaseAPICountry.tableDataCaseLast();
-//     tableDataAllHundred = dataCaseAPICountry.hundredDataCaseAll();
-//     tableDataLastHundred = dataCaseAPICountry.hundredDataCaseLast();
-//     pageDataList = [tableDataAllCase, tableDataLastCase, tableDataAllHundred, tableDataLastHundred];
-//     tableBox.updateItem(country, Table, tableDataAllCase);
-//     tableCases[0].pagination.node.innerText = tabletList[0];
-//     tableCases[0].index = 0;
-//     // здесь пока не настоящие данные в таблице
-//     // const chartDataCountry = dataTable[1];
-//     // chartBox.updateItem2(chartDataCountry);
-
-//     const tableDataCountry = dataCaseAPICountry.tableDataCaseAll();
-//   });
-
-//   arrPageForHidden.forEach((item) => {
-//     item.addListener('onFullScreen', (modifier) => {
-//       const arrPageHide = arrPageForHidden.filter((el) => el.modifier !== modifier);
-//       arrPageHide.forEach((el) => {
-//         if (el.node.classList.contains('pagebox__wrapper--hide')) {
-//           el.node.classList.remove('pagebox__wrapper--hide');
-//           document.body.style.gridTemplateRows = '';
-//           main.node.style.gridTemplateRows = '';
-//         } else {
-//           el.node.classList.toggle('pagebox__wrapper--hide');
-//           document.body.style.gridTemplateRows = '82px calc(100vh - 158px) 50px';
-//           main.node.style.gridTemplateRows = '1fr';
-//         }
-
+        //   arrPageForHidden.forEach((item) => {
+        //     item.addListener('onFullScreen', (modifier) => {
+        //       const arrPageHide = arrPageForHidden.filter((el) => el.modifier !== modifier);
+        //       arrPageHide.forEach((el) => {
+        //         if (el.node.classList.contains('pagebox__wrapper--hide')) {
+        //           el.node.classList.remove('pagebox__wrapper--hide');
+        //           document.body.style.gridTemplateRows = '';
+        //           main.node.style.gridTemplateRows = '';
+        //         } else {
+        //           el.node.classList.toggle('pagebox__wrapper--hide');
+        //           document.body.style.gridTemplateRows = '82px calc(100vh - 158px) 50px';
+        //           main.node.style.gridTemplateRows = '1fr';
+        //         }
       });
 
       let pageIndex = 0;
 
       listBox.item.addListener('onSelectedCountry', (country) => {
-        // это нужный кусок для карты
         const countryJson = json.filter((key) => key.country === country);
         mapBox.item.map.flyTo({
           center: [
@@ -292,10 +262,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
             chartsRequestsAllCountryDay, chartsRequestsDeathsCountryDay, chartsRequestsRecoveredCountryDay,
             arr, arr, arr, arr, arr, arr,
           ];
-
-          // const chartDataCountry = dataTable[0];
-          // chartCases[0].pagination.node.innerText = chartList[0];
-          // chartCases[0].index = 0;
           chartBox.updateItem(country, ChartWrapped, dataTable[pageIndex]);
         });
       });
@@ -317,19 +283,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
         });
       });
 
-
-//   arrPageForSinhron.forEach((item) => {
-//     item.pagination.addListener('tabSelected', (index) => {
-//       arrPageForSinhron.forEach((el) => {
-//         el.pagination.node.innerText = pagList[index];
-//         el.index = index;
-//         if (el.modifier === 'chart') {
-//           el.updateItem2(dataTable[index]);
-//         } else {
-//           //           el.updateItem1(dataList[index]);
-//           el.updateItem1(dataList[index], tabArr[index]);
-//         }
-
       // chartBox.addListener('dataChange', (index) => {
       //   const newCapthion = chartBox.pagination.captions[index];
       //   const newTitle = chartBox.titles[index];
@@ -349,14 +302,8 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
               el.updateItem1(dataList[index], tabArr[index]);
             }
             el.index = index;
-            // if (el.modifier === 'chart') {
-            //   el.updateItem2(dataTable[index]);
-            // } else {
-            //   el.updateItem1(dataList[index], tabArr[index]);
-            // }
           });
         });
-
       });
 
       tableCases.forEach((item) => {
@@ -370,40 +317,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
       });
     });
   });
-// =======
-//   // chartBox.addListener('dataChange', (index) => {
-//   //   const newCapthion = chartBox.pagination.captions[index];
-//   //   const newTitle = chartBox.titles[index];
-//   //   const allArr = [arr, arr.concat(arr), arr.concat(arr).concat(arr)];
-//   //   chartBox.updateItem(newCapthion, newTitle, ChartWrapped, allArr[index]);
-//   // });
 
-//   arrPageForSinhron.forEach((item) => {
-//     item.pagination.addListener('tabSelected', (index) => {
-//       arrPageForSinhron.forEach((el) => {
-//         el.pagination.node.innerText = pagList[index];
-//         el.index = index;
-//         if (el.modifier === 'chart') {
-//           el.updateItem2(dataTable[index]);
-//         } else {
-
-//           //           el.updateItem1(dataList[index]);
-//           el.updateItem1(dataList[index], tabArr[index]);
-//         }
-//       });
-//     });
-//   });
-
-//   tableCases.forEach((item) => {
-//     item.pagination.addListener('tabSelected', (index) => {
-//       tableCases.forEach((el) => {
-//         el.pagination.node.innerText = tabletList[index];
-//         el.index = index;
-//         el.updateItem1(pageDataList[index]);
-//       });
-//     });
-//   });
-
-// >>>>>>> develop
   new Footer();
 });
