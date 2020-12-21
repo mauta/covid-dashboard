@@ -77,7 +77,6 @@ export default class PageBox extends Control {
 
   updateItem2(content) {
     this.item.chart.update(content);
-    console.log(this.item);
     this.item.update(content);
   }
 }

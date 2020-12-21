@@ -132,7 +132,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
       let pageIndex = 0;
 
       listBox.item.addListener('onSelectedCountry', (country) => {
-        // это нужный кусок для карты
         const countryJson = json.filter((key) => key.country === country);
         mapBox.item.map.flyTo({
           center: [
@@ -171,7 +170,8 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
           // const chartDataCountry = dataTable[0];
           // chartCases[0].pagination.node.innerText = chartList[0];
           // chartCases[0].index = 0;
-          chartBox.updateItem(country, ChartWrapped, dataTable[pageIndex]);
+          chartBox.updateItem2(dataTable[pageIndex]);
+          chartBox.title.node.textContent = country;
         });
       });
 
@@ -211,11 +211,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
               el.updateItem1(dataList[index], tabArr[index]);
             }
             el.index = index;
-            // if (el.modifier === 'chart') {
-            //   el.updateItem2(dataTable[index]);
-            // } else {
-            //   el.updateItem1(dataList[index], tabArr[index]);
-            // }
           });
         });
       });
