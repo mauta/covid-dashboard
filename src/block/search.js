@@ -30,10 +30,6 @@ export default class Search extends Control {
       } else {
         this.input.node.classList.remove('search__input--invalid');
       }
-      if (this.arrCountry.length === 1) {
-        this.input.node.value = this.arrCountry[0];
-        this.ul.node.classList.add('search__list--hidden');
-      }
       if (this.arrCountry.length === 0) {
         this.ul.node.classList.add('search__list--hidden');
       }
@@ -42,6 +38,18 @@ export default class Search extends Control {
         const country = this.arrCountry[0][0].toUpperCase() + this.arrCountry[0].slice(1);
         this.dispath('onSearchCountry', country);
       }
+    });
+
+    this.items.forEach((item) => {
+      item.node.addEventListener('click', () => {
+        const country = item.node.innerText;
+        this.dispath('onSearchCountry', country[0].toUpperCase() + country.slice(1));
+        this.input.node.value = '';
+        this.items.forEach((key) => {
+          key.node.style.display = 'none';
+        });
+        this.ul.node.classList.add('search__list--hidden');
+      });
     });
   }
 }

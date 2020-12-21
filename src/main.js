@@ -47,7 +47,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   // cписок вкладок для графика
   const chartList = ['all cases', 'all deaths', 'all recovered', 'cases by day', 'deaths by day', 'recovered by day',
     'all cases/100 000', 'all deaths/100 000', 'all recovered/100 000',
-    'cases/100 000 by day', 'deaths/100 000 by day', 'recovered/100 000 by day'
+    'cases/100 000 by day', 'deaths/100 000 by day', 'recovered/100 000 by day',
   ];
 
   const dataList = [globalCases, globalDeaths, globalRecovered, lastCases, lastDeaths, lastRecovered,
@@ -57,7 +57,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   // cписок вкладок для таблицы
   const tabletList = ['all', 'last', 'all/100 000', 'last/100 000'];
   const tabArr = ['globalCases', 'globalDeaths', 'globalRecovered', 'lastCases', 'lastDeaths', 'lastRecovered',
-    'globalCases100', 'globalDeaths100', 'globalRecovered100', 'lastCases100', 'lastDeaths100', 'lastRecovered100'
+    'globalCases100', 'globalDeaths100', 'globalRecovered100', 'lastCases100', 'lastDeaths100', 'lastRecovered100',
   ];
 
   const arr = [
@@ -112,7 +112,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
       const tableBox = new PageBox(main.node, 'table', tabletList);
 
       const arrPageForSinhron = [chartBox, listBox, mapBox];
-      const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];;
+      const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];
       const tableCases = [tableBox];
       const chartCases = [chartBox];
 
@@ -124,7 +124,10 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
       tableBox.addItem('World', Table, tableDataAllCase);
 
       cases.search.addListener('onSearchCountry', (country) => {
+        console.log(country);
         const indexCountry = listBox.item.countries.indexOf(country);
+        console.log(listBox.item.countries);
+        console.log(indexCountry);
         listBox.item.select(indexCountry, true);
         listBox.item.items[indexCountry].node.scrollIntoView();
       });
