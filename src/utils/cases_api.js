@@ -5,6 +5,14 @@ export default class CasesAPI {
     this.json = json;
   }
 
+countPopulation() {
+    let poputation = 0;
+    this.json.forEach((keys) => {
+      poputation += keys.population;
+    });
+    return poputation;
+  }
+
   count(massCases, country, value, iso3, flag = '') {
     massCases.push({
       src: flag,
@@ -74,7 +82,31 @@ export default class CasesAPI {
   newCountRecovered(massCases = []) {
     this.json.forEach((keys) => {
       this.count(massCases, keys.country, keys.todayRecovered, keys.countryInfo.iso3, keys.countryInfo.flag);
+/ =======
+//     });
+//     return massCases;
+//   }
+
+//   newCountCases100(massCases = []) {
+//     this.json.forEach((keys) => {
+//       this.count(massCases, keys.country, (keys.todayCases / keys.population) * 100000, keys.countryInfo.iso3, keys.countryInfo.flag);
+//     });
+//     return massCases;
+//   }
+
+//   newCountDeaths100(massCases = []) {
+//     this.json.forEach((keys) => {
+//       this.count(massCases, keys.country, (keys.todayDeaths / keys.population) * 100000, keys.countryInfo.iso3, keys.countryInfo.flag);
+//     });
+//     return massCases;
+//   }
+
+//   newCountRecovered100(massCases = []) {
+//     this.json.forEach((keys) => {
+//       this.count(massCases, keys.country, (keys.todayRecovered / keys.population) * 100000, keys.countryInfo.iso3, keys.countryInfo.flag);
+// >>>>>>> develop
     });
+    
     return massCases;
   }
 
@@ -96,7 +128,7 @@ export default class CasesAPI {
     this.json.forEach((keys) => {
       this.count(massCases, keys.country, (keys.todayRecovered / keys.population) * 100000, keys.countryInfo.iso3, keys.countryInfo.flag);
     });
-    
+
     return massCases;
   }
 

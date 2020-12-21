@@ -528,7 +528,7 @@ td {
 
 .popup__wrapper {
   position: absolute;
-  width: 80px;
+  width: 100px;
   height: 45px;
   text-align: center;
   background-color: #0009;
