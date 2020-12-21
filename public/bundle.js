@@ -374,18 +374,77 @@ class ChartWrapped extends _utils_control__WEBPACK_IMPORTED_MODULE_2__["default"
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ChartsAPI; });
+/*eslint class-methods-use-this: ["error", { "exceptMethods": ["correctDate"]}] */
 class ChartsAPI {
   constructor(json) {
     this.json = json;
-    // this.chartGS(this.json);
   }
 
-  chartGS() {
-    const arrGS = [];
+  chartGC(population = 0, arr = []) {
     this.json.forEach((keys) => {
-      arrGS.push([keys.total_cases, keys.last_update]);
+      if (population !== 0) {
+        arr.push([((keys.total_cases / population) * 100000).toFixed(2), keys.last_update.split('T').shift().substring(2)]);
+      } else {
+        arr.push([keys.total_cases, keys.last_update.split('T').shift().substring(2)]);
+      };
     });
-    return arrGS;
+    return arr;
+  }
+
+  chartDC(population = 0, arr = []) {
+    this.json.forEach((keys) => {
+      if (population !== 0) {
+        arr.push([((keys.total_deaths / population) * 100000).toFixed(2), keys.last_update.split('T').shift().substring(2)]);
+      } else {
+        arr.push([keys.total_deaths, keys.last_update.split('T').shift().substring(2)]);
+      };
+    });
+    return arr;
+  }
+
+  chartRC(population = 0, arr = []) {
+    this.json.forEach((keys) => {
+      if (population !== 0) {
+        arr.push([((keys.total_recovered / population) * 100000).toFixed(2), keys.last_update.split('T').shift().substring(2)]);
+      } else {
+        arr.push([keys.total_recovered, keys.last_update.split('T').shift().substring(2)]);
+      };
+    });
+    return arr;
+  }
+
+  chartByDay(json, population = 100000, arr = []) {
+    const obj = Object.keys(json);
+    for (var i = 0; i < obj.length; i++) {
+      let objStr = this.correctDate(obj[i]);
+      if (i === 0) {
+        arr.push([((json[obj[i]] / population) * 100000).toFixed(2), objStr]);
+      } else {
+        arr.push([(((json[obj[i]] - json[obj[i - 1]]) / population) * 100000).toFixed(2), objStr]);
+      }
+    }
+    return arr;
+  }
+
+  chartByCountry(json, population = 100000, arr = []) {
+    const obj = Object.keys(json);
+    for (var i = 0; i < obj.length; i++) {
+      let objStr = this.correctDate(obj[i]);
+      arr.push([json[obj[i]], objStr]);
+    }
+    return arr;
+  }
+
+  correctDate(obj) {
+    let objStr = obj.split('/');
+    if (objStr[0].length === 1) {
+      objStr[0] = `0${objStr[0]}`;
+    };
+    if (objStr[1].length === 1) {
+      objStr[1] = `0${objStr[1]}`;
+    };
+    objStr = `${objStr[2]}-${objStr[0]}-${objStr[1]}`;
+    return objStr;
   }
 }
 
@@ -679,7 +738,6 @@ class MapWraper extends _utils_control__WEBPACK_IMPORTED_MODULE_1__["default"] {
     this.node.id = 'map';
     this.data = data;
     this.tab = 'globalCases';
-    console.log(this.data)
     this.tabValue25 = Math.max.apply(null, this.countArr) * 0.05;
     this.tabValue50 = Math.max.apply(null, this.countArr) * 0.20;
     this.tabValue75 = Math.max.apply(null, this.countArr) * 0.98;
@@ -789,10 +847,10 @@ class MapWraper extends _utils_control__WEBPACK_IMPORTED_MODULE_1__["default"] {
         if (hoveredCountry) {
           this.map.setFeatureState({
             source: 'dataCountry',
-            id: hoveredCountry
+            id: hoveredCountry,
           }, {
-            hover: false
-          }, );
+            hover: false,
+          });
         }
         hoveredCountry = null;
       });
@@ -1179,6 +1237,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const urlAPI = 'https://corona.lmao.ninja/v2/countries';
 const url = 'https://covid19-api.org/api/timeline';
+const apiDay = 'https://disease.sh/v3/covid-19/historical/all?lastdays=366';
 fetch(urlAPI).then((res) => res.json()).then((json) => {
   new _block_header__WEBPACK_IMPORTED_MODULE_2__["default"]();
   const main = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](document.body, 'main', 'main');
@@ -1187,11 +1246,10 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
 
   // константы ниже для хранения объектов с цифрами по каждой стране
   const caseAPI = new _utils_cases_api__WEBPACK_IMPORTED_MODULE_7__["default"](json);
+  const populationAll = caseAPI.countPopulation();
   const globalCases = caseAPI.globalCountSort(caseAPI.globalCountCases());
   const globalDeaths = caseAPI.globalCountSort(caseAPI.globalCountDeaths());
   const globalRecovered = caseAPI.globalCountSort(caseAPI.globalCountRecovered());
-
-  // переменные ниже будут с соответствующими данными
   const lastCases = caseAPI.globalCountSort(caseAPI.newCountCases());
   const lastDeaths = caseAPI.globalCountSort(caseAPI.newCountDeaths());
   const lastRecovered = caseAPI.globalCountSort(caseAPI.newCountRecovered());
@@ -1201,6 +1259,28 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   const lastCases100 = caseAPI.globalCountSort(caseAPI.newCountCases100());
   const lastDeaths100 = caseAPI.globalCountSort(caseAPI.newCountDeaths100());
   const lastRecovered100 = caseAPI.globalCountSort(caseAPI.newCountRecovered100());
+
+  // cписок вкладок для карты, и списка
+  const pagList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered',
+    'all cases/100 000', 'all deaths/100 000', 'all recovered/100 000',
+    'last cases/100 000', 'last deaths/100 000', 'last recovered/100 000',
+  ];
+
+  // cписок вкладок для графика
+  const chartList = ['all cases', 'all deaths', 'all recovered', 'cases by day', 'deaths by day', 'recovered by day',
+    'all cases/100 000', 'all deaths/100 000', 'all recovered/100 000',
+    'cases/100 000 by day', 'deaths/100 000 by day', 'recovered/100 000 by day'
+  ];
+
+  const dataList = [globalCases, globalDeaths, globalRecovered, lastCases, lastDeaths, lastRecovered,
+    globalCases100, globalDeaths100, globalRecovered100, lastCases100, lastDeaths100, lastRecovered100,
+  ];
+
+  // cписок вкладок для таблицы
+  const tabletList = ['all', 'last', 'all/100 000', 'last/100 000'];
+  const tabArr = ['globalCases', 'globalDeaths', 'globalRecovered', 'lastCases', 'lastDeaths', 'lastRecovered',
+    'globalCases100', 'globalDeaths100', 'globalRecovered100', 'lastCases100', 'lastDeaths100', 'lastRecovered100'
+  ];
 
   const arr = [
     [68, '15.03.20'],
@@ -1212,162 +1292,167 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     [25, '20.12.20'],
   ];
 
-  // cписок вкладок для карты, и списка
-  const pagList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered',
-    'all cases/100 000', 'all deaths/100 000', 'all recovered/100 000',
-    'last cases/100 000', 'last deaths/100 000', 'last recovered/100 000',
-  ];
+  fetch(apiDay).then((resChartDay) => resChartDay.json()).then((jsonChartDay) => {
+    const chartsRequestsDay = new _block_charts_api__WEBPACK_IMPORTED_MODULE_11__["default"](jsonChartDay);
+    const chartsRequestsAllDay = chartsRequestsDay.chartByDay(jsonChartDay.cases);
+    const chartsRequestsDeathsDay = chartsRequestsDay.chartByDay(jsonChartDay.deaths);
+    const chartsRequestsRecoveredDay = chartsRequestsDay.chartByDay(jsonChartDay.recovered);
 
-  // cписок вкладок для графика
-  const chartList = ['all cases', 'all deaths', 'all recovered', 'last cases', 'last deaths', 'last recovered',
-    'all cases/100 000', 'all deaths/100 000', 'all recovered/100 000',
-    'last cases/100 000', 'last deaths/100 000', 'last recovered/100 000',
-  ];
+    const chartsRequestsAllDay100 = chartsRequestsDay.chartByDay(jsonChartDay.cases, populationAll);
+    const chartsRequestsDeathsDay100 = chartsRequestsDay.chartByDay(jsonChartDay.deaths, populationAll);
+    const chartsRequestsRecoveredDay100 = chartsRequestsDay.chartByDay(jsonChartDay.recovered, populationAll);
 
-  const dataList = [globalCases, globalDeaths, globalRecovered, lastCases, lastDeaths, lastRecovered,
-    globalCases100, globalDeaths100, globalRecovered100, lastCases100, lastDeaths100, lastRecovered100,
-  ];
+    fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
+      const chartsRequests = new _block_charts_api__WEBPACK_IMPORTED_MODULE_11__["default"](jsonChart);
+      const chartsRequestsAll = chartsRequests.chartGC().reverse();
+      const chartsRequestsAllDeaths = chartsRequests.chartDC().reverse();
+      const chartsRequestsAllRec = chartsRequests.chartRC().reverse();
 
+      const chartsRequestsAll100 = chartsRequests.chartGC(populationAll).reverse();
+      const chartsRequestsAllDeaths100 = chartsRequests.chartDC(populationAll).reverse();
+      const chartsRequestsAllRec100 = chartsRequests.chartRC(populationAll).reverse();
 
-  // cписок вкладок для таблицы
-  const tabletList = ['all', 'last', 'all/100 000', 'last/100 000'];
+      let dataTable = [chartsRequestsAll, chartsRequestsAllDeaths, chartsRequestsAllRec, chartsRequestsAllDay, chartsRequestsDeathsDay, chartsRequestsRecoveredDay,
+        chartsRequestsAll100, chartsRequestsAllDeaths100, chartsRequestsAllRec100, chartsRequestsAllDay100, chartsRequestsDeathsDay100, chartsRequestsRecoveredDay100,
+      ];
 
-  // так будут у тебя называться переменные внутри геоджейсона
-  const tabArr = ['globalCases', 'globalDeaths', 'globalRecovered', 'lastCases', 'lastDeaths', 'lastRecovered',
-    'globalCases100', 'globalDeaths100', 'globalRecovered100', 'lastCases100', 'lastDeaths100', 'lastRecovered100'
-  ];
+      const chartBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'chart', chartList);
+      chartBox.addItem('World', _block_chart_Wrapped__WEBPACK_IMPORTED_MODULE_6__["default"], dataTable[0]);
 
+      const mapBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'map', pagList);
+      mapBox.addItem('World', _block_mapblock__WEBPACK_IMPORTED_MODULE_8__["default"], dataList[0], json);
 
-  // пока пусть просто arr, на свежую голову сделаю
+      const listBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'list', pagList);
+      listBox.addItem('World', _block_list__WEBPACK_IMPORTED_MODULE_4__["default"], dataList[0]);
 
-  const dataTable = [arr, arr.concat(arr), arr.concat(arr).concat(arr), arr, arr.concat(arr), arr.concat(arr).concat(arr),
-    arr, arr, arr, arr, arr, arr,
-  ];
+      mapBox.item.addListener('onMapCountrySelect', (country) => {
+        const indexCountry = listBox.item.countries.indexOf(country);
+        listBox.item.select(indexCountry, true);
+        listBox.item.items[indexCountry].node.scrollIntoView();
+      });
 
-  const mapBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'map', pagList);
-  mapBox.addItem('World', _block_mapblock__WEBPACK_IMPORTED_MODULE_8__["default"], dataList[0], json);
+      const tableBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'table', tabletList);
 
+      const arrPageForSinhron = [chartBox, listBox, mapBox];
+      const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];;
+      const tableCases = [tableBox];
+      const chartCases = [chartBox];
 
-  const listBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'list', pagList);
-  listBox.addItem('World', _block_list__WEBPACK_IMPORTED_MODULE_4__["default"], dataList[0]);
+      let tableDataAllCase = dataCaseAPI.tableDataCaseAll();
+      let tableDataLastCase = dataCaseAPI.tableDataCaseLast();
+      let tableDataAllHundred = dataCaseAPI.hundredDataCaseAll();
+      let tableDataLastHundred = dataCaseAPI.hundredDataCaseLast();
+      let pageDataList = [tableDataAllCase, tableDataLastCase, tableDataAllHundred, tableDataLastHundred];
+      tableBox.addItem('World', _block_table__WEBPACK_IMPORTED_MODULE_5__["default"], tableDataAllCase);
 
+      cases.search.addListener('onSearchCountry', (country) => {
+        const indexCountry = listBox.item.countries.indexOf(country);
+        listBox.item.select(indexCountry, true);
+        listBox.item.items[indexCountry].node.scrollIntoView();
+      });
 
-  const chartBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'chart', chartList);
-  chartBox.addItem('World', _block_chart_Wrapped__WEBPACK_IMPORTED_MODULE_6__["default"], dataTable[0]);
+      let pageIndex = 0;
 
-  mapBox.item.addListener('onMapCountrySelect', (country) => {
-    const indexCountry = listBox.item.countries.indexOf(country);
-    listBox.item.select(indexCountry, true);
-    listBox.item.items[indexCountry].node.scrollIntoView();
-  });
+      listBox.item.addListener('onSelectedCountry', (country) => {
+        // это нужный кусок для карты
+        const countryJson = json.filter((key) => key.country === country);
+        mapBox.item.map.flyTo({
+          center: [
+            countryJson[0].countryInfo.long,
+            countryJson[0].countryInfo.lat,
+          ],
+          zoom: 4,
+          essential: true,
+        });
+        const dataCaseAPICountry = new _block_data_api__WEBPACK_IMPORTED_MODULE_9__["default"](json, main, country);
+        tableDataAllCase = dataCaseAPICountry.tableDataCaseAll();
+        tableDataLastCase = dataCaseAPICountry.tableDataCaseLast();
+        tableDataAllHundred = dataCaseAPICountry.hundredDataCaseAll();
+        tableDataLastHundred = dataCaseAPICountry.hundredDataCaseLast();
+        pageDataList = [tableDataAllCase, tableDataLastCase, tableDataAllHundred, tableDataLastHundred];
+        tableBox.updateItem(country, _block_table__WEBPACK_IMPORTED_MODULE_5__["default"], tableDataAllCase);
+        tableCases[0].pagination.node.innerText = tabletList[0];
+        tableCases[0].index = 0;
 
-  // fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
-  //   const chartsRequests = new ChartsAPI(jsonChart);
-  //   console.log(chartsRequests.chartGS());
-  // });
+        const chartCountry = `https://disease.sh/v3/covid-19/historical/${country}?lastdays=366`;
+        fetch(chartCountry).then((apiChart) => apiChart.json()).then((jsonchartCountry) => {
+          const chartsRequestsCountry = new _block_charts_api__WEBPACK_IMPORTED_MODULE_11__["default"](jsonchartCountry);
+          const chartsRequestsAllCountry = chartsRequestsCountry.chartByCountry(jsonchartCountry.timeline.cases);
+          const chartsRequestsDeathsCountry = chartsRequestsCountry.chartByCountry(jsonchartCountry.timeline.deaths);
+          const chartsRequestsRecoveredCountry = chartsRequestsCountry.chartByCountry(jsonchartCountry.timeline.recovered);
 
+          const chartsRequestsAllCountryDay = chartsRequestsCountry.chartByDay(jsonchartCountry.timeline.cases);
+          const chartsRequestsDeathsCountryDay = chartsRequestsCountry.chartByDay(jsonchartCountry.timeline.deaths);
+          const chartsRequestsRecoveredCountryDay = chartsRequestsCountry.chartByDay(jsonchartCountry.timeline.recovered);
 
-  const tableBox = new _block_page_box__WEBPACK_IMPORTED_MODULE_3__["default"](main.node, 'table', tabletList);
+          dataTable = [chartsRequestsAllCountry, chartsRequestsDeathsCountry, chartsRequestsRecoveredCountry,
+            chartsRequestsAllCountryDay, chartsRequestsDeathsCountryDay, chartsRequestsRecoveredCountryDay,
+            arr, arr, arr, arr, arr, arr,
+          ];
 
+          // const chartDataCountry = dataTable[0];
+          // chartCases[0].pagination.node.innerText = chartList[0];
+          // chartCases[0].index = 0;
+          chartBox.updateItem(country, _block_chart_Wrapped__WEBPACK_IMPORTED_MODULE_6__["default"], dataTable[pageIndex]);
+        });
+      });
 
-  const arrPageForSinhron = [chartBox, listBox, mapBox];
-  const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];
-  // const countryTitleCases = [chartBox, tableBox, mapBox];
+      arrPageForHidden.forEach((item) => {
+        item.addListener('onFullScreen', (modifier) => {
+          const arrPageHide = arrPageForHidden.filter((el) => el.modifier !== modifier);
+          arrPageHide.forEach((el) => {
+            if (el.node.classList.contains('pagebox__wrapper--hide')) {
+              el.node.classList.remove('pagebox__wrapper--hide');
+              document.body.style.gridTemplateRows = '';
+              main.node.style.gridTemplateRows = '';
+            } else {
+              el.node.classList.toggle('pagebox__wrapper--hide');
+              document.body.style.gridTemplateRows = '82px calc(100vh - 158px) 50px';
+              main.node.style.gridTemplateRows = '1fr';
+            }
+          });
+        });
+      });
 
-  const tableCases = [tableBox];
+      // chartBox.addListener('dataChange', (index) => {
+      //   const newCapthion = chartBox.pagination.captions[index];
+      //   const newTitle = chartBox.titles[index];
+      //   const allArr = [arr, arr.concat(arr), arr.concat(arr).concat(arr)];
+      //   chartBox.updateItem(newCapthion, newTitle, ChartWrapped, allArr[index]);
+      // });
 
+      arrPageForSinhron.forEach((item) => {
+        item.pagination.addListener('tabSelected', (index) => {
+          pageIndex = index;
+          arrPageForSinhron.forEach((el) => {
+            if (el.modifier === 'chart') {
+              el.pagination.node.innerText = chartList[index];
+              el.updateItem2(dataTable[index]);
+            } else {
+              el.pagination.node.innerText = pagList[index];
+              el.updateItem1(dataList[index], tabArr[index]);
+            }
+            el.index = index;
+            // if (el.modifier === 'chart') {
+            //   el.updateItem2(dataTable[index]);
+            // } else {
+            //   el.updateItem1(dataList[index], tabArr[index]);
+            // }
+          });
+        });
+      });
 
-  let tableDataAllCase = dataCaseAPI.tableDataCaseAll();
-  let tableDataLastCase = dataCaseAPI.tableDataCaseLast();
-  let tableDataAllHundred = dataCaseAPI.hundredDataCaseAll();
-  let tableDataLastHundred = dataCaseAPI.hundredDataCaseLast();
-
-  let pageDataList = [tableDataAllCase, tableDataLastCase, tableDataAllHundred, tableDataLastHundred];
-
-  tableBox.addItem('World', _block_table__WEBPACK_IMPORTED_MODULE_5__["default"], tableDataAllCase);
-
-  cases.search.addListener('onSearchCountry', (country) => {
-    const indexCountry = listBox.item.countries.indexOf(country);
-    listBox.item.select(indexCountry, true);
-    listBox.item.items[indexCountry].node.scrollIntoView();
-  });
-
-  listBox.item.addListener('onSelectedCountry', (country) => {
-    // это нужный кусок для карты
-    const countryJson = json.filter((key) => key.country === country);
-    mapBox.item.map.flyTo({
-      center: [
-        countryJson[0].countryInfo.long,
-        countryJson[0].countryInfo.lat,
-      ],
-      zoom: 4,
-      essential: true,
-    });
-    const dataCaseAPICountry = new _block_data_api__WEBPACK_IMPORTED_MODULE_9__["default"](json, main, country);
-    tableDataAllCase = dataCaseAPICountry.tableDataCaseAll();
-    tableDataLastCase = dataCaseAPICountry.tableDataCaseLast();
-    tableDataAllHundred = dataCaseAPICountry.hundredDataCaseAll();
-    tableDataLastHundred = dataCaseAPICountry.hundredDataCaseLast();
-    pageDataList = [tableDataAllCase, tableDataLastCase, tableDataAllHundred, tableDataLastHundred];
-    tableBox.updateItem(country, _block_table__WEBPACK_IMPORTED_MODULE_5__["default"], tableDataAllCase);
-    tableCases[0].pagination.node.innerText = tabletList[0];
-    tableCases[0].index = 0;
-    // здесь пока не настоящие данные в таблице
-    // const chartDataCountry = dataTable[1];
-    // chartBox.updateItem2(chartDataCountry);
-
-    const tableDataCountry = dataCaseAPICountry.tableDataCaseAll();
-  });
-
-  arrPageForHidden.forEach((item) => {
-    item.addListener('onFullScreen', (modifier) => {
-      const arrPageHide = arrPageForHidden.filter((el) => el.modifier !== modifier);
-      arrPageHide.forEach((el) => {
-        if (el.node.classList.contains('pagebox__wrapper--hide')) {
-          el.node.classList.remove('pagebox__wrapper--hide');
-          document.body.style.gridTemplateRows = '';
-          main.node.style.gridTemplateRows = '';
-        } else {
-          el.node.classList.toggle('pagebox__wrapper--hide');
-          document.body.style.gridTemplateRows = '82px calc(100vh - 158px) 50px';
-          main.node.style.gridTemplateRows = '1fr';
-        }
+      tableCases.forEach((item) => {
+        item.pagination.addListener('tabSelected', (index) => {
+          tableCases.forEach((el) => {
+            el.pagination.node.innerText = tabletList[index];
+            el.index = index;
+            el.updateItem1(pageDataList[index]);
+          });
+        });
       });
     });
   });
-
-  // chartBox.addListener('dataChange', (index) => {
-  //   const newCapthion = chartBox.pagination.captions[index];
-  //   const newTitle = chartBox.titles[index];
-  //   const allArr = [arr, arr.concat(arr), arr.concat(arr).concat(arr)];
-  //   chartBox.updateItem(newCapthion, newTitle, ChartWrapped, allArr[index]);
-  // });
-
-  arrPageForSinhron.forEach((item) => {
-    item.pagination.addListener('tabSelected', (index) => {
-      arrPageForSinhron.forEach((el) => {
-        el.pagination.node.innerText = pagList[index];
-        el.index = index;
-        if (el.modifier === 'chart') {
-          el.updateItem2(dataTable[index]);
-        } else {
-          //           el.updateItem1(dataList[index]);
-          el.updateItem1(dataList[index], tabArr[index]);
-        }
-      });
-    });
-  });
-
-  tableCases.forEach((item) => {
-    item.pagination.addListener('tabSelected', (index) => {
-      tableCases.forEach((el) => {
-        el.pagination.node.innerText = tabletList[index];
-        el.index = index;
-        el.updateItem1(pageDataList[index]);
-      });
-    });
-  });
-
   new _block_footer__WEBPACK_IMPORTED_MODULE_1__["default"]();
 });
 
@@ -1384,11 +1469,20 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return CasesAPI; });
-/*eslint class-methods-use-this: ["error", { "exceptMethods": ["count", "globalCountSort"]}] */
+/* eslint-disable max-len */
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["count", "globalCountSort"]}] */
 
 class CasesAPI {
   constructor(json) {
     this.json = json;
+  }
+
+  countPopulation() {
+    let poputation = 0;
+    this.json.forEach((keys) => {
+      poputation += keys.population;
+    });
+    return poputation;
   }
 
   count(massCases, country, value, iso3, flag = '') {
@@ -1396,9 +1490,9 @@ class CasesAPI {
       src: flag,
       country,
       count: value,
-      countryInfo: iso3
+      countryInfo: iso3,
     });
-    return massCases; 
+    return massCases;
   }
 
   globalCountCases(massCases = []) {
@@ -1461,6 +1555,7 @@ class CasesAPI {
     this.json.forEach((keys) => {
       this.count(massCases, keys.country, keys.todayRecovered, keys.countryInfo.iso3, keys.countryInfo.flag);
     });
+
     return massCases;
   }
 
@@ -1482,7 +1577,7 @@ class CasesAPI {
     this.json.forEach((keys) => {
       this.count(massCases, keys.country, (keys.todayRecovered / keys.population) * 100000, keys.countryInfo.iso3, keys.countryInfo.flag);
     });
-    
+
     return massCases;
   }
 
