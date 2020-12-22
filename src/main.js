@@ -20,7 +20,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
   new Header();
   const main = new Control(document.body, 'main', 'main');
   const dataCaseAPI = new DataAPI(json, main);
-  const cases = new Cases(main, dataCaseAPI.countCases);
+  const cases = new Cases(main, dataCaseAPI.countCases, json);
 
   // константы ниже для хранения объектов с цифрами по каждой стране
   const caseAPI = new CasesAPI(json);
@@ -50,8 +50,10 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     'cases/100 000 by day', 'deaths/100 000 by day', 'recovered/100 000 by day',
   ];
 
-  const dataList = [globalCases, globalDeaths, globalRecovered, lastCases, lastDeaths, lastRecovered,
-    globalCases100, globalDeaths100, globalRecovered100, lastCases100, lastDeaths100, lastRecovered100,
+  const dataList = [caseAPI.replaceCountry(globalCases), caseAPI.replaceCountry(globalDeaths), caseAPI.replaceCountry(globalRecovered),
+    caseAPI.replaceCountry(lastCases), caseAPI.replaceCountry(lastDeaths), caseAPI.replaceCountry(lastRecovered),
+    caseAPI.replaceCountry(globalCases100), caseAPI.replaceCountry(globalDeaths100),
+    caseAPI.replaceCountry(globalRecovered100), caseAPI.replaceCountry(lastCases100), caseAPI.replaceCountry(lastDeaths100), caseAPI.replaceCountry(lastRecovered100),
   ];
 
   // cписок вкладок для таблицы
@@ -60,25 +62,15 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     'globalCases100', 'globalDeaths100', 'globalRecovered100', 'lastCases100', 'lastDeaths100', 'lastRecovered100',
   ];
 
-  const arr = [
-    [68, '15.03.20'],
-    [74, '15.03.20'],
-    [82, '16.06.20'],
-    [1, '15.08.20'],
-    [122, '15.03.20'],
-    [12, '15.03.20'],
-    [25, '20.12.20'],
-  ];
-
   fetch(apiDay).then((resChartDay) => resChartDay.json()).then((jsonChartDay) => {
     const chartsRequestsDay = new ChartsAPI(jsonChartDay);
     const chartsRequestsAllDay = chartsRequestsDay.chartByDay(jsonChartDay.cases);
     const chartsRequestsDeathsDay = chartsRequestsDay.chartByDay(jsonChartDay.deaths);
     const chartsRequestsRecoveredDay = chartsRequestsDay.chartByDay(jsonChartDay.recovered);
 
-    const chartsRequestsAllDay100 = chartsRequestsDay.chartByDay(jsonChartDay.cases, populationAll);
-    const chartsRequestsDeathsDay100 = chartsRequestsDay.chartByDay(jsonChartDay.deaths, populationAll);
-    const chartsRequestsRecoveredDay100 = chartsRequestsDay.chartByDay(jsonChartDay.recovered, populationAll);
+    const chartsRequestsAllDay100 = chartsRequestsDay.chartByDay100(jsonChartDay.cases, populationAll);
+    const chartsRequestsDeathsDay100 = chartsRequestsDay.chartByDay100(jsonChartDay.deaths, populationAll);
+    const chartsRequestsRecoveredDay100 = chartsRequestsDay.chartByDay100(jsonChartDay.recovered, populationAll);
 
     fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
       const chartsRequests = new ChartsAPI(jsonChart);
@@ -114,7 +106,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
       const arrPageForSinhron = [chartBox, listBox, mapBox];
       const arrPageForHidden = [chartBox, listBox, mapBox, tableBox];
       const tableCases = [tableBox];
-      const chartCases = [chartBox];
 
       let tableDataAllCase = dataCaseAPI.tableDataCaseAll();
       let tableDataLastCase = dataCaseAPI.tableDataCaseLast();
@@ -144,37 +135,54 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
           zoom: 4,
           essential: true,
         });
+
+        let countryReplace = country;
+        if (country === 'Curacao') {
+          countryReplace = 'Curaçao'
+        };
+        if (country === 'Ivory Coast') {
+          countryReplace = `Côte d'Ivoire`
+        };
+        if (country === 'Reunion') {
+          countryReplace = `Réunion`
+        };
+
         const dataCaseAPICountry = new DataAPI(json, main, country);
         tableDataAllCase = dataCaseAPICountry.tableDataCaseAll();
         tableDataLastCase = dataCaseAPICountry.tableDataCaseLast();
         tableDataAllHundred = dataCaseAPICountry.hundredDataCaseAll();
         tableDataLastHundred = dataCaseAPICountry.hundredDataCaseLast();
         pageDataList = [tableDataAllCase, tableDataLastCase, tableDataAllHundred, tableDataLastHundred];
-        tableBox.updateItem(country, Table, tableDataAllCase);
+        tableBox.updateItem(countryReplace, Table, tableDataAllCase);
         tableCases[0].pagination.node.innerText = tabletList[0];
         tableCases[0].index = 0;
 
-        const chartCountry = `https://disease.sh/v3/covid-19/historical/${country}?lastdays=366`;
+        const chartCountry = `https://disease.sh/v3/covid-19/historical/${countryReplace}?lastdays=366`;
         fetch(chartCountry).then((apiChart) => apiChart.json()).then((jsonchartCountry) => {
           const chartsRequestsCountry = new ChartsAPI(jsonchartCountry);
           const chartsRequestsAllCountry = chartsRequestsCountry.chartByCountry(jsonchartCountry.timeline.cases);
           const chartsRequestsDeathsCountry = chartsRequestsCountry.chartByCountry(jsonchartCountry.timeline.deaths);
           const chartsRequestsRecoveredCountry = chartsRequestsCountry.chartByCountry(jsonchartCountry.timeline.recovered);
 
+          const chartsRequestsAllCountry100 = chartsRequestsCountry.chartByCountry100(jsonchartCountry.timeline.cases, json, countryReplace);
+          const chartsRequestsDeathsCountry100 = chartsRequestsCountry.chartByCountry100(jsonchartCountry.timeline.deaths, json, countryReplace);
+          const chartsRequestsRecoveredCountry100 = chartsRequestsCountry.chartByCountry100(jsonchartCountry.timeline.recovered, json, countryReplace);
+
           const chartsRequestsAllCountryDay = chartsRequestsCountry.chartByDay(jsonchartCountry.timeline.cases);
           const chartsRequestsDeathsCountryDay = chartsRequestsCountry.chartByDay(jsonchartCountry.timeline.deaths);
           const chartsRequestsRecoveredCountryDay = chartsRequestsCountry.chartByDay(jsonchartCountry.timeline.recovered);
 
+          const chartsRequestsAllCountryDay100 = chartsRequestsCountry.chartByDayCountry100(jsonchartCountry.timeline.cases, json, countryReplace);
+          const chartsRequestsDeathsCountryDay100 = chartsRequestsCountry.chartByDayCountry100(jsonchartCountry.timeline.deaths, json, countryReplace);
+          const chartsRequestsRecoveredCountryDay100 = chartsRequestsCountry.chartByDayCountry100(jsonchartCountry.timeline.recovered, json, countryReplace);
+
           dataTable = [chartsRequestsAllCountry, chartsRequestsDeathsCountry, chartsRequestsRecoveredCountry,
             chartsRequestsAllCountryDay, chartsRequestsDeathsCountryDay, chartsRequestsRecoveredCountryDay,
-            arr, arr, arr, arr, arr, arr,
+            chartsRequestsAllCountry100, chartsRequestsDeathsCountry100, chartsRequestsRecoveredCountry100,
+            chartsRequestsAllCountryDay100, chartsRequestsDeathsCountryDay100, chartsRequestsRecoveredCountryDay100
           ];
-
-          // const chartDataCountry = dataTable[0];
-          // chartCases[0].pagination.node.innerText = chartList[0];
-          // chartCases[0].index = 0;
           chartBox.updateItem2(dataTable[pageIndex]);
-          chartBox.title.node.textContent = country;
+          chartBox.title.node.textContent = countryReplace;
         });
       });
 
@@ -194,13 +202,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
           });
         });
       });
-
-      // chartBox.addListener('dataChange', (index) => {
-      //   const newCapthion = chartBox.pagination.captions[index];
-      //   const newTitle = chartBox.titles[index];
-      //   const allArr = [arr, arr.concat(arr), arr.concat(arr).concat(arr)];
-      //   chartBox.updateItem(newCapthion, newTitle, ChartWrapped, allArr[index]);
-      // });
 
       arrPageForSinhron.forEach((item) => {
         item.pagination.addListener('tabSelected', (index) => {
