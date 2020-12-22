@@ -38,7 +38,6 @@ export default class ChartsAPI {
   }
 
   chartByDay(json, arr = []) {
-    console.log(json)
     const obj = Object.keys(json);
     for (var i = 0; i < obj.length; i++) {
       let objStr = this.correctDate(obj[i]);
@@ -82,7 +81,6 @@ export default class ChartsAPI {
   }
 
   chartByCountry100(json, jsonGlobal, country, arr = []) {
-    console.log(json, jsonGlobal, country);
     let population;
     jsonGlobal.forEach((element) => {
       if (element.country === country) {
