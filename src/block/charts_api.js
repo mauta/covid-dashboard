@@ -38,13 +38,18 @@ export default class ChartsAPI {
   }
 
   chartByDay(json, arr = []) {
+    console.log(json)
     const obj = Object.keys(json);
     for (var i = 0; i < obj.length; i++) {
       let objStr = this.correctDate(obj[i]);
       if (i === 0) {
         arr.push([json[obj[i]], objStr]);
       } else {
-        arr.push([(json[obj[i]] - json[obj[i - 1]]), objStr]);
+        if ((json[obj[i]] - json[obj[i - 1]]) < 0) {
+          arr.push(arr[i-1]);
+        } else {
+          arr.push([(json[obj[i]] - json[obj[i - 1]]), objStr]);
+        }
       }
     }
     return arr;
@@ -57,7 +62,11 @@ export default class ChartsAPI {
       if (i === 0) {
         arr.push([((json[obj[i]] / population) * 100000).toFixed(2), objStr]);
       } else {
-        arr.push([(((json[obj[i]] - json[obj[i - 1]]) / population) * 100000).toFixed(2), objStr]);
+        if ((json[obj[i]] - json[obj[i - 1]]) < 0) {
+          arr.push(arr[i-1]);
+        } else {
+          arr.push([(((json[obj[i]] - json[obj[i - 1]]) / population) * 100000).toFixed(2), objStr]);
+        }
       }
     }
     return arr;
@@ -101,7 +110,11 @@ export default class ChartsAPI {
       if (i === 0) {
         arr.push([(((json[obj[i]]) / population) * 100000).toFixed(2), objStr]);
       } else {
-        arr.push([(((json[obj[i]] - json[obj[i - 1]]) / population) * 100000).toFixed(2), objStr]);
+        if ((json[obj[i]] - json[obj[i - 1]]) < 0) {
+          arr.push(arr[i-1]);
+        } else {
+          arr.push([(((json[obj[i]] - json[obj[i - 1]]) / population) * 100000).toFixed(2), objStr]);
+        }
       };
     }
     return arr;
