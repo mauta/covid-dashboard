@@ -1,6 +1,5 @@
 export default class DataAPI {
   constructor(json, main, country = '') {
-    console.log(country)
     this.json = json;
     this.country = country;
     this.allCases = 0;
