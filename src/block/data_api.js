@@ -1,5 +1,6 @@
 export default class DataAPI {
   constructor(json, main, country = '') {
+    console.log(country)
     this.json = json;
     this.country = country;
     this.allCases = 0;
@@ -82,18 +83,18 @@ export default class DataAPI {
 
   hundredDataCaseAll() {
     const hundredData = {
-      cases: this.hundredAllCase.toLocaleString('ru-RU'),
-      deaths: this.hundredDeathsCase.toLocaleString('ru-RU'),
-      recovered: this.hundredRecoveredsCase.toLocaleString('ru-RU'),
+      cases: this.hundredAllCase.toFixed(2).toLocaleString('ru-RU'),
+      deaths: this.hundredDeathsCase.toFixed(2).toLocaleString('ru-RU'),
+      recovered: this.hundredRecoveredsCase.toFixed(2).toLocaleString('ru-RU'),
     };
     return hundredData;
   }
 
   hundredDataCaseLast() {
     const hundredData = {
-      cases: this.hundredNewAllCase.toLocaleString('ru-RU'),
-      deaths: this.hundredNewDeathsCase.toLocaleString('ru-RU'),
-      recovered: this.hundredNewRecoveredsCase.toLocaleString('ru-RU'),
+      cases: this.hundredNewAllCase.toFixed(2).toLocaleString('ru-RU'),
+      deaths: this.hundredNewDeathsCase.toFixed(2).toLocaleString('ru-RU'),
+      recovered: this.hundredNewRecoveredsCase.toFixed(2).toLocaleString('ru-RU'),
     };
     return hundredData;
   }

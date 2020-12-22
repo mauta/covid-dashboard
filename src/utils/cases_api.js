@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-/* eslint class-methods-use-this: ["error", { "exceptMethods": ["count", "globalCountSort"]}] */
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["count", "globalCountSort", "replaceCountry"]}] */
 
 export default class CasesAPI {
   constructor(json) {
@@ -121,5 +121,21 @@ export default class CasesAPI {
       return 0;
     });
     return massCases;
+  }
+
+  //Curaçao, Côte d'Ivoire, Réunion
+  replaceCountry(mass) {
+    mass.forEach((key) => {
+      if (key.country === 'Curaçao') {
+        key.country = 'Curacao'
+      };
+      if (key.country === `Côte d'Ivoire`) {
+        key.country = 'Ivory Coast'
+      };
+      if (key.country === `Réunion`) {
+        key.country = 'Reunion'
+      };
+    })
+    return mass;
   }
 }
