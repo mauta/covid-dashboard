@@ -4,6 +4,7 @@ export default class Chart extends Control {
   constructor(parentNode, dataForChart) {
     super(parentNode, 'canvas', 'canvas');
     this.parentNode = parentNode;
+
     this.addListener('onResize', () => {
       this.reRender();
     });
@@ -15,6 +16,7 @@ export default class Chart extends Control {
     const TOP_PDNG = 10;
     const SIZE_PDNG = 40;
     const AXE_PDNG = 20;
+    this.data = data;
     this.dataArr = data.map((el) => el[0]);
 
     this.ctx = this.node.getContext('2d');
@@ -37,6 +39,12 @@ export default class Chart extends Control {
     this.XKoef = this.XLenght / this.dataArr.length;
     this.YKoef = this.YLenght / this.maxY;
     this.ctx.fillStyle = '#008000';
+
+    // this.ctx.fillText(`${this.valueYChart(this.maxY)}`, 3, AXE_PDNG, AXE_PDNG - 6);
+    // this.ctx.fillText(`${this.valueYChart(Math.round(this.maxY * 0.25))}`, 3, AXE_PDNG + this.YLenght * 0.75, AXE_PDNG - 6);
+    // this.ctx.fillText(`${this.valueYChart(Math.round(this.maxY * 0.5))}`, 3, AXE_PDNG + this.YLenght * 0.5, AXE_PDNG - 6);
+    // this.ctx.fillText(`${this.valueYChart(Math.round(this.maxY * 0.75))}`, 3, AXE_PDNG + this.YLenght * 0.25, AXE_PDNG - 6);
+
     this.ctx.fillText(`${this.maxY}`, 3, AXE_PDNG, AXE_PDNG - 6);
     this.ctx.fillText(`${Math.round(this.maxY * 0.25)}`, 3, AXE_PDNG + this.YLenght * 0.75, AXE_PDNG - 6);
     this.ctx.fillText(`${Math.round(this.maxY * 0.5)}`, 3, AXE_PDNG + this.YLenght * 0.5, AXE_PDNG - 6);
@@ -62,4 +70,32 @@ export default class Chart extends Control {
     this.clear();
     this.render(this.data);
   }
+
+  update(data) {
+    this.clear();
+    this.render(data);
+  }
+
+  // valueYChart(val) {
+  //   let valueY = val;
+  //   if (val <= 1000) {
+  //     valueY = '1k';
+  //   }
+  //   else if (val > 1000 && val <= 10000) {
+  //     valueY = '10k';
+  //   }
+  //   else if (val > 10000 && val <= 100000) {
+  //     valueY = '100k';
+  //   }
+  //   else if (val > 100000 && val <= 1000000) {
+  //     valueY = '1M';
+  //   }
+  //   else if (val > 1000000 && val <= 10000000) {
+  //     valueY = '10M';
+  //   }
+  //   else if (val > 10000000 && val <= 100000000) {
+  //     valueY = '100M';
+  //   }
+  //   return valueY;
+  // }
 }
