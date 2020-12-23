@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable max-len */
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["count", "globalCountSort", "replaceCountry"]}] */
 
@@ -61,7 +62,6 @@ export default class CasesAPI {
 
   globalCountRecovered100(massCases = []) {
     this.json.forEach((keys) => {
-
       this.count(massCases, keys.country, (keys.recoveredPerOneMillion / 10).toFixed(2), keys.countryInfo.iso3, keys.countryInfo.flag);
     });
     return massCases;
@@ -91,10 +91,9 @@ export default class CasesAPI {
 
   newCountCases100(massCases = []) {
     this.json.forEach((keys) => {
-      if (isNaN(keys.todayCases / keys.population)) {
+      if (Number.isNaN(keys.todayCases / keys.population)) {
         this.count(massCases, keys.country, 0, keys.countryInfo.iso3, keys.countryInfo.flag);
-      }
-      else {
+      } else {
         this.count(massCases, keys.country, ((keys.todayCases / keys.population) * 100000).toFixed(2), keys.countryInfo.iso3, keys.countryInfo.flag);
       }
     });
@@ -103,10 +102,9 @@ export default class CasesAPI {
 
   newCountDeaths100(massCases = []) {
     this.json.forEach((keys) => {
-      if (isNaN(keys.todayCases / keys.population)) {
+      if (Number.isNaN(keys.todayCases / keys.population)) {
         this.count(massCases, keys.country, 0, keys.countryInfo.iso3, keys.countryInfo.flag);
-      }
-      else {
+      } else {
         this.count(massCases, keys.country, ((keys.todayDeaths / keys.population) * 100000).toFixed(2), keys.countryInfo.iso3, keys.countryInfo.flag);
       }
     });
@@ -115,27 +113,11 @@ export default class CasesAPI {
 
   newCountRecovered100(massCases = []) {
     this.json.forEach((keys) => {
-      if (isNaN(keys.todayCases / keys.population)) {
+      if (Number.Number.isNaN(keys.todayCases / keys.population)) {
         this.count(massCases, keys.country, 0, keys.countryInfo.iso3, keys.countryInfo.flag);
-      }
-      else {
+      } else {
         this.count(massCases, keys.country, ((keys.todayRecovered / keys.population) * 100000).toFixed(2), keys.countryInfo.iso3, keys.countryInfo.flag);
       }
-    });
-
-    return massCases;
-  }
-
-newCountDeaths100(massCases = []) {
-    this.json.forEach((keys) => {
-      this.count(massCases, keys.country, (keys.todayDeaths / keys.population) * 100000, keys.countryInfo.iso3, keys.countryInfo.flag);
-    });
-    return massCases;
-  }
-
-newCountRecovered100(massCases = []) {
-    this.json.forEach((keys) => {
-      this.count(massCases, keys.country, (keys.todayRecovered / keys.population) * 100000, keys.countryInfo.iso3, keys.countryInfo.flag);
     });
 
     return massCases;
@@ -154,19 +136,19 @@ newCountRecovered100(massCases = []) {
     return massCases;
   }
 
-  //Curaçao, Côte d'Ivoire, Réunion
+  // Curaçao, Côte d'Ivoire, Réunion
   replaceCountry(mass) {
     mass.forEach((key) => {
       if (key.country === 'Curaçao') {
-        key.country = 'Curacao'
-      };
-      if (key.country === `Côte d'Ivoire`) {
-        key.country = 'Ivory Coast'
-      };
-      if (key.country === `Réunion`) {
-        key.country = 'Reunion'
-      };
-    })
+        key.country = 'Curacao';
+      }
+      if (key.country === 'Côte d\'Ivoire') {
+        key.country = 'Ivory Coast';
+      }
+      if (key.country === 'Réunion') {
+        key.country = 'Reunion';
+      }
+    });
     return mass;
   }
 }

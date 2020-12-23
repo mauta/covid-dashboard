@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable max-len */
 import Toggle from './toggle';
 import Control from './control';

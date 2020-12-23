@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import Control from './control';
 
 export default class Toggle extends Control {

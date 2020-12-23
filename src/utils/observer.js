@@ -30,7 +30,7 @@ export default class Observer {
     this.listeners = this.listeners.filter((it) => it.id !== id);
   }
 
-  dispath(name,...params) {
+  dispath(name, ...params) {
     this.listeners.filter((it) => it.name === name).forEach((it) => it.callback(...params));
   }
 }

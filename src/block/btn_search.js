@@ -7,6 +7,3 @@ export default class BtnSearch extends Control {
     this.node.setAttribute('type', 'button');
   }
 }
-
-
-// и вот тут надо писать много и красовой логики по поиску

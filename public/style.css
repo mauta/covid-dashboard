@@ -105,6 +105,7 @@ td {
   border: solid var(--border-width) rgba(0, 128, 0, 0.5);
   padding: var(--padding);
   text-align: center;
+  width: 50%;
 }
 
 .pagebox__wrapper--hide {
@@ -556,7 +557,7 @@ td {
 .mapboxgl-popup-tip{
   background-color: #008000;
   border: solid var(--border-width);
-  border-radius: var(--border-radius); */
+  border-radius: var(--border-radius);
 }
 
 .mapboxgl-popup-content {

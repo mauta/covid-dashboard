@@ -1,3 +1,5 @@
+/* eslint-disable prefer-destructuring */
+/* eslint-disable no-param-reassign */
 /* eslint-disable max-len */
 /* eslint-disable no-new */
 import Control from './utils/control';
@@ -115,10 +117,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
       tableBox.addItem('World', Table, tableDataAllCase);
 
       cases.search.addListener('onSearchCountry', (country) => {
-        console.log(country);
         const indexCountry = listBox.item.countries.indexOf(country);
-        console.log(listBox.item.countries);
-        console.log(indexCountry);
         listBox.item.select(indexCountry, true);
         listBox.item.items[indexCountry].node.scrollIntoView();
       });
@@ -138,14 +137,14 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
 
         let countryReplace = country;
         if (country === 'Curacao') {
-          countryReplace = 'Curaçao'
-        };
+          countryReplace = 'Curaçao';
+        }
         if (country === 'Ivory Coast') {
-          countryReplace = `Côte d'Ivoire`
-        };
+          countryReplace = 'Côte d\'Ivoire';
+        }
         if (country === 'Reunion') {
-          countryReplace = `Réunion`
-        };
+          countryReplace = 'Réunion';
+        }
 
         const dataCaseAPICountry = new DataAPI(json, main, country);
         tableDataAllCase = dataCaseAPICountry.tableDataCaseAll();
@@ -179,7 +178,7 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
           dataTable = [chartsRequestsAllCountry, chartsRequestsDeathsCountry, chartsRequestsRecoveredCountry,
             chartsRequestsAllCountryDay, chartsRequestsDeathsCountryDay, chartsRequestsRecoveredCountryDay,
             chartsRequestsAllCountry100, chartsRequestsDeathsCountry100, chartsRequestsRecoveredCountry100,
-            chartsRequestsAllCountryDay100, chartsRequestsDeathsCountryDay100, chartsRequestsRecoveredCountryDay100
+            chartsRequestsAllCountryDay100, chartsRequestsDeathsCountryDay100, chartsRequestsRecoveredCountryDay100,
           ];
           chartBox.updateItem2(dataTable[pageIndex]);
           chartBox.title.node.textContent = countryReplace;
