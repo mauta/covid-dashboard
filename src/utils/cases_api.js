@@ -33,7 +33,7 @@ export default class CasesAPI {
 
   globalCountCases100(massCases = []) {
     this.json.forEach((keys) => {
-      this.count(massCases, keys.country, keys.casesPerOneMillion / 10, keys.countryInfo.iso3, keys.countryInfo.flag);
+      this.count(massCases, keys.country, (keys.casesPerOneMillion / 10).toFixed(2), keys.countryInfo.iso3, keys.countryInfo.flag);
     });
     return massCases;
   }
@@ -47,21 +47,22 @@ export default class CasesAPI {
 
   globalCountDeaths100(massCases = []) {
     this.json.forEach((keys) => {
-      this.count(massCases, keys.country, keys.deathsPerOneMillion / 10, keys.countryInfo.iso3, keys.countryInfo.flag);
+      this.count(massCases, keys.country, (keys.deathsPerOneMillion / 10).toFixed(2), keys.countryInfo.iso3, keys.countryInfo.flag);
     });
     return massCases;
   }
 
   globalCountRecovered(massCases = []) {
     this.json.forEach((keys) => {
-      this.count(massCases, keys.country, keys.recovered / 10, keys.countryInfo.iso3, keys.countryInfo.flag);
+      this.count(massCases, keys.country, keys.recovered, keys.countryInfo.iso3, keys.countryInfo.flag);
     });
     return massCases;
   }
 
   globalCountRecovered100(massCases = []) {
     this.json.forEach((keys) => {
-      this.count(massCases, keys.country, keys.recoveredPerOneMillion / 10, keys.countryInfo.iso3, keys.countryInfo.flag);
+
+      this.count(massCases, keys.country, (keys.recoveredPerOneMillion / 10).toFixed(2), keys.countryInfo.iso3, keys.countryInfo.flag);
     });
     return massCases;
   }
@@ -90,8 +91,38 @@ export default class CasesAPI {
 
   newCountCases100(massCases = []) {
     this.json.forEach((keys) => {
-      this.count(massCases, keys.country, (keys.todayCases / keys.population) * 100000, keys.countryInfo.iso3, keys.countryInfo.flag);
+      if (isNaN(keys.todayCases / keys.population)) {
+        this.count(massCases, keys.country, 0, keys.countryInfo.iso3, keys.countryInfo.flag);
+      }
+      else {
+        this.count(massCases, keys.country, ((keys.todayCases / keys.population) * 100000).toFixed(2), keys.countryInfo.iso3, keys.countryInfo.flag);
+      }
     });
+    return massCases;
+  }
+
+  newCountDeaths100(massCases = []) {
+    this.json.forEach((keys) => {
+      if (isNaN(keys.todayCases / keys.population)) {
+        this.count(massCases, keys.country, 0, keys.countryInfo.iso3, keys.countryInfo.flag);
+      }
+      else {
+        this.count(massCases, keys.country, ((keys.todayDeaths / keys.population) * 100000).toFixed(2), keys.countryInfo.iso3, keys.countryInfo.flag);
+      }
+    });
+    return massCases;
+  }
+
+  newCountRecovered100(massCases = []) {
+    this.json.forEach((keys) => {
+      if (isNaN(keys.todayCases / keys.population)) {
+        this.count(massCases, keys.country, 0, keys.countryInfo.iso3, keys.countryInfo.flag);
+      }
+      else {
+        this.count(massCases, keys.country, ((keys.todayRecovered / keys.population) * 100000).toFixed(2), keys.countryInfo.iso3, keys.countryInfo.flag);
+      }
+    });
+
     return massCases;
   }
 

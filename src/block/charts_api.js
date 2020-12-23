@@ -44,7 +44,12 @@ export default class ChartsAPI {
       if (i === 0) {
         arr.push([json[obj[i]], objStr]);
       } else {
-        arr.push([(json[obj[i]] - json[obj[i - 1]]), objStr]);
+        if ((json[obj[i]] - json[obj[i - 1]]) < 0) {
+          arr.push(arr[i-1]);
+        } else {
+          arr.push([(json[obj[i]] - json[obj[i - 1]]), objStr]);
+        }
+
       }
     }
     return arr;
@@ -57,13 +62,18 @@ export default class ChartsAPI {
       if (i === 0) {
         arr.push([((json[obj[i]] / population) * 100000).toFixed(2), objStr]);
       } else {
-        arr.push([(((json[obj[i]] - json[obj[i - 1]]) / population) * 100000).toFixed(2), objStr]);
+        if ((json[obj[i]] - json[obj[i - 1]]) < 0) {
+          arr.push(arr[i-1]);
+        } else {
+          arr.push([(((json[obj[i]] - json[obj[i - 1]]) / population) * 100000).toFixed(2), objStr]);
+        }
       }
     }
     return arr;
   }
 
 chartByCountry(json, arr = []) {
+
     const obj = Object.keys(json);
     for (var i = 0; i < obj.length; i++) {
       let objStr = this.correctDate(obj[i]);
@@ -73,7 +83,6 @@ chartByCountry(json, arr = []) {
   }
 
   chartByCountry100(json, jsonGlobal, country, arr = []) {
-    console.log(json, jsonGlobal, country);
     let population;
     jsonGlobal.forEach((element) => {
       if (element.country === country) {
@@ -98,11 +107,20 @@ chartByCountry(json, arr = []) {
     const obj = Object.keys(json);
     for (var i = 0; i < obj.length; i++) {
       let objStr = this.correctDate(obj[i]);
-      arr.push([(((json[obj[i]] - json[obj[i - 1]]) / population) * 100000).toFixed(2), objStr]);
+      if (i === 0) {
+        arr.push([(((json[obj[i]]) / population) * 100000).toFixed(2), objStr]);
+      } else {
+        if ((json[obj[i]] - json[obj[i - 1]]) < 0) {
+          arr.push(arr[i-1]);
+        } else {
+          arr.push([(((json[obj[i]] - json[obj[i - 1]]) / population) * 100000).toFixed(2), objStr]);
+        }
+      };
     }
     return arr;
   }
-  correctDate(obj) {
+
+correctDate(obj) {
     let objStr = obj.split('/');
     if (objStr[0].length === 1) {
       objStr[0] = `0${objStr[0]}`;
