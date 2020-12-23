@@ -13,7 +13,7 @@
 }
 
 body {
-  font-family: 'Dosis', sans-serif;
+  font-family: 'JetBrains Mono', monospace;
   margin: 0;
   padding: 6px;
   box-sizing: border-box;
@@ -453,7 +453,7 @@ td {
   border-radius: var(--border-radius);
   background-color: var(--back-color);
   color: var(--border-color);
-  font-family: 'Dosis', sans-serif;
+  font-family: 'JetBrains Mono', monospace;
   width: 80%;
   padding: 3px var(--padding);
   z-index: 2;
@@ -564,7 +564,7 @@ td {
   background-color: #0009;
   border: solid 1px #008000;
   border-radius: var(--border-radius);
-  font-family: 'Dosis', sans-serif;
+  font-family: 'JetBrains Mono', monospace;
   font-size: larger;
 }
 
