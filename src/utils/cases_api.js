@@ -113,7 +113,7 @@ export default class CasesAPI {
 
   newCountRecovered100(massCases = []) {
     this.json.forEach((keys) => {
-      if (Number.Number.isNaN(keys.todayCases / keys.population)) {
+      if (Number.isNaN(keys.todayCases / keys.population)) {
         this.count(massCases, keys.country, 0, keys.countryInfo.iso3, keys.countryInfo.flag);
       } else {
         this.count(massCases, keys.country, ((keys.todayRecovered / keys.population) * 100000).toFixed(2), keys.countryInfo.iso3, keys.countryInfo.flag);
