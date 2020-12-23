@@ -61,6 +61,7 @@ export default class CasesAPI {
 
   globalCountRecovered100(massCases = []) {
     this.json.forEach((keys) => {
+
       this.count(massCases, keys.country, (keys.recoveredPerOneMillion / 10).toFixed(2), keys.countryInfo.iso3, keys.countryInfo.flag);
     });
     return massCases;
@@ -120,6 +121,21 @@ export default class CasesAPI {
       else {
         this.count(massCases, keys.country, ((keys.todayRecovered / keys.population) * 100000).toFixed(2), keys.countryInfo.iso3, keys.countryInfo.flag);
       }
+    });
+
+    return massCases;
+  }
+
+newCountDeaths100(massCases = []) {
+    this.json.forEach((keys) => {
+      this.count(massCases, keys.country, (keys.todayDeaths / keys.population) * 100000, keys.countryInfo.iso3, keys.countryInfo.flag);
+    });
+    return massCases;
+  }
+
+newCountRecovered100(massCases = []) {
+    this.json.forEach((keys) => {
+      this.count(massCases, keys.country, (keys.todayRecovered / keys.population) * 100000, keys.countryInfo.iso3, keys.countryInfo.flag);
     });
 
     return massCases;

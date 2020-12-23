@@ -176,8 +176,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
           const chartsRequestsDeathsCountryDay100 = chartsRequestsCountry.chartByDayCountry100(jsonchartCountry.timeline.deaths, json, countryReplace);
           const chartsRequestsRecoveredCountryDay100 = chartsRequestsCountry.chartByDayCountry100(jsonchartCountry.timeline.recovered, json, countryReplace);
 
-          console.log(chartsRequestsAllCountryDay100);
-
           dataTable = [chartsRequestsAllCountry, chartsRequestsDeathsCountry, chartsRequestsRecoveredCountry,
             chartsRequestsAllCountryDay, chartsRequestsDeathsCountryDay, chartsRequestsRecoveredCountryDay,
             chartsRequestsAllCountry100, chartsRequestsDeathsCountry100, chartsRequestsRecoveredCountry100,
@@ -204,13 +202,6 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
           });
         });
       });
-
-      // chartBox.addListener('dataChange', (index) => {
-      //   const newCapthion = chartBox.pagination.captions[index];
-      //   const newTitle = chartBox.titles[index];
-      //   const allArr = [arr, arr.concat(arr), arr.concat(arr).concat(arr)];
-      //   chartBox.updateItem(newCapthion, newTitle, ChartWrapped, allArr[index]);
-      // });
 
       arrPageForSinhron.forEach((item) => {
         item.pagination.addListener('tabSelected', (index) => {

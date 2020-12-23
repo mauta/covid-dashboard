@@ -49,6 +49,7 @@ export default class ChartsAPI {
         } else {
           arr.push([(json[obj[i]] - json[obj[i - 1]]), objStr]);
         }
+
       }
     }
     return arr;
@@ -71,7 +72,8 @@ export default class ChartsAPI {
     return arr;
   }
 
-  chartByCountry(json, arr = []) {
+chartByCountry(json, arr = []) {
+
     const obj = Object.keys(json);
     for (var i = 0; i < obj.length; i++) {
       let objStr = this.correctDate(obj[i]);
@@ -118,7 +120,7 @@ export default class ChartsAPI {
     return arr;
   }
 
-  correctDate(obj) {
+correctDate(obj) {
     let objStr = obj.split('/');
     if (objStr[0].length === 1) {
       objStr[0] = `0${objStr[0]}`;

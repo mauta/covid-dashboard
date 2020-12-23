@@ -4,6 +4,7 @@ export default class Chart extends Control {
   constructor(parentNode, dataForChart) {
     super(parentNode, 'canvas', 'canvas');
     this.parentNode = parentNode;
+
     this.addListener('onResize', () => {
       this.reRender();
     });
@@ -15,6 +16,7 @@ export default class Chart extends Control {
     const TOP_PDNG = 10;
     const SIZE_PDNG = 40;
     const AXE_PDNG = 35;
+
     this.data = data;
     this.dataArr = data.map((el) => el[0]);
 
@@ -40,7 +42,6 @@ export default class Chart extends Control {
     this.ctx.fillStyle = '#008000';
 
     this.depth = '';
-
     this.ctx.fillText(`${this.valueYChartCeil(this.maxY)}${this.depth}`, 3, AXE_PDNG, AXE_PDNG - 6);
     this.ctx.fillText(`${this.valueYChartCeil(Math.round(this.maxY * 0.25))}${this.depth}`, 3, AXE_PDNG + this.YLenght * 0.75, AXE_PDNG - 6);
     this.ctx.fillText(`${this.valueYChartCeil(Math.round(this.maxY * 0.5))}${this.depth}`, 3, AXE_PDNG + this.YLenght * 0.5, AXE_PDNG - 6);
