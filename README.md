@@ -1,8 +1,8 @@
 ## Task 8. Covid dashboard для [RS School](https://rs.school/)
 
-![](covid.png)
+![](https://github.com/mauta/covid-dashboard/blob/master/covid.png)
 
-[Готовый Covid dashboard](https://mauta.github.io/shelter/shelter/pages/main/index.html) 
+[Готовый Covid dashboard](https://mauta.github.io/covid-dashboard/public/) 
 
 В этом задании создадим приложение для отслеживания распространения COVID-19 в мире и в отдельных странах. Информацию необходимо представить в виде таблицы, списка, графика и интерактивной карты.
 
