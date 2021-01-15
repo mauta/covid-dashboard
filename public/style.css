@@ -423,8 +423,18 @@ td {
   }
 
   .footer {
-    font-size: smaller;
+    font-size: 12px;
   }
+
+  .footer__link{
+    margin: 0;
+    padding-left: 0;
+  }
+
+  .footer__link--gh::before{
+    display: none;
+  }
+
 }
 
 .canvas {
@@ -525,8 +535,6 @@ td {
   height: 100%;
 }
 
-
-
 .popup__wrapper {
   position: absolute;
   width: 100px;
@@ -537,7 +545,6 @@ td {
   border-radius: var(--border-radius);
   margin: -50px 0px;
 }
-
 
 .popup__wrapper--hidden {
   display: none;
