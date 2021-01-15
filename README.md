@@ -1,6 +1,6 @@
 ## Task 8. Covid dashboard для [RS School](https://rs.school/)
 
-![](https://github.com/mauta/shelter/blob/shelterProduct/shelter.png)
+![](covid.png)
 
 [Готовый Covid dashboard](https://mauta.github.io/shelter/shelter/pages/main/index.html) 
 
