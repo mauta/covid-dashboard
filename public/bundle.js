@@ -1334,10 +1334,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const urlAPI = 'https://corona.lmao.ninja/v2/countries';
-const url = 'https://covid19-api.org/api/timeline';
-const apiDay = 'https://disease.sh/v3/covid-19/historical/all?lastdays=366';
-fetch(urlAPI).then((res) => res.json()).then((json) => {
+const URL_COUNTRY = 'https://quiet-tor-23643.herokuapp.com/country';
+const URL_TIMELINE = 'https://quiet-tor-23643.herokuapp.com/timeline';
+const URL_DAY = 'https://quiet-tor-23643.herokuapp.com/day';
+
+fetch(URL_COUNTRY, {
+  method: "POST"
+}).then((res) => res.json()).then((json) => {
   new _block_header__WEBPACK_IMPORTED_MODULE_2__["default"]();
   const main = new _utils_control__WEBPACK_IMPORTED_MODULE_0__["default"](document.body, 'main', 'main');
   const dataCaseAPI = new _block_data_api__WEBPACK_IMPORTED_MODULE_9__["default"](json, main);
@@ -1383,7 +1386,9 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     'globalCases100', 'globalDeaths100', 'globalRecovered100', 'lastCases100', 'lastDeaths100', 'lastRecovered100',
   ];
 
-  fetch(apiDay).then((resChartDay) => resChartDay.json()).then((jsonChartDay) => {
+  fetch(URL_DAY, {
+    method: "POST"
+  }).then((resChartDay) => resChartDay.json()).then((jsonChartDay) => {
     const chartsRequestsDay = new _block_charts_api__WEBPACK_IMPORTED_MODULE_11__["default"](jsonChartDay);
     const chartsRequestsAllDay = chartsRequestsDay.chartByDay(jsonChartDay.cases);
     const chartsRequestsDeathsDay = chartsRequestsDay.chartByDay(jsonChartDay.deaths);
@@ -1393,7 +1398,9 @@ fetch(urlAPI).then((res) => res.json()).then((json) => {
     const chartsRequestsDeathsDay100 = chartsRequestsDay.chartByDay100(jsonChartDay.deaths, populationAll);
     const chartsRequestsRecoveredDay100 = chartsRequestsDay.chartByDay100(jsonChartDay.recovered, populationAll);
 
-    fetch(url).then((resChart) => resChart.json()).then((jsonChart) => {
+    fetch(URL_TIMELINE, {
+      method: "POST"
+    }).then((resChart) => resChart.json()).then((jsonChart) => {
       const chartsRequests = new _block_charts_api__WEBPACK_IMPORTED_MODULE_11__["default"](jsonChart);
       const chartsRequestsAll = chartsRequests.chartGC().reverse();
       const chartsRequestsAllDeaths = chartsRequests.chartDC().reverse();
